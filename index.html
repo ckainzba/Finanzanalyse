@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOS Mandant – Finanzberatung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- HEADER -->
+    <header id="header">
+      <div class="header-sidebar-area">
+        <div class="logo">TOS</div>
+        <div class="mandant-label">Mandant</div>
+      </div>
+      <div class="header-main-area">
+        <div class="spacer"></div>
+
+      </div>
+    </header>
+
+    <!-- FULL-WIDTH MENU BAR -->
+    <div class="toolbar">
+      <div class="sidebar-toggle" title="Sidebar umschalten">
+        <div class="menu-icons">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+          <span class="divider">|</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <div id="body">
+      <!-- SIDEBAR -->
+      <aside id="sidebar">
+        <nav>
+          <!-- Persönliche Angaben -->
+          <div class="nav-item">
+            <div class="nav-link has-children" data-page="persoenliche-angaben">
+              <span>Persönliche Angaben</span>
+              <span class="chevron">▾</span>
+            </div>
+            <div class="sub-nav">
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="personendaten">Personendaten</div>
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="ausweisdaten">Ausweisdaten</div>
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="kontaktdaten">Kontaktdaten</div>
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="hobbys">Hobbys</div>
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="tiere">Tiere</div>
+            </div>
+          </div>
+          <!-- Berufliche Angaben -->
+          <div class="nav-item">
+            <div class="nav-link has-children" data-page="berufliche-angaben">
+              <span>Berufliche Angaben</span>
+              <span class="chevron">▾</span>
+            </div>
+            <div class="sub-nav">
+              <div class="sub-nav-link" data-page="berufliche-angaben" data-sub="beruf">Beruf</div>
+              <div class="sub-nav-link" data-page="berufliche-angaben" data-sub="arbeitgeber">Arbeitgeber</div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="konten" data-sub="konten"><span>Konten</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="kinder" data-sub="kinder"><span>Kinder</span></div>
+          </div>
+          <!-- Gesundheit -->
+          <div class="nav-item">
+            <div class="nav-link has-children" data-page="gesundheit">
+              <span>Gesundheit</span>
+              <span class="chevron">▾</span>
+            </div>
+            <div class="sub-nav">
+              <div class="sub-nav-link" data-page="gesundheit" data-sub="gesundheit-allgemein">Allgemein</div>
+              <div class="sub-nav-link" data-page="gesundheit" data-sub="gesundheit-krankenversicherung">
+                Krankenversicherung</div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="rente" data-sub="rente"><span>Rente</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="einnahmen" data-sub="einnahmen"><span>Einnahmen</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="ausgaben" data-sub="ausgaben"><span>Ausgaben</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="vermoegen" data-sub="vermoegen"><span>Vermögen</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="verbindlichkeiten" data-sub="verbindlichkeiten">
+              <span>Verbindlichkeiten</span>
+            </div>
+          </div>
+          <!-- Versicherungen -->
+          <div class="nav-item">
+            <div class="nav-link has-children" data-page="versicherungen">
+              <span>Versicherungen</span>
+              <span class="chevron">▾</span>
+            </div>
+            <div class="sub-nav">
+              <div class="sub-nav-link" data-page="versicherungen" data-sub="hausrat">Schulz erworbener Werte</div>
+              <div class="sub-nav-link" data-page="versicherungen" data-sub="existenzrisiken">Existenzrisiken</div>
+              <div class="sub-nav-link" data-page="versicherungen" data-sub="altersvorsorge">Private Altersvorsorge
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="wuensche" data-sub="wuensche"><span>Wünsche &amp; Ziele</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="weitere" data-sub="weitere"><span>Weitere Angaben</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="empfehlungen" data-sub="empfehlungen"><span>Empfehlungen</span></div>
+          </div>
+          <div class="nav-item">
+            <div class="nav-link" data-page="abschluss" data-sub="abschluss"><span>Abschluss</span></div>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <main id="main">
+        <button class="ki-btn-floating" id="upload-btn" title="Daten per KI erfassen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          Daten KI-gestützt erfassen
+        </button>
+
+        <!-- ============ PAGE: PERSONENDATEN ============ -->
+        <div class="page" id="page-personendaten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Persönliche Angaben</h1>
+
+          <h2 class="section-title">Person</h2>
+          <div class="field-grid grid-4">
+            <div class="field-group"><label>Anrede</label><input id="p-anrede" type="text" placeholder="Herr"></div>
+            <div class="field-group"><label>Geschlecht</label><input id="p-geschlecht" type="text"
+                placeholder="männlich"></div>
+            <div class="field-group"><label>Titel</label><input id="p-titel" type="text" placeholder="keiner"></div>
+            <div class="field-group"><label>Vorname</label><input id="p-vorname" type="text" placeholder="Vorname">
+            </div>
+          </div>
+          <div class="field-grid grid-4">
+            <div class="field-group"><label>Nachname</label><input id="p-nachname" type="text" placeholder="Nachname">
+            </div>
+            <div class="field-group"><label>Geburtsdatum</label><input id="p-geburtsdatum" type="text"
+                placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Geburtsname</label><input id="p-geburtsname" type="text" placeholder="—">
+            </div>
+            <div class="field-group"><label>Staatsangehörigkeit</label><input id="p-staatsangehoerigkeit" type="text"
+                placeholder="Deutschland"></div>
+          </div>
+          <button class="btn btn-outline" style="margin-top:8px;" data-action="save">Personendaten bearbeiten</button>
+
+          <hr class="section-divider">
+          <h2 class="section-title">Adresse</h2>
+          <div class="field-grid grid-4">
+            <div class="field-group"><label>Land</label><input id="a-land" type="text" placeholder="Deutschland"></div>
+            <div class="field-group"><label>Postleitzahl</label><input id="a-plz" type="text" placeholder="PLZ"></div>
+            <div class="field-group"><label>Ort</label><input id="a-ort" type="text" placeholder="Ort"></div>
+            <div class="field-group"><label>Straße</label><input id="a-strasse" type="text" placeholder="Straße"></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Hausnummer</label><input id="a-hausnummer" type="text" placeholder="Nr.">
+            </div>
+            <div class="field-group"><label>c/o Adresszusatz</label><input id="a-adresszusatz" type="text"
+                placeholder="—"></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: AUSWEISDATEN ============ -->
+        <div class="page" id="page-ausweisdaten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Ausweisdaten</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Ausweisart</label><input id="aus-art" type="text" placeholder="Personalausweis"></div>
+            <div class="field-group"><label>Ausweisnummer</label><input id="aus-nummer" type="text" placeholder=""></div>
+            <div class="field-group"><label>Ausstellungsbehörde</label><input id="aus-behoerde" type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Ausstellungsdatum</label><input id="aus-ausstellungsdatum" type="text" placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Gültig bis</label><input id="aus-gueltigbis" type="text" placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Geburtsort</label><input id="aus-geburtsort" type="text" placeholder=""></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: KONTAKTDATEN ============ -->
+        <div class="page" id="page-kontaktdaten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Kontaktdaten</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Telefon (Vorwahl)</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Telefon (Rufnummer)</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Mobil</label><input type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>E-Mail</label><input type="email" placeholder=""></div>
+            <div class="field-group"><label>Website</label><input type="text" placeholder=""></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: HOBBYS ============ -->
+        <div class="page" id="page-hobbys">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Hobbys</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Hobby 1</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Hobby 2</label><input type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Hobby 3</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Hobby 4</label><input type="text" placeholder=""></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: TIERE ============ -->
+        <div class="page" id="page-tiere">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Tiere</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Tierart</label><input type="text" placeholder="z.B. Hund"></div>
+            <div class="field-group"><label>Rasse</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Name</label><input type="text" placeholder=""></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: BERUF ============ -->
+        <div class="page" id="page-beruf">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Beruf</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Berufsbezeichnung</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Branche</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Beschäftigungsart</label>
+              <select>
+                <option>Angestellter</option>
+                <option>Beamter</option>
+                <option>Selbstständig</option>
+                <option>Rentner</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: ARBEITGEBER (FA2) ============ -->
+        <div class="page" id="page-arbeitgeber">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Arbeitgeber</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Arbeitgeber</label><input id="ag-arbeitgeber" type="text" placeholder="">
+            </div>
+            <div class="field-group"><label>Geschäftsform</label>
+              <select id="ag-geschaeftsform">
+                <option value="">Bitte wählen</option>
+                <option>GmbH</option>
+                <option>AG</option>
+                <option>KG</option>
+                <option>GbR</option>
+                <option>e.K.</option>
+                <option>Einzelunternehmen</option>
+              </select>
+            </div>
+            <div class="field-group"><label>Land</label>
+              <select id="ag-land">
+                <option>Deutschland</option>
+                <option>Österreich</option>
+                <option>Schweiz</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-grid grid-4">
+            <div class="field-group"><label>Postleitzahl</label><input id="ag-plz" type="text" placeholder=""></div>
+            <div class="field-group"><label>Ort</label><input id="ag-ort" type="text" placeholder=""></div>
+            <div class="field-group"><label>Straße</label><input id="ag-strasse" type="text" placeholder=""></div>
+            <div class="field-group"><label>Hausnummer</label><input id="ag-hausnummer" type="text" placeholder="">
+            </div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Telefon (Vorwahl)</label><input id="ag-telvorwahl" type="text"
+                placeholder=""></div>
+            <div class="field-group"><label>Telefon (Rufnummer)</label><input id="ag-telnummer" type="text"
+                placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>tätig seit</label><input id="ag-taetigkeit" type="text"
+                placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group">
+              <label class="required">Befristung</label>
+              <div class="radio-group">
+                <label><input type="radio" name="ag-befristung" value="ja"> ja</label>
+                <label><input type="radio" name="ag-befristung" value="nein" checked> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:300px;">
+            <div class="field-group">
+              <label class="required">bAV gewünscht</label>
+              <div class="radio-group">
+                <label><input type="radio" name="ag-bav" value="ja"> ja</label>
+                <label><input type="radio" name="ag-bav" value="nein" checked> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label class="required">Arbeitgeberförderung in %</label><input id="ag-pct"
+                type="text" placeholder="0"></div>
+            <div class="field-group"><label>Arbeitgeberförderung in Euro</label><input id="ag-eur" type="text"
+                placeholder="0,00"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+            <button class="btn btn-primary" data-action="save-next">Speichern &amp; weiter →</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: KONTEN ============ -->
+        <div class="page" id="page-konten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Konten</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Kontoname</label><input type="text" placeholder="z.B. Girokonto"></div>
+            <div class="field-group"><label>IBAN</label><input type="text" placeholder="DE00 0000 0000 0000 0000 00">
+            </div>
+            <div class="field-group"><label>Bank</label><input type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Kontostand in Euro</label><input type="text" placeholder="0,00"></div>
+            <div class="field-group"><label>Datum</label><input type="text" placeholder="TT.MM.JJJJ"></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: KINDER ============ -->
+        <div class="page" id="page-kinder">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Kinder</h1>
+          <div class="field-grid grid-4">
+            <div class="field-group"><label>Vorname</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Nachname</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Geburtsdatum</label><input type="text" placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Kindergeld</label>
+              <div class="radio-group">
+                <label><input type="radio" name="kinder-kg" value="ja"> ja</label>
+                <label><input type="radio" name="kinder-kg" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: GESUNDHEIT ============ -->
+        <div class="page" id="page-gesundheit-allgemein">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Gesundheit – Allgemein</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Körpergröße (cm)</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Gewicht (kg)</label><input type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-1">
+            <div class="field-group"><label>Vorerkrankungen / Anmerkungen</label>
+              <textarea
+                style="border:1px solid var(--border);border-radius:4px;padding:8px;font-size:13px;min-height:80px;resize:vertical;"
+                placeholder="Keine"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="page" id="page-gesundheit-krankenversicherung">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Krankenversicherung</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Versicherungsart</label>
+              <div class="radio-group">
+                <label><input type="radio" name="kv-art" value="gkv" checked> GKV</label>
+                <label><input type="radio" name="kv-art" value="pkv"> PKV</label>
+              </div>
+            </div>
+            <div class="field-group"><label>Krankenkasse</label><input type="text" placeholder="z.B. AOK, TK"></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Beitrag monatlich in Euro</label><input type="text" placeholder="0,00">
+            </div>
+            <div class="field-group"><label>Zusatzbeitrag in %</label><input type="text" placeholder="0,00"></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: RENTE (FA5) ============ -->
+        <div class="page" id="page-rente">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Gesetzliche Rente anlegen</h1>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label>Renteninformation vom</label><input id="r-info" type="text"
+                placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Rente wegen voller Erwerbsminderung in Euro</label><input id="r-em"
+                type="text" placeholder="0,00"></div>
+            <div class="field-group"><label>bislang erreichte Regelaltersrente in Euro</label><input id="r-regel"
+                type="text" placeholder="0,00"></div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:300px;">
+            <div class="field-group"><label>künftige Rente in Euro ohne Rentenanpassung</label><input id="r-kuenftig"
+                type="text" placeholder="0,00"></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group">
+              <label>Sind Sie derzeit noch in der gesetzlichen Rentenversicherung versichert?</label>
+            </div>
+            <div class="field-group">
+              <label class="required">gesetzliche Rente</label>
+              <div class="radio-group">
+                <label><input type="radio" name="r-gesetzlich" value="ja" checked> ja</label>
+                <label><input type="radio" name="r-gesetzlich" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:400px;margin-bottom:8px;">
+            <div class="field-group">
+              <label class="required">Freiwilligkeit</label>
+              <div class="radio-group">
+                <label><input type="radio" name="r-freiwilligkeit" value="pflichtversichert" checked>
+                  pflichtversichert</label>
+                <label><input type="radio" name="r-freiwilligkeit" value="freiwillig versichert"> freiwillig
+                  versichert</label>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">
+            Bitte tragen Sie bei einer längeren <span style="color:var(--blue-accent)">Beitragspause</span> die Werte
+            aus der Renteninformation ein.
+          </p>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Wie viele Jahre haben Sie bisher in die gesetzliche Rentenversicherung
+                eingezahlt?</label></div>
+            <div class="field-group"><label>Jahre eingezahlt</label><input id="r-jahre" type="text" placeholder="0">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============ PAGE: EINNAHMEN (FA3) ============ -->
+        <div class="page" id="page-einnahmen">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Einnahmen</h1>
+
+          <div class="income-section">
+            <h2 class="section-title">Einkommen</h2>
+            <p class="empty-msg">Es wurde kein Einkommen angelegt.</p>
+            <button class="btn btn-add">+ Einkommen hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+
+          <div class="income-section">
+            <h2 class="section-title">Einkommen aus geringfügiger Beschäftigung</h2>
+            <p class="empty-msg">Es wurde kein Einkommen aus geringfügiger Beschäftigung angelegt.</p>
+            <button class="btn btn-add">+ Einkommen hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+
+          <div class="income-section">
+            <h2 class="section-title">Einkommen aus Selbstständigkeit</h2>
+            <p class="empty-msg">Es wurde kein Einkommen aus Selbstständigkeit angelegt.</p>
+            <button class="btn btn-add">+ Einkommen hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+
+          <div class="income-section">
+            <h2 class="section-title">Sonstige Einnahmen</h2>
+            <p class="empty-msg">Es wurden keine sonstigen Einnahmen angelegt.</p>
+            <button class="btn btn-add">+ Einnahme hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: AUSGABEN ============ -->
+        <div class="page" id="page-ausgaben">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Ausgaben</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Miete / Kreditrate monatlich in Euro</label><input type="text"
+                placeholder="0,00"></div>
+            <div class="field-group"><label>Lebenshaltungskosten monatlich in Euro</label><input type="text"
+                placeholder="0,00"></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Sonstige Ausgaben monatlich in Euro</label><input type="text"
+                placeholder="0,00"></div>
+            <div class="field-group"><label>Sparrate monatlich in Euro</label><input type="text" placeholder="0,00">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: VERMÖGEN ============ -->
+        <div class="page" id="page-vermoegen">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Vermögen</h1>
+          <div class="income-section">
+            <h2 class="section-title">Bankguthaben</h2>
+            <p class="empty-msg">Es wurde kein Vermögen angelegt.</p>
+            <button class="btn btn-add">+ Vermögen hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+          <div class="income-section">
+            <h2 class="section-title">Wertpapiere</h2>
+            <p class="empty-msg">Es wurden keine Wertpapiere angelegt.</p>
+            <button class="btn btn-add">+ Wertpapier hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+          <div class="income-section">
+            <h2 class="section-title">Immobilien</h2>
+            <p class="empty-msg">Es wurden keine Immobilien angelegt.</p>
+            <button class="btn btn-add">+ Immobilie hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: VERBINDLICHKEITEN ============ -->
+        <div class="page" id="page-verbindlichkeiten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Verbindlichkeiten</h1>
+          <div class="income-section">
+            <h2 class="section-title">Kredite &amp; Darlehen</h2>
+            <p class="empty-msg">Es wurden keine Verbindlichkeiten angelegt.</p>
+            <button class="btn btn-add">+ Verbindlichkeit hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: HAUSRATVERSICHERUNG (FA4) ============ -->
+        <div class="page" id="page-hausrat">
+          <h1 class="page-title" style="margin-bottom:24px;">Hausratversicherung hinzufügen</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group">
+              <label class="required">Objekt</label>
+              <select id="hr-objekt">
+                <option value="">Bitte wählen</option>
+                <option>Hauptwohnung</option>
+                <option>Nebenwohnung</option>
+                <option>Ferienimmobilie</option>
+              </select>
+            </div>
+            <div class="field-group"><label class="required">Name der Gesellschaft</label><input id="hr-gesellschaft"
+                type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:300px;">
+            <div class="field-group"><label class="required">Versicherungsnummer</label><input id="hr-nummer"
+                type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label class="required">Beitrag je Zahlweise in Euro</label><input id="hr-beitrag"
+                type="text" placeholder="0,00"></div>
+            <div class="field-group">
+              <label class="required">Zahlungsweise</label>
+              <div class="radio-group">
+                <label><input type="radio" name="hr-zahlung" value="monatlich" checked> Monatlich</label>
+                <label><input type="radio" name="hr-zahlung" value="vierteljährlich"> Vierteljährlich</label>
+                <label><input type="radio" name="hr-zahlung" value="halbjährlich"> Halbjährlich</label>
+                <label><input type="radio" name="hr-zahlung" value="jährlich"> Jährlich</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Beginn</label><input id="hr-beginn" type="text" placeholder="TT.MM.JJJJ">
+            </div>
+            <div class="field-group"><label>Ablauf</label><input id="hr-ablauf" type="text" placeholder="TT.MM.JJJJ">
+            </div>
+          </div>
+          <div class="field-grid grid-3">
+            <div class="field-group"><label class="required">Wohnfläche in m²</label><input id="hr-wfl" type="text"
+                placeholder="0"></div>
+            <div class="field-group"><label>Versicherungssumme in Euro</label><input id="hr-vs" type="text"
+                placeholder="0,00"></div>
+            <div class="field-group"><label>Selbstbeteiligung in Euro</label><input id="hr-sb" type="text"
+                placeholder="0,00"></div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:280px;">
+            <div class="field-group">
+              <label>Fahrraddiebstahl</label>
+              <div class="radio-group">
+                <label><input type="radio" name="hr-fahr" value="ja"> ja</label>
+                <label><input type="radio" name="hr-fahr" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:280px;">
+            <div class="field-group">
+              <label>Glasversicherung</label>
+              <div class="radio-group">
+                <label><input type="radio" name="hr-glas" value="ja"> ja</label>
+                <label><input type="radio" name="hr-glas" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-1" style="max-width:280px;">
+            <div class="field-group">
+              <label>Elementarschäden</label>
+              <div class="radio-group">
+                <label><input type="radio" name="hr-elem" value="ja"> ja</label>
+                <label><input type="radio" name="hr-elem" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Anzahl der Vorschäden in den letzten 5 Jahren</label><input id="hr-vors"
+                type="text" placeholder="0"></div>
+            <div class="field-group"><label>Höhe der Vorschäden in den letzten 5 Jahren</label><input id="hr-vorsh"
+                type="text" placeholder="0,00"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+            <button class="btn btn-primary" data-action="save-next">Speichern &amp; weiter →</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: EXISTENZRISIKEN ============ -->
+        <div class="page" id="page-existenzrisiken">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Existenzrisiken</h1>
+          <div class="income-section">
+            <h2 class="section-title">Berufsunfähigkeitsversicherung</h2>
+            <p class="empty-msg">Keine BU-Versicherung angelegt.</p>
+            <button class="btn btn-add">+ BU hinzufügen</button>
+          </div>
+          <hr class="section-divider">
+          <div class="income-section">
+            <h2 class="section-title">Risikolebensversicherung</h2>
+            <p class="empty-msg">Keine Risikolebensversicherung angelegt.</p>
+            <button class="btn btn-add">+ Risikoleben hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: ALTERSVORSORGE ============ -->
+        <div class="page" id="page-altersvorsorge">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Private Altersvorsorge</h1>
+          <div class="income-section">
+            <h2 class="section-title">Rentenversicherungen</h2>
+            <p class="empty-msg">Keine private Altersvorsorge angelegt.</p>
+            <button class="btn btn-add">+ Altersvorsorge hinzufügen</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: WÜNSCHE ============ -->
+        <div class="page" id="page-wuensche">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Wünsche &amp; Ziele</h1>
+          <div class="field-grid grid-1">
+            <div class="field-group"><label>Kurzbeschreibung der Kundenziele</label>
+              <textarea
+                style="border:1px solid var(--border);border-radius:4px;padding:8px;font-size:13px;min-height:100px;resize:vertical;"
+                placeholder="Bitte Ziele des Mandanten beschreiben..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: WEITERE ============ -->
+        <div class="page" id="page-weitere">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Weitere Angaben</h1>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Sonstige Angaben</label><input type="text" placeholder=""></div>
+            <div class="field-group"><label>Anmerkungen</label><input type="text" placeholder=""></div>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: EMPFEHLUNGEN ============ -->
+        <div class="page" id="page-empfehlungen">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Empfehlungen</h1>
+          <p style="color:var(--text-muted);font-size:13px;">Hier werden die generierten Empfehlungen auf Basis der
+            erfassten Daten angezeigt.</p>
+        </div>
+
+        <!-- ============ PAGE: ABSCHLUSS ============ -->
+        <div class="page" id="page-abschluss">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Abschluss</h1>
+          <div style="padding:24px;background:#e8f5e9;border-radius:6px;border:1px solid #a5d6a7;">
+            <p style="font-size:14px;color:#2e7d32;font-weight:500;">✓ Alle Daten wurden erfasst.</p>
+            <p style="font-size:13px;color:#388e3c;margin-top:6px;">Sie können nun die Beratungsdokumentation
+              abschließen und den Mandanten speichern.</p>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary">Beratung abschließen</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== KI ANALYSE MODAL ===== -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Daten KI-gestützt erfassen</h2>
+        <button class="modal-close" aria-label="Schließen">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div>
+            <div class="modal-dropzone" id="modal-dropzone">
+              <input type="file" id="modal-file-input" accept=".pdf,image/jpeg,image/png" multiple>
+              <div class="dropzone-icon">📄</div>
+              <p class="dropzone-text">Dokument reinziehen oder hier klicken</p>
+              <p class="dropzone-hint">PDF, JPG oder PNG – max. 20 MB pro Datei – Mehrere Dokumente möglich</p>
+            </div>
+            <div class="progress-bar-wrap" id="progress-wrap">
+              <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+            </div>
+            <div class="upload-status" id="upload-status"></div>
+          </div>
+          <div class="qr-section">
+            <canvas id="qrCanvas" width="120" height="120"></canvas>
+            <p>Mit Smartphone fotografieren</p>
+          </div>
+        </div>
+
+        <!-- API KEY ROW -->
+        <div class="api-key-row" id="api-key-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+          </svg>
+          <input type="password" id="gemini-api-key" placeholder="Gemini API Key (wird lokal gespeichert)"
+            autocomplete="off">
+          <button id="save-api-key" class="btn btn-outline" style="padding:5px 12px;font-size:12px;">Speichern</button>
+          <span id="api-key-status" style="font-size:11px;color:var(--text-muted);"></span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      drawQR('rente-qr', '#1565C0');
+    });
+  </script>
+</body>
+
+</html>
