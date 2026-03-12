@@ -27,18 +27,25 @@
 
     <!-- FULL-WIDTH MENU BAR -->
     <div class="toolbar">
-      <div class="sidebar-toggle" title="Sidebar umschalten">
-        <div class="menu-icons">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-          <span class="divider">|</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
+      <div class="toolbar-sidebar-area">
+        <div class="toolbar-logo-space">
+          <div class="sidebar-toggle" title="Sidebar umschalten">
+            <div class="menu-icons">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+              <span class="divider">|</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar-mandant-space">
+          <button class="daten-btn">Daten</button>
         </div>
       </div>
       <div class="spacer"></div>
@@ -748,7 +755,23 @@
           <button id="save-api-key" class="btn btn-outline" style="padding:5px 12px;font-size:12px;">Speichern</button>
           <span id="api-key-status" style="font-size:11px;color:var(--text-muted);"></span>
         </div>
-
+      </div>
+    </div> <!-- .modal -->
+  </div> <!-- .modal-overlay -->
+  <!-- REVIEW MODAL -->
+  <div id="review-modal-overlay" class="modal-overlay">
+    <div id="review-modal" class="modal review-modal-content">
+      <div class="modal-header">
+        <h3 id="review-modal-title">Erkannte Daten überprüfen (0 Felder)</h3>
+        <button class="modal-close" id="review-modal-close" title="Schließen">&times;</button>
+      </div>
+      <div class="modal-body review-modal-body">
+        <p class="review-instructions">Bitte prüfen Sie die von der KI erkannten Daten. Sie können Werte anpassen oder Felder abwählen, die nicht übernommen werden sollen.</p>
+        <div id="review-fields-container"></div>
+      </div>
+      <div class="modal-footer review-modal-footer">
+        <button class="btn btn-outline" id="review-btn-cancel">Abbrechen</button>
+        <button class="btn btn-primary" id="review-btn-apply">Daten übernehmen</button>
       </div>
     </div>
   </div>

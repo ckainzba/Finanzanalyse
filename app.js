@@ -477,7 +477,19 @@ async function callGeminiAPI(images) {
     parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
   }
   const body = { contents: [{ parts }], generationConfig: { temperature: 0.1 } };
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
+  let res;
+  try {
+    res = await fetch(url, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
   if (!res.ok) {
     const errBody = await res.text();
     throw new Error(`Gemini API Fehler ${res.status}: ${errBody.slice(0, 300)}`);
@@ -504,13 +516,12 @@ async function finishUpload(payload, useVision) {
       bar.style.width = '100%';
       status.textContent = '✓ KI-Analyse abgeschlossen!';
     } catch (err) {
-      console.error('=== GEMINI FEHLER (vollständig) ===', err.message);
+      console.error('=== GEMINI FEHLER ===', err);
       bar.style.width = '100%';
       bar.style.background = '#e53935';
-      // Show full error, don't navigate away
       status.textContent = '';
-      status.innerHTML = `<span style="color:#c62828;font-size:12px;word-break:break-all">${err.message}</span>`;
-      // Don't auto-close modal — let user read the error
+      const safeMsg = String(err.message || err).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      status.innerHTML = `<span style="color:#c62828;font-size:12px;word-break:break-all">${safeMsg}</span>`;
       return;
     }
   } else {
@@ -519,58 +530,170 @@ async function finishUpload(payload, useVision) {
     parsed = parseDocumentText(payload); // payload = extracted text string
   }
 
-    return new Promise(resolveUpload => {
-      setTimeout(() => {
-        clearAllKIMarkers();
-        const filledFields = { person: [], ausweis: [], adresse: [], arbeitgeber: [], radios: [] };
-
-        const personMap = { vorname: 'p-vorname', nachname: 'p-nachname', geburtsdatum: 'p-geburtsdatum', anrede: 'p-anrede', geschlecht: 'p-geschlecht', titel: 'p-titel', staatsangehoerigkeit: 'p-staatsangehoerigkeit' };
-        for (const [key, id] of Object.entries(personMap)) {
-          if (parsed.person?.[key]) { state.data.person[key] = parsed.person[key]; filledFields.person.push(id); }
-        }
-        
-        const ausMap = { art: 'aus-art', nummer: 'aus-nummer', behoerde: 'aus-behoerde', ausstellungsdatum: 'aus-ausstellungsdatum', gueltig_bis: 'aus-gueltigbis', geburtsort: 'aus-geburtsort' };
-        for (const [key, id] of Object.entries(ausMap)) {
-          if (parsed.ausweis?.[key]) { state.data.ausweis[key] = parsed.ausweis[key]; filledFields.ausweis.push(id); }
-        }
-
-        const adrMap = { plz: 'a-plz', ort: 'a-ort', strasse: 'a-strasse', hausnummer: 'a-hausnummer', land: 'a-land' };
-        for (const [key, id] of Object.entries(adrMap)) {
-          if (parsed.adresse?.[key]) { state.data.adresse[key] = parsed.adresse[key]; filledFields.adresse.push(id); }
-        }
-        const agMap = { arbeitgeber: 'ag-arbeitgeber', plz: 'ag-plz', ort: 'ag-ort', strasse: 'ag-strasse', hausnummer: 'ag-hausnummer', telefonVorwahl: 'ag-telvorwahl', telefonNummer: 'ag-telnummer', taetigkeit: 'ag-taetigkeit', arbeitgeber_pct: 'ag-pct', arbeitgeber_eur: 'ag-eur' };
-        for (const [key, id] of Object.entries(agMap)) {
-          if (parsed.arbeitgeber?.[key]) { state.data.arbeitgeber[key] = parsed.arbeitgeber[key]; filledFields.arbeitgeber.push(id); }
-        }
-        if (parsed.arbeitgeber?.befristung) { state.data.arbeitgeber.befristung = parsed.arbeitgeber.befristung; filledFields.radios.push('ag-befristung'); }
-        if (parsed.arbeitgeber?.bav) { state.data.arbeitgeber.bav = parsed.arbeitgeber.bav; filledFields.radios.push('ag-bav'); }
-        if (parsed.rente) Object.assign(state.data.rente, Object.fromEntries(Object.entries(parsed.rente).filter(([, v]) => v)));
-        if (parsed.hausrat) Object.assign(state.data.hausrat, Object.fromEntries(Object.entries(parsed.hausrat).filter(([, v]) => v)));
-
-        let navPage = ['berufliche-angaben', 'arbeitgeber'];
-        if (parsed.docType === 'Renteninformation') navPage = ['rente', 'rente'];
-        else if (parsed.docType === 'Versicherungsvertrag') navPage = ['versicherungen', 'hausrat'];
-        else if (parsed.docType === 'Ausweis') navPage = ['persoenliche-angaben', 'ausweisdaten'];
-
-        closeModal();
-        navigate(navPage[0], navPage[1]);
-
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          filledFields.person.forEach(markKIField);
-          filledFields.ausweis.forEach(markKIField);
-          filledFields.adresse.forEach(markKIField);
-          filledFields.arbeitgeber.forEach(markKIField);
-          filledFields.radios.forEach(markKIRadio);
-          const total = filledFields.person.length + filledFields.ausweis.length + filledFields.adresse.length + filledFields.arbeitgeber.length + filledFields.radios.length;
-          if (total > 0) showKIBanner(navPage[1], total);
-
-          const method = useVision ? 'Gemini Vision' : 'Regex';
-          // showToast(`✓ ${parsed.docType || 'Dokument'} (${method}) – ${total} Felder befüllt`); // Suppress single-doc toast when called from queue
-          resolveUpload(total);
-        }));
-      }, 300);
-    });
+    return parsed;
   }
+
+// ===== HUMAN IN THE LOOP REVIEW =====
+let currentReviewResolve = null;
+let currentParsedData = null;
+
+function showReviewModal(parsed, resolveUpload) {
+  currentReviewResolve = resolveUpload;
+  currentParsedData = parsed;
+  
+  const container = document.getElementById('review-fields-container');
+  container.innerHTML = '';
+  let fieldCount = 0;
+
+  const createRow = (category, key, value, label) => {
+    if (value === undefined || value === null || String(value).trim() === '') return '';
+    fieldCount++;
+    const safeVal = String(value).trim().replace(/"/g, '&quot;');
+    return `
+      <div class="review-row">
+        <label>
+          <input type="checkbox" checked data-category="${category}" data-key="${key}">
+          ${label}
+        </label>
+        <input type="text" value="${safeVal}" id="review-input-${category}-${key}">
+      </div>
+    `;
+  };
+
+  let html = '';
+
+  // Person
+  const personMap = { vorname: 'Vorname', nachname: 'Nachname', geburtsdatum: 'Geburtsdatum', anrede: 'Anrede', geschlecht: 'Geschlecht', titel: 'Titel', staatsangehoerigkeit: 'Staatsangehörigkeit' };
+  let personHtml = '';
+  for (const [key, label] of Object.entries(personMap)) {
+    personHtml += createRow('person', key, parsed.person?.[key], label);
+  }
+  if (personHtml) html += `<div class="review-category">Person</div>${personHtml}`;
+
+  // Ausweis
+  const ausMap = { art: 'Ausweisart', nummer: 'Dokumentnummer', behoerde: 'Behörde', ausstellungsdatum: 'Ausstellungsdatum', gueltig_bis: 'Gültig bis', geburtsort: 'Geburtsort' };
+  let ausHtml = '';
+  for (const [key, label] of Object.entries(ausMap)) {
+    ausHtml += createRow('ausweis', key, parsed.ausweis?.[key], label);
+  }
+  if (ausHtml) html += `<div class="review-category">Ausweis</div>${ausHtml}`;
+
+  // Adresse
+  const adrMap = { land: 'Land', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer' };
+  let adrHtml = '';
+  for (const [key, label] of Object.entries(adrMap)) {
+    adrHtml += createRow('adresse', key, parsed.adresse?.[key], label);
+  }
+  if (adrHtml) html += `<div class="review-category">Adresse</div>${adrHtml}`;
+
+  // Arbeitgeber
+  const agMap = { arbeitgeber: 'Name Arbeitgeber', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer', telefonVorwahl: 'Tele-Vorwahl', telefonNummer: 'Tele-Nummer', taetigkeit: 'Tätigkeit', befristung: 'Befristung', bav: 'bAV', arbeitgeber_pct: 'Anteil AG (%)', arbeitgeber_eur: 'Anteil AG (€)' };
+  let agHtml = '';
+  for (const [key, label] of Object.entries(agMap)) {
+    agHtml += createRow('arbeitgeber', key, parsed.arbeitgeber?.[key], label);
+  }
+  if (agHtml) html += `<div class="review-category">Beruf & Arbeitgeber</div>${agHtml}`;
+
+  // Rente
+  const renteMap = { renteVollEM: 'Erwerbsminderungsrente', regelAltersrente: 'Regelaltersrente', jahreEingezahlt: 'Jahre eingezahlt' };
+  let renteHtml = '';
+  for (const [key, label] of Object.entries(renteMap)) {
+    renteHtml += createRow('rente', key, parsed.rente?.[key], label);
+  }
+  if (renteHtml) html += `<div class="review-category">Rente</div>${renteHtml}`;
+
+  // Hausrat
+  const hausratMap = { gesellschaft: 'Gesellschaft', versicherungsnummer: 'Versicherungsnr.', beitrag: 'Beitrag', zahlungsweise: 'Zahlungsweise', beginn: 'Beginn', ablauf: 'Ablauf', wohnflaeche: 'Wohnfläche', versicherungssumme: 'Versicherungssumme' };
+  let hausratHtml = '';
+  for (const [key, label] of Object.entries(hausratMap)) {
+    hausratHtml += createRow('hausrat', key, parsed.hausrat?.[key], label);
+  }
+  if (hausratHtml) html += `<div class="review-category">Hausratversicherung</div>${hausratHtml}`;
+
+  if (fieldCount === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Keine relevanten Felder erkannt.</p>';
+  } else {
+    container.innerHTML = html;
+  }
+
+  document.getElementById('review-modal-title').textContent = `Erkannte Daten überprüfen (${fieldCount} Felder)`;
+  
+  // Close standard upload modal, open review modal
+  closeModal(); 
+  document.getElementById('review-modal-overlay').style.display = 'flex';
+}
+
+function applyReviewSelected() {
+  document.getElementById('review-modal-overlay').style.display = 'none';
+  
+  clearAllKIMarkers();
+  const filledFields = { person: [], ausweis: [], adresse: [], arbeitgeber: [], rente: [], hausrat: [], radios: [] };
+
+  const personIdMap = { vorname: 'p-vorname', nachname: 'p-nachname', geburtsdatum: 'p-geburtsdatum', anrede: 'p-anrede', geschlecht: 'p-geschlecht', titel: 'p-titel', staatsangehoerigkeit: 'p-staatsangehoerigkeit' };
+  const ausIdMap = { art: 'aus-art', nummer: 'aus-nummer', behoerde: 'aus-behoerde', ausstellungsdatum: 'aus-ausstellungsdatum', gueltig_bis: 'aus-gueltigbis', geburtsort: 'aus-geburtsort' };
+  const adrIdMap = { plz: 'a-plz', ort: 'a-ort', strasse: 'a-strasse', hausnummer: 'a-hausnummer', land: 'a-land' };
+  const agIdMap = { arbeitgeber: 'ag-arbeitgeber', plz: 'ag-plz', ort: 'ag-ort', strasse: 'ag-strasse', hausnummer: 'ag-hausnummer', telefonVorwahl: 'ag-telvorwahl', telefonNummer: 'ag-telnummer', taetigkeit: 'ag-taetigkeit', arbeitgeber_pct: 'ag-pct', arbeitgeber_eur: 'ag-eur' };
+  const renteIdMap = { renteVollEM: 'r-em', regelAltersrente: 'r-regel', jahreEingezahlt: 'r-jahre' };
+  const hausratIdMap = { gesellschaft: 'hr-gesellschaft', versicherungsnummer: 'hr-nummer', beitrag: 'hr-beitrag', zahlungsweise: 'hr-zahlung', beginn: 'hr-beginn', ablauf: 'hr-ablauf', wohnflaeche: 'hr-wfl', versicherungssumme: 'hr-vs' };
+
+  let totalApplied = 0;
+
+  // Process selected boxes
+  document.querySelectorAll('#review-fields-container input[type="checkbox"]:checked').forEach(cb => {
+    const cat = cb.dataset.category;
+    const key = cb.dataset.key;
+    const val = document.getElementById(`review-input-${cat}-${key}`).value;
+    
+    if (cat === 'person' && personIdMap[key]) { state.data.person[key] = val; filledFields.person.push(personIdMap[key]); totalApplied++; }
+    if (cat === 'ausweis' && ausIdMap[key]) { state.data.ausweis[key] = val; filledFields.ausweis.push(ausIdMap[key]); totalApplied++; }
+    if (cat === 'adresse' && adrIdMap[key]) { state.data.adresse[key] = val; filledFields.adresse.push(adrIdMap[key]); totalApplied++; }
+    if (cat === 'arbeitgeber') {
+      state.data.arbeitgeber[key] = val;
+      if (key === 'befristung') filledFields.radios.push('ag-befristung');
+      else if (key === 'bav') filledFields.radios.push('ag-bav');
+      else if (agIdMap[key]) filledFields.arbeitgeber.push(agIdMap[key]);
+      totalApplied++;
+    }
+    if (cat === 'rente' && renteIdMap[key]) { state.data.rente[key] = val; filledFields.rente.push(renteIdMap[key]); totalApplied++; }
+    if (cat === 'hausrat') {
+      state.data.hausrat[key] = val;
+      if (key === 'zahlungsweise') filledFields.radios.push('hr-zahlung');
+      else if (hausratIdMap[key]) filledFields.hausrat.push(hausratIdMap[key]);
+      totalApplied++;
+    }
+  });
+
+  // Navigation Logic based on DocType
+  let navPage = ['berufliche-angaben', 'arbeitgeber'];
+  if (currentParsedData.docType === 'Renteninformation') navPage = ['rente', 'rente'];
+  else if (currentParsedData.docType === 'Versicherungsvertrag') navPage = ['versicherungen', 'hausrat'];
+  else if (currentParsedData.docType === 'Ausweis') navPage = ['persoenliche-angaben', 'ausweisdaten'];
+  else if (totalApplied > 0 && filledFields.person.length > filledFields.arbeitgeber.length) navPage = ['persoenliche-angaben', 'personendaten'];
+
+  navigate(navPage[0], navPage[1]);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    filledFields.person.forEach(markKIField);
+    filledFields.ausweis.forEach(markKIField);
+    filledFields.adresse.forEach(markKIField);
+    filledFields.arbeitgeber.forEach(markKIField);
+    filledFields.rente.forEach(markKIField);
+    filledFields.hausrat.forEach(markKIField);
+    filledFields.radios.forEach(markKIRadio);
+    if (totalApplied > 0) showKIBanner(navPage[1], totalApplied);
+
+    if (currentReviewResolve) currentReviewResolve(totalApplied);
+    currentReviewResolve = null;
+    currentParsedData = null;
+  }));
+}
+
+function cancelReview() {
+  document.getElementById('review-modal-overlay').style.display = 'none';
+  if (currentReviewResolve) currentReviewResolve(0);
+  currentReviewResolve = null;
+  currentParsedData = null;
+}
 
 
 
@@ -620,15 +743,42 @@ async function processFileQueue(files) {
         showToast('⚠️ Bitte PDF, JPG oder PNG hochladen.');
         return;
       }
-      let totalFields = 0;
+      
+      let combinedParsed = { person: {}, ausweis: {}, adresse: {}, arbeitgeber: {}, einnahmen: {}, rente: {}, hausrat: {} };
+      let hasData = false;
+      let lastDocType = 'Dokument';
+
       for (let i = 0; i < list.length; i++) {
         const file = list[i];
         const prefix = list.length > 1 ? `(${i + 1}/${list.length}) ` : '';
-        const fields = await processSingleFile(file, prefix);
-        totalFields += fields;
+        const parsed = await processSingleFile(file, prefix);
+        
+        if (parsed) {
+          hasData = true;
+          if (parsed.docType && parsed.docType !== 'Dokument' && parsed.docType !== 'Unbekannt') {
+            lastDocType = parsed.docType;
+          }
+          ['person', 'ausweis', 'adresse', 'arbeitgeber', 'einnahmen', 'rente', 'hausrat'].forEach(key => {
+            if (parsed[key]) {
+              Object.entries(parsed[key]).forEach(([k, v]) => {
+                if (v && String(v).trim() !== '') {
+                  combinedParsed[key][k] = v;
+                }
+              });
+            }
+          });
+        }
       }
-      if (list.length > 1) {
-        showToast(`✓ ${list.length} Dokumente verarbeitet – ${totalFields} Felder befüllt`);
+      
+      combinedParsed.docType = lastDocType;
+
+      if (hasData) {
+        const verifiedFields = await new Promise(resolveUpload => {
+          showReviewModal(combinedParsed, resolveUpload);
+        });
+        if (list.length > 1) {
+          showToast(`✓ ${list.length} Dokumente verarbeitet – ${verifiedFields} Felder befüllt`);
+        }
       }
     }
 
@@ -647,7 +797,7 @@ function processSingleFile(file, prefix = '') {
         
         if (isImage && !apiKey) {
            status.textContent = prefix + '⚠️ Für Bilder wird ein Gemini API Key benötigt.';
-           resolve(0);
+           resolve(null);
            return;
         }
 
@@ -670,16 +820,16 @@ function processSingleFile(file, prefix = '') {
             if (!payload) {
               bar.style.width = '0%';
               status.textContent = prefix + '⚠️ Dokument konnte nicht gelesen werden.';
-              resolve(0);
+              resolve(null);
               return;
             }
-            finishUpload(payload, !!apiKey).then(resolve).catch(() => resolve(0));
+            finishUpload(payload, !!apiKey).then(resolve).catch(() => resolve(null));
           })
           .catch(err => {
             clearInterval(tickInterval);
             status.textContent = prefix + '⚠️ Fehler: ' + err.message;
             console.error(err);
-            resolve(0);
+            resolve(null);
           });
       });
     }
@@ -726,6 +876,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('.modal-close')?.addEventListener('click', closeModal);
       document.getElementById('modal-overlay')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
       setupDropZone('modal-dropzone', 'modal-file-input');
+
+      // Review Modal
+      document.getElementById('review-modal-close')?.addEventListener('click', cancelReview);
+      document.getElementById('review-btn-cancel')?.addEventListener('click', cancelReview);
+      document.getElementById('review-btn-apply')?.addEventListener('click', applyReviewSelected);
 
       // Gemini API Key management
       const keyInput = document.getElementById('gemini-api-key');
