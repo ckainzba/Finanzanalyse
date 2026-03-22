@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Förder-Rechner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-white p-4 md:p-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Main Heading -->
+        <h1 class="text-4xl main-heading mt-6 mb-12 text-center">Förder-Rechner: Riester vs. AV-Depot</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Left Column - Inputs -->
+            <div class="space-y-6">
+
+                <!-- Persönliche Daten -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                    <h2 class="text-lg blue-heading mb-4">
+                        <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="7" r="4" fill="#9AB2CE" />
+                            <path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#023e84" stroke-width="2"
+                                stroke-linecap="round" fill="none" />
+                        </svg>
+                        Persönliche Daten
+                    </h2>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Jahresbruttoeinkommen</label>
+                            <span class="text-lg font-semibold" id="income-display">45.000 €</span>
+                        </div>
+                        <input type="range" id="income-slider" min="0" max="200000" step="1000" value="45000"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 €</span>
+                            <span>200.000 €</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-gray-700 block mb-2">Familienstand</label>
+                        <select id="marital-status"
+                            class="w-full bg-white border-2 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 marital-status-select">
+                            <option value="single">ledig</option>
+                            <option value="married">verheiratet</option>
+                            <option value="single-parent">Alleinerziehend (Mit Kindern, ohne Partner)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Kinder mit Kindergeldanspruch -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                    <h2 class="text-lg blue-heading mb-4">
+                        <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                            <circle cx="9" cy="6" r="2.5" fill="#9AB2CE" />
+                            <circle cx="15" cy="6" r="2.5" fill="#9AB2CE" />
+                            <path d="M5 15c0-2.2 1.8-4 4-4s4 1.8 4 4v3H5v-3z" fill="#9AB2CE" stroke="#023e84"
+                                stroke-width="1.2" />
+                            <path d="M11 15c0-2.2 1.8-4 4-4s4 1.8 4 4v3h-8v-3z" fill="#9AB2CE" stroke="#023e84"
+                                stroke-width="1.2" />
+                        </svg>
+                        Kinder mit Kindergeldanspruch
+                    </h2>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Kinder geboren vor 2008</label>
+                            <span class="text-sm font-semibold" id="children-before-display">0</span>
+                        </div>
+                        <input type="range" id="children-before-slider" min="0" max="6" step="1" value="0"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0</span>
+                            <span>6</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Kinder geboren ab 2008</label>
+                            <span class="text-sm font-semibold" id="children-after-display">0</span>
+                        </div>
+                        <input type="range" id="children-after-slider" min="0" max="6" step="1" value="0"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0</span>
+                            <span>6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ihr Eigenbeitrag -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                    <h2 class="text-lg blue-heading mb-4">
+                        <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" fill="#9AB2CE" />
+                            <path
+                                d="M14.5 8.5C13.5 7.5 12 7 10.5 7.5C9 8 8 9.5 8 11M8 11h5M8 13h5M8 13c0 1.5 1 3 2.5 3.5 1.5.5 3 0 4-1"
+                                stroke="#023e84" stroke-width="2" stroke-linecap="round" fill="none" />
+                        </svg>
+                        Ihr Eigenbeitrag
+                    </h2>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Eigenbeitrag pro Jahr</label>
+                            <span class="text-lg font-semibold" id="contribution-display">1.200 €</span>
+                        </div>
+                        <input type="range" id="contribution-slider" min="60" max="2100" step="10" value="1200"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>60 €</span>
+                            <span>2.100 €</span>
+                        </div>
+                    </div>
+
+                    <button id="optimal-button"
+                        class="w-full bg-white text-button-blue font-semibold py-3 px-4 rounded-lg border-2 riester-button hover:bg-blue-50 transition-colors">
+                        Beitrag für volle Riester-Zulage verwenden (<span id="optimal-amount">1625</span> €)
+                    </button>
+                </div>
+
+                <!-- Ansparphase -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                    <h2 class="text-lg blue-heading mb-4">
+                        <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" fill="#9AB2CE" />
+                            <path d="M12 6v6l4 4" stroke="#023e84" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" fill="none" />
+                        </svg>
+                        Ansparphase
+                    </h2>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Alter bei Vertragsbeginn</label>
+                            <span class="text-lg font-semibold"><span id="start-age-display">30</span> Jahre</span>
+                        </div>
+                        <input type="range" id="start-age-slider" min="18" max="60" step="1" value="30" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>18 Jahre</span>
+                            <span>60 Jahre</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Geplantes Rentenalter</label>
+                            <span class="text-lg font-semibold"><span id="retirement-age-display">67</span> Jahre</span>
+                        </div>
+                        <input type="range" id="retirement-age-slider" min="62" max="70" step="1" value="67"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>62 Jahre</span>
+                            <span>70 Jahre</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Nettorendite Riester</label>
+                            <span class="text-lg font-semibold"><span id="riester-return-display">3,0</span> %</span>
+                        </div>
+                        <input type="range" id="riester-return-slider" min="0" max="9" step="0.1" value="3.0"
+                            class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 %</span>
+                            <span>9 %</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm text-gray-700">Nettorendite AV-Depot</label>
+                            <span class="text-lg font-semibold"><span id="av-return-display">3,0</span> %</span>
+                        </div>
+                        <input type="range" id="av-return-slider" min="0" max="9" step="0.1" value="3.0" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>0 %</span>
+                            <span>9 %</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Results -->
+            <div class="space-y-6">
+
+                <!-- Comparison Grid: Riester vs AV-Depot -->
+                <div class="comparison-grid">
+
+                    <!-- Riester Column -->
+                    <div id="riester-column" class="product-column space-y-4">
+                        <!-- Header Card - Riester -->
+                        <div class="bg-riester-main rounded-xl shadow-sm p-6 text-white">
+                            <div class="text-xl font-bold opacity-90 mb-2">Riester-Rente</div>
+                            <div class="text-xs mb-1">Geschätzte monatliche Rente (brutto)</div>
+                            <div class="text-4xl font-bold mb-1"><span id="header-monthly-pension">302,00</span> €</div>
+                        </div>
+
+                        <!-- Staatliche Zulagen - Riester -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Staatliche Zulagen</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Grundzulage</span>
+                                    <span class="font-semibold text-green-600">+<span id="basic-subsidy">175,00</span>
+                                        €</span>
+                                </div>
+                                <div id="child-subsidy-row" class="flex justify-between" style="display: none;">
+                                    <span class="text-sm text-gray-600">Kinderzulagen</span>
+                                    <span class="font-semibold text-green-600">+<span id="child-subsidy">0,00</span>
+                                        €</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t">
+                                    <span class="text-sm font-semibold">Zulagen gesamt</span>
+                                    <span class="font-semibold text-green-600"><span id="total-allowances">129,23</span>
+                                        €</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Warning Card - Riester -->
+                        <div id="warning-card"
+                            class="bg-orange-50 border-l-4 border-orange-400 rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold text-orange-800 mb-2">Mindesteigenbeitrag nicht erreicht</h3>
+                            <p class="text-sm text-orange-700">
+                                Für die volle Zulage benötigen Sie mindestens <span class="font-semibold"
+                                    id="minimum-required">1.625,00</span> € Eigenbeitrag pro Jahr.
+                            </p>
+                        </div>
+
+                        <!-- Günstigerprüfung - Riester -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Günstigerprüfung</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Zusätzliche Steuerersparnis</span>
+                                    <span class="font-semibold text-green-600">+<span id="tax-savings">189,78</span>
+                                        €</span>
+                                </div>
+                            </div>
+                            <p id="guenstigerpruefung-text" class="text-xs text-gray-500 mt-3">
+                                Der Sonderausgabenabzug ist für Sie günstiger als die Zulagen. Das Finanzamt
+                                erstattet
+                                die
+                                Differenz.
+                            </p>
+                        </div>
+
+                        <!-- Gesamtförderung - Riester -->
+                        <div class="bg-riester-light rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold text-riester-dark mb-4">Ihre Gesamtförderung</h3>
+                            <div class="mb-5">
+                                <div class="text-3xl font-bold text-riester-dark mb-1"><span
+                                        id="summary-total">319,01</span> €</div>
+                                <div class="text-sm text-riester-medium">Förderquote: <span
+                                        id="subsidy-rate">26,6</span> %</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 border-t border-gray-300 pt-4">
+                                <div>
+                                    <div class="text-sm text-riester-medium">Zulagen</div>
+                                    <div class="text-xl font-bold text-riester-dark"><span
+                                            id="summary-subsidies">129,23</span> €
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-riester-medium">Steuerersparnis</div>
+                                    <div class="text-xl font-bold text-riester-dark"><span
+                                            id="summary-tax">189,78</span> €
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prognose - Riester -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Prognose (bei <span id="riester-return-title">3,0</span>%
+                                Nettorendite)</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Laufzeit</span>
+                                    <span class="font-semibold"><span id="duration">37</span> Jahre</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Jährliche Einzahlung</span>
+                                    <span class="font-semibold"><span id="annual-payment">1.329,23</span> €</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Geschätztes Endkapital</span>
+                                    <span class="font-semibold"><span id="end-capital">90.599,64</span> €</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t">
+                                    <span class="text-sm font-semibold">Geschätzte monatliche Rente (brutto)</span>
+                                    <span class="font-semibold"><span id="monthly-pension">302,00</span> €</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AV-Depot Column -->
+                    <div id="av-depot-column" class="product-column space-y-4">
+                        <!-- Header Card - AV-Depot -->
+                        <div class="bg-av-depot-main rounded-xl shadow-sm p-6 text-white">
+                            <div class="text-xl font-bold opacity-90 mb-2">AV-Depot</div>
+                            <div class="text-xs mb-1">Geschätzte monatliche Rente (brutto)</div>
+                            <div class="text-4xl font-bold mb-1"><span id="av-header-monthly-pension">353,33</span> €
+                            </div>
+                        </div>
+
+                        <!-- Staatliche Zulagen - AV-Depot -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Staatliche Zulagen</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Grundzulage</span>
+                                    <span class="font-semibold text-green-600">+<span
+                                            id="av-grundzulage-total">360,00</span> €</span>
+                                </div>
+                                <div id="av-child-subsidy-row" class="flex justify-between" style="display: none;">
+                                    <span class="text-sm text-gray-600">Kinderzulagen</span>
+                                    <span class="font-semibold text-green-600">+<span id="av-child-subsidy">0,00</span>
+                                        €</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t">
+                                    <span class="text-sm font-semibold">Zulagen gesamt</span>
+                                    <span class="font-semibold text-green-600"><span
+                                            id="av-total-allowances">360,00</span> €</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Warning Card - AV-Depot -->
+                        <div id="av-warning-card"
+                            class="bg-orange-50 border-l-4 border-orange-400 rounded-xl shadow-sm p-6"
+                            style="display: none;">
+                            <h3 class="font-semibold text-orange-800 mb-2">Mindesteigenbeitrag nicht erreicht</h3>
+                            <p class="text-sm text-orange-700">
+                                Der Mindesteigenbeitrag beträgt <span class="font-semibold"
+                                    id="av-minimum-required">120,00</span> €.
+                            </p>
+                        </div>
+
+                        <!-- Günstigerprüfung - AV-Depot -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Günstigerprüfung</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Zusätzliche Steuerersparnis</span>
+                                    <span class="font-semibold text-green-600">+<span id="av-tax-savings">140,00</span>
+                                        €</span>
+                                </div>
+                            </div>
+                            <p id="av-guenstigerpruefung-text" class="text-xs text-gray-500 mt-3">
+                                Der Sonderausgabenabzug ist für Sie günstiger als die Zulagen. Das Finanzamt
+                                erstattet
+                                die
+                                Differenz.
+                            </p>
+                        </div>
+
+                        <!-- Gesamtförderung - AV-Depot -->
+                        <div class="bg-av-depot-light rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold text-av-depot-dark mb-4">Ihre Gesamtförderung</h3>
+                            <div class="mb-5">
+                                <div class="text-3xl font-bold text-av-depot-dark mb-1"><span
+                                        id="av-summary-total">500,00</span> €</div>
+                                <div class="text-sm text-av-depot-medium">Förderquote: <span
+                                        id="av-subsidy-rate">41,7</span> %</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 border-t border-gray-300 pt-4">
+                                <div>
+                                    <div class="text-sm text-av-depot-medium">Zulagen</div>
+                                    <div class="text-xl font-bold text-av-depot-dark"><span
+                                            id="av-summary-subsidies">360,00</span> €</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-av-depot-medium">Steuerersparnis</div>
+                                    <div class="text-xl font-bold text-av-depot-dark"><span
+                                            id="av-summary-tax">140,00</span> €</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prognose - AV-Depot -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-semibold mb-4">Prognose (bei <span id="av-return-title">3,0</span>%
+                                Nettorendite)
+                            </h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Laufzeit</span>
+                                    <span class="font-semibold"><span id="av-duration">37</span> Jahre</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Jährliche Einzahlung</span>
+                                    <span class="font-semibold"><span id="av-annual-payment">1.560,00</span>
+                                        €</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Geschätztes Endkapital</span>
+                                    <span class="font-semibold"><span id="av-end-capital">106.000,00</span> €</span>
+                                </div>
+                                <div class="flex justify-between pt-2 border-t">
+                                    <span class="text-sm font-semibold">Geschätzte monatliche Rente (brutto)</span>
+                                    <span class="font-semibold"><span id="av-monthly-pension">353,33</span> €</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Summary Section -->
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl shadow-lg p-6 border-2 border-gray-200">
+                    <h3 class="font-bold text-gray-900 mb-4 text-center text-xl">📊 Ihre Gesamtförderung im
+                        Vergleich
+                    </h3>
+
+                    <!-- Recommendation -->
+                    <div class="bg-white rounded-lg p-4 mb-4 text-center">
+                        <p id="comparison-recommendation" class="text-lg font-semibold text-blue-700">
+                            Riester bietet für Sie die bessere Förderung!
+                        </p>
+                    </div>
+
+                    <!-- Comparison Details -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-xs text-gray-600 mb-1">Zulagen-Differenz</div>
+                            <div class="text-lg font-bold">
+                                <span id="comparison-subsidies-diff" class="text-green-600">230,77</span> €
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">AV-Depot höher</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-xs text-gray-600 mb-1">Steuer-Differenz</div>
+                            <div class="text-lg font-bold">
+                                <span id="comparison-tax-diff" class="text-red-600">49,78</span> €
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Riester höher</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-xs text-gray-600 mb-1">Gesamt-Differenz</div>
+                            <div class="text-lg font-bold">
+                                <span id="comparison-total-diff" class="text-green-600">180,99</span> €
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">jährlich</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-4 text-center">
+                            <div class="text-xs text-gray-600 mb-1">Kapital-Differenz</div>
+                            <div class="text-lg font-bold">
+                                <span id="comparison-capital-diff" class="text-green-600">15.400,36</span> €
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">bei Rentenbeginn</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Boxes -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Riester Info -->
+                    <div class="bg-riester-light rounded-xl shadow-sm p-6">
+                        <h3 class="font-semibold text-riester-dark mb-3">Riester-Förderung 2026</h3>
+                        <ul class="text-sm text-riester-medium space-y-1">
+                            <li>• Grundzulage: 175 € pro Jahr</li>
+                            <li>• Kinderzulage (vor 2008): 185 € pro Kind</li>
+                            <li>• Kinderzulage (ab 2008): 300 € pro Kind</li>
+                            <li>• Mindesteigenbeitrag: 4% des Bruttogehalts abzgl. Zulagen</li>
+                            <li>• Max. Förderbeitrag: 2.100 € (Sonderausgabenabzug)</li>
+                        </ul>
+                    </div>
+
+                    <!-- AV-Depot Info -->
+                    <div class="bg-av-depot-light rounded-xl shadow-sm p-6">
+                        <h3 class="font-semibold text-av-depot-dark mb-3">AV-Depot Förderung (neu)</h3>
+                        <ul class="text-sm text-av-depot-medium space-y-1">
+                            <li>• Grundzulage: 30% auf erste 1.200 € (max. 360 €) und 20% auf 1.201 - 1.800 € (max. 120
+                                €)</li>
+                            <li>• Kinderzulage: 25% des Eigenbeitrags (max. 300 € pro Kind)</li>
+                            <li>• Mindesteigenbeitrag: 120 € pro Jahr</li>
+                            <li>• Max. Förderbeitrag: 1.800 € (Sonderausgabenabzug)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wichtiger Hinweis -->
+        <div class="mt-8 bg-red-50 border-l-4 border-red-400 rounded-xl shadow-sm p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-lg font-semibold text-red-800">Wichtiger Hinweis</h3>
+                    <p class="mt-2 text-sm text-red-700">
+                        Die Berechnungen und Informationen dieses Rechners dienen ausschließlich allgemeinen
+                        Informationszwecken und stellen keine steuerliche, rechtliche oder finanzielle Beratung dar. Für
+                        die Vollständigkeit, Richtigkeit und Aktualität der Angaben wird keine Haftung übernommen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="foerder-rechner.js"></script>
+</body>
+
+</html>

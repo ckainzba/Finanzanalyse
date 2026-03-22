@@ -10,9 +10,56 @@ const state = {
     arbeitgeber: { arbeitgeber: '', geschaeftsform: '', land: 'Deutschland', plz: '', ort: '', strasse: '', hausnummer: '', telefonVorwahl: '', telefonNummer: '', taetigkeit: '', befristung: 'nein', bav: 'nein', arbeitgeber_pct: '15', arbeitgeber_eur: '0,00' },
     rente: { renteninfoVom: '', renteVollEM: '0,00', regelAltersrente: '0,00', kuenftigeRente: '0,00', gesetzlicheRente: 'ja', freiwilligkeit: 'pflichtversichert', jahreEingezahlt: '0' },
     hausrat: { objekt: '', gesellschaft: '', versicherungsnummer: '', beitrag: '0,00', zahlungsweise: 'monatlich', beginn: '', ablauf: '', wohnflaeche: '0', versicherungssumme: '0,00', selbstbeteiligung: '0,00', fahrraddiebstahl: '', glasversicherung: '', elementarschaeden: '', vorschaeden: '0', hoeheVorschaeden: '0,00' },
-    einnahmen: { einkommen: [], geringfuegig: [], selbststaendig: [] }
+    einnahmen: { brutto: '', netto: '', anzahlProJahr: '12' },
+    gkv: { gesellschaft: '', mitgliedsnummer: '', beginn: '', status: '', bonus: '', notizen: '' },
+    steuerdaten: { steuerId: '', svNummer: '' }
   }
 };
+
+// ===== TOP NAVIGATION SECTIONS =====
+// Sections: 'dashboard', 'daten', 'beratung', 'vertraege', 'informationen', 'controlling'
+const TOP_NAV_SECTIONS = {
+  dashboard: { sidebarDaten: false, sidebarBeratung: false, page: 'dashboard',  sub: 'dashboard' },
+  daten:     { sidebarDaten: true,  sidebarBeratung: false, page: null,          sub: null },
+  beratung:  { sidebarDaten: false, sidebarBeratung: true,  page: 'jeg2026',     sub: 'jeg2026' },
+  vertraege: { sidebarDaten: false, sidebarBeratung: false, page: 'vertraege',   sub: 'vertraege' },
+  'pot-jeg': { sidebarDaten: false, sidebarBeratung: false, page: 'pot-jeg',     sub: 'pot-jeg' },
+};
+state.activeSection = 'daten'; // default section
+
+function switchSection(section) {
+  state.activeSection = section;
+  const cfg = TOP_NAV_SECTIONS[section];
+  if (!cfg) return;
+
+  // Update active tab styling
+  document.querySelectorAll('.top-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.section === section);
+  });
+
+  // Show/hide the two sidebars independently
+  const sidebarDaten    = document.getElementById('sidebar');
+  const sidebarBeratung = document.getElementById('sidebar-beratung');
+  if (sidebarDaten)    sidebarDaten.classList.toggle('section-hidden', !cfg.sidebarDaten);
+  if (sidebarBeratung) sidebarBeratung.classList.toggle('section-hidden', !cfg.sidebarBeratung);
+
+  // Show KI upload button only in Daten section
+  document.querySelectorAll('.ki-btn-daten-only').forEach(btn => {
+    btn.style.display = (section === 'daten') ? '' : 'none';
+  });
+
+  // Navigate to target page
+  if (cfg.page) {
+    navigate(cfg.page, cfg.sub);
+  } else if (section === 'daten') {
+    const isBeratungPage = p => !p || p.startsWith('jeg') || ['dashboard','informationen','controlling','vertraege', 'pot-jeg'].includes(p);
+    const page = !isBeratungPage(state.currentPage)    ? state.currentPage    : 'persoenliche-angaben';
+    const sub  = !isBeratungPage(state.currentSubPage) ? state.currentSubPage : 'personendaten';
+    navigate(page, sub);
+  }
+
+}
+
 
 // ===== NAVIGATION =====
 function navigate(page, subPage) {
@@ -45,12 +92,36 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('collapsed', state.sidebarCollapsed);
 }
 
+function updateBnavSubActive(activeSub) {
+  document.querySelectorAll('.bnav-sub-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.sub === activeSub);
+  });
+}
+
+function updateBnavSubSubActive(activeSub) {
+  document.querySelectorAll('.bnav-subsub-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.sub === activeSub);
+  });
+}
+
+
 // ===== PAGES =====
 function renderPage() {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pageId = state.currentSubPage || state.currentPage;
   const el = document.getElementById('page-' + pageId);
-  if (el) { el.classList.add('active'); fillFormFromState(); }
+  if (el) {
+    el.classList.add('active');
+    fillFormFromState();
+    // Lazily initialize the Förder-Vergleichsrechner on first visit
+    if (pageId === 'jeg-foerder' && typeof initFoerderRechner === 'function') {
+      initFoerderRechner();
+    }
+  }
+  // Scroll to top on every page change
+  const scroller = document.querySelector('.main-content') || document.querySelector('main') || document.documentElement;
+  if (scroller) scroller.scrollTop = 0;
+  window.scrollTo(0, 0);
 }
 
 function fillFormFromState() {
@@ -98,6 +169,38 @@ function fillFormFromState() {
   setRadius('r-gesetzlich', state.data.rente.gesetzlicheRente);
   setRadius('r-freiwilligkeit', state.data.rente.freiwilligkeit);
   setVal('r-jahre', state.data.rente.jahreEingezahlt);
+  // Einnahmen
+  setVal('e-brutto', state.data.einnahmen.brutto);
+  setVal('e-netto', state.data.einnahmen.netto);
+  setVal('e-anzahl', state.data.einnahmen.anzahlProJahr);
+  // GKV
+  setVal('gkv-gesellschaft', state.data.gkv.gesellschaft);
+  setVal('gkv-nummer', state.data.gkv.mitgliedsnummer);
+  setVal('gkv-beginn', state.data.gkv.beginn);
+  setVal('gkv-notizen', state.data.gkv.notizen);
+  setRadio('gkv-status', state.data.gkv.status);
+  setRadio('gkv-bonus', state.data.gkv.bonus);
+  // Steuerdaten
+  setVal('st-einkommen', state.data.steuerdaten?.einkommen);
+  setRadio('st-familienstand', state.data.steuerdaten?.familienstand);
+  setRadio('st-steuerklasse', state.data.steuerdaten?.steuerklasse);
+  setRadio('st-kirchensteuer', state.data.steuerdaten?.kirchensteuerpflichtig);
+  setRadio('st-sozialversicherung', state.data.steuerdaten?.sozialversicherungspflichtig);
+  setVal('st-id', state.data.steuerdaten?.steuerId);
+  setVal('st-sv', state.data.steuerdaten?.svNummer);
+  setVal('st-steuernummer', state.data.steuerdaten?.steuernummer);
+  setVal('st-finanzamt', state.data.steuerdaten?.finanzamt);
+  // Energie
+  setVal('en-strom-verbrauch', state.data.energie?.strom_verbrauch);
+  setVal('en-strom-kosten', state.data.energie?.strom_kosten);
+  setVal('en-strom-anbieter', state.data.energie?.strom_anbieter);
+  setCheckbox('en-strom-oeko', state.data.energie?.strom_oeko);
+  setCheckbox('en-strom-gewerblich', state.data.energie?.strom_gewerblich);
+  setVal('en-gas-verbrauch', state.data.energie?.gas_verbrauch);
+  setVal('en-gas-kosten', state.data.energie?.gas_kosten);
+  setVal('en-gas-anbieter', state.data.energie?.gas_anbieter);
+  setCheckbox('en-gas-oeko', state.data.energie?.gas_oeko);
+  setCheckbox('en-gas-gewerblich', state.data.energie?.gas_gewerblich);
 }
 
 function setVal(id, val) { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; }
@@ -106,25 +209,37 @@ function setRadio(name, val) {
   radios.forEach(r => { r.checked = r.value === val; });
 }
 function setRadius(name, val) { setRadio(name, val); }
+function setCheckbox(id, val) { const el = document.getElementById(id); if (el) el.checked = !!val; }
 
 function savePageData() {
   const g = id => { const el = document.getElementById(id); return el ? el.value : ''; };
   const radio = name => { const r = document.querySelector(`input[name="${name}"]:checked`); return r ? r.value : ''; };
+  const checkbox = id => { const el = document.getElementById(id); return el ? el.checked : false; };
   state.data.person = { anrede: g('p-anrede'), geschlecht: g('p-geschlecht'), titel: g('p-titel'), vorname: g('p-vorname'), nachname: g('p-nachname'), geburtsdatum: g('p-geburtsdatum'), geburtsname: g('p-geburtsname'), staatsangehoerigkeit: g('p-staatsangehoerigkeit') };
   state.data.ausweis = { art: g('aus-art'), nummer: g('aus-nummer'), behoerde: g('aus-behoerde'), ausstellungsdatum: g('aus-ausstellungsdatum'), gueltig_bis: g('aus-gueltigbis'), geburtsort: g('aus-geburtsort') };
   state.data.adresse = { land: g('a-land'), plz: g('a-plz'), ort: g('a-ort'), strasse: g('a-strasse'), hausnummer: g('a-hausnummer'), adresszusatz: g('a-adresszusatz') };
   state.data.arbeitgeber = { ...state.data.arbeitgeber, arbeitgeber: g('ag-arbeitgeber'), plz: g('ag-plz'), ort: g('ag-ort'), strasse: g('ag-strasse'), hausnummer: g('ag-hausnummer'), telefonVorwahl: g('ag-telvorwahl'), telefonNummer: g('ag-telnummer'), taetigkeit: g('ag-taetigkeit'), arbeitgeber_pct: g('ag-pct'), arbeitgeber_eur: g('ag-eur'), befristung: radio('ag-befristung'), bav: radio('ag-bav') };
   state.data.rente = { renteninfoVom: g('r-info'), renteVollEM: g('r-em'), regelAltersrente: g('r-regel'), kuenftigeRente: g('r-kuenftig'), gesetzlicheRente: radio('r-gesetzlich'), freiwilligkeit: radio('r-freiwilligkeit'), jahreEingezahlt: g('r-jahre') };
+  state.data.einnahmen = { brutto: g('e-brutto'), netto: g('e-netto'), anzahlProJahr: g('e-anzahl') };
+  state.data.gkv = { gesellschaft: g('gkv-gesellschaft'), mitgliedsnummer: g('gkv-nummer'), beginn: g('gkv-beginn'), status: radio('gkv-status'), bonus: radio('gkv-bonus'), notizen: g('gkv-notizen') };
+  state.data.steuerdaten = { einkommen: g('st-einkommen'), familienstand: radio('st-familienstand'), steuerklasse: radio('st-steuerklasse'), kirchensteuerpflichtig: radio('st-kirchensteuer'), sozialversicherungspflichtig: radio('st-sozialversicherung'), steuerId: g('st-id'), svNummer: g('st-sv'), steuernummer: g('st-steuernummer'), finanzamt: g('st-finanzamt') };
+  state.data.energie = { strom_verbrauch: g('en-strom-verbrauch'), strom_kosten: g('en-strom-kosten'), strom_anbieter: g('en-strom-anbieter'), strom_oeko: checkbox('en-strom-oeko'), strom_gewerblich: checkbox('en-strom-gewerblich'), gas_verbrauch: g('en-gas-verbrauch'), gas_kosten: g('en-gas-kosten'), gas_anbieter: g('en-gas-anbieter'), gas_oeko: checkbox('en-gas-oeko'), gas_gewerblich: checkbox('en-gas-gewerblich') };
   showToast('Daten gespeichert.');
 }
 
 // ===== MODAL =====
-function openModal() {
+function openModal(context) {
+  state.kiContext = context || 'daten';
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('upload-status').textContent = '';
   document.getElementById('progress-wrap').classList.remove('visible');
   drawQR('qrCanvas', '#000');
 }
+
+function openDakModal() {
+  openModal('dak');
+}
+
 function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
 
 // ===== QR CODE (clean canvas-based) =====
@@ -284,13 +399,13 @@ async function renderPDFToImages(file) {
 
   for (let i = 1; i <= pagesToRender; i++) {
     const page = await pdf.getPage(i);
-    const viewport = page.getViewport({ scale: 1.2 }); // 2x = high quality
+    const viewport = page.getViewport({ scale: 2.0 }); // 2x = high quality for small text like StKl column
     const canvas = document.createElement('canvas');
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-    // JPEG at 0.92 quality — good balance of size vs quality
-    const base64 = canvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+    // JPEG at 0.90 quality – higher detail for dense payslip tables
+    const base64 = canvas.toDataURL('image/jpeg', 0.90).split(',')[1];
     images.push(base64);
     console.log(`Page ${i}: ${Math.round(base64.length * 0.75 / 1024)} KB image sent to Gemini`);
   }
@@ -337,6 +452,7 @@ function parseDocumentText(text) {
   const result = { person: {}, adresse: {}, arbeitgeber: {}, einnahmen: {}, docType: 'Dokument' };
   if (/gehalt|lohn|entgelt|lohnabr|gehaltsabr/i.test(text)) result.docType = 'Gehaltsabrechnung';
   else if (/renten(?:information|bescheid|auskunft)|deutsche rentenversicherung/i.test(text)) result.docType = 'Renteninformation';
+  else if (/krankenversicherung|gesundheitskarte|mitgliedsbescheinigung|kassenärztliche/i.test(text)) result.docType = 'Gesetzliche Krankenversicherung';
   else if (/hausrat|wohngebäude|eigenheim/i.test(text)) result.docType = 'Versicherungsvertrag';
   const anredeMatch = text.match(/\b(Herr|Frau)\s+(?:Dr\.?\s+)?([A-ZÄÖÜ][a-zäöüß\-]+)\s+([A-ZÄÖÜ][a-zäöüß\-]+)/);
   if (anredeMatch) { result.person.anrede = anredeMatch[1]; result.person.geschlecht = anredeMatch[1] === 'Herr' ? 'männlich' : 'weiblich'; result.person.vorname = anredeMatch[2]; result.person.nachname = anredeMatch[3]; }
@@ -391,7 +507,7 @@ const GEMINI_PROMPT = `Du bist ein KI-Assistent für Finanzberatung. Analysiere 
 
 Gib NUR ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
 {
-  "docType": "Gehaltsabrechnung|Renteninformation|Versicherungsvertrag|Kontoauszug|Ausweis|Unbekannt",
+  "docType": "Gehaltsabrechnung|Renteninformation|Versicherungsvertrag|Gesetzliche Krankenversicherung|Kontoauszug|Ausweis|Unbekannt",
   "person": {
     "anrede": "Herr|Frau|...",
     "geschlecht": "männlich|weiblich",
@@ -404,11 +520,11 @@ Gib NUR ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
   },
   "ausweis": {
     "art": "Personalausweis|Reisepass|Führerschein",
-    "nummer": "",
-    "behoerde": "",
-    "ausstellungsdatum": "TT.MM.JJJJ",
-    "gueltig_bis": "TT.MM.JJJJ",
-    "geburtsort": ""
+    "nummer": "",                       // Ausweisnummer / Dokumentennummer (Vorderseite oder maschinenlesbarer Bereich)
+    "behoerde": "",                     // Ausstellende Behörde: auf der Rückseite unter 'Behörde / Authority / Autorité' (z.B. 'STADT KÖLN')
+    "ausstellungsdatum": "TT.MM.JJJJ", // Rückseite unter 'Datum / Date / Date' (z.B. '02.08.21' → 02.08.2021)
+    "gueltig_bis": "TT.MM.JJJJ",      // Gültigkeitsdatum: Vorderseite oder maschinenlesbarer Bereich
+    "geburtsort": ""                    // Geburtsort: Vorderseite oder maschinenlesbarer Bereich
   },
   "adresse": {
     "strasse": "",
@@ -426,7 +542,7 @@ Gib NUR ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
     "hausnummer": "",
     "telefonVorwahl": "",
     "telefonNummer": "",
-    "taetigkeit": "TT.MM.JJJJ",
+    "taetigkeit": "TT.MM.JJJJ",  // Eintrittsdatum beim Arbeitgeber (tätig seit / Beschäftigungsbeginn / Eintrittsdatum)
     "befristung": "ja|nein",
     "bav": "ja|nein",
     "arbeitgeber_pct": "",
@@ -435,11 +551,14 @@ Gib NUR ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
   "einnahmen": {
     "brutto": "",
     "netto": "",
-    "steuerklasse": ""
+    "steuerbrutto": "",
+    "anzahlProJahr": "12|13|14"
   },
   "rente": {
-    "regelAltersrente": "",
-    "renteVollEM": "",
+    "renteninfoVom": "TT.MM.JJJJ",   // Datum des Schreibens der Deutschen Rentenversicherung (z.B. oben rechts auf dem Brief)
+    "renteVollEM": "",                 // Rente wegen voller Erwerbsminderung (erster Betrag, z.B. 'Wären Sie heute erwerbsgemindert...')
+    "regelAltersrente": "",            // 'bislang erreichte Rentenanwartschaft' / 'Ihre Rentenanwartschaft entspräche...' (ZWEITER Betrag, NICHT die künftige Rente!)
+    "kuenftigeRente": "",              // künftige Regelaltersrente ohne Rentenanpassung (DRITTER / letzter Hauptbetrag)
     "jahreEingezahlt": ""
   },
   "hausrat": {
@@ -451,6 +570,37 @@ Gib NUR ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
     "ablauf": "TT.MM.JJJJ",
     "wohnflaeche": "",
     "versicherungssumme": ""
+  },
+  "gkv": {
+    "gesellschaft": "",
+    "mitgliedsnummer": "",
+    "beginn": "TT.MM.JJJJ",
+    "status": "freiwillig versichert|pflichtversichert",
+    "bonus": "ja|nein",
+    "notizen": ""
+  },
+  "steuerdaten": {
+    "einkommen": "",
+    "familienstand": "geschieden|ledig|verheiratet|verwitwet",
+    "steuerklasse": "I|II|III|IV|V",
+    "kirchensteuerpflichtig": "ja|nein",
+    "sozialversicherungspflichtig": "ja|nein",
+    "steuerId": "",
+    "svNummer": "",
+    "steuernummer": "",
+    "finanzamt": ""
+  },
+  "energie": {
+    "strom_verbrauch": "",
+    "strom_kosten": "",
+    "strom_anbieter": "",
+    "strom_oeko": false,
+    "strom_gewerblich": false,
+    "gas_verbrauch": "",
+    "gas_kosten": "",
+    "gas_anbieter": "",
+    "gas_oeko": false,
+    "gas_gewerblich": false
   }
 }
 
@@ -461,6 +611,12 @@ Regeln:
 - Deutsche Zahlenformate beibehalten (z.B. "3.450,00")
 - Datumformat immer TT.MM.JJJJ
 - Wenn Arbeitgeberadresse und Mitarbeiteradresse vorhanden, trenne sie korrekt
+- Manche deutschen Lohnabrechnungen (z.B. DATEV-Format) schreiben Daten komprimiert ohne Trennzeichen und mit 2-stelliger Jahreszahl, z.B. "010120" = 01.01.2020 oder "010102" = 01.01.2002. Wandle solche 6-stelligen Datumsangaben (TTMMJJ) immer in TT.MM.JJJJ um. Jahreszahlen 00–30 → 2000–2030, 31–99 → 1931–1999.
+- Das Feld "Eintritt" auf Gehaltsabrechnungen entspricht dem JSON-Feld "taetigkeit" im Arbeitgeber-Objekt
+- Renteninformation (Deutsche Rentenversicherung): Das Briefdatum oben rechts (z.B. "Datum 03.01.2023") → renteninfoVom. Die drei Hauptbeträge im Dokument sind IMMER: 1) Erwerbsminderungsrente → renteVollEM, 2) bislang erreichte Rentenanwartschaft ("Ihre bislang erreichte Rentenanwartschaft entspräche...") → regelAltersrente, 3) künftige Regelaltersrente ohne Rentenanpassung (der letzte der drei Hauptbeträge) → kuenftigeRente. Verwechsle diese Beträge NICHT miteinander.
+- Personalausweis Rückseite: Das Feld 'Datum / Date / Date' (z.B. '02.08.21') ist das Ausstellungsdatum → ausstellungsdatum. Das Feld 'Behörde / Authority / Autorité' (z.B. 'STADT KÖLN') ist die ausstellende Behörde → behoerde. Datumsangaben auf Ausweisen mit 2-stelligem Jahr (Format TT.MM.JJ) immer in TT.MM.JJJJ umwandeln: Jahreszahlen 00–30 →2000–2030, 31–99 →1931–1999.
+- Steuerklasse (Spalte 'StKl' auf Gehaltsabrechnungen): Auf Lohnabrechnungen steht die Steuerklasse oft als arabische Zahl (1–5). Wandle diese IMMER in römische Zahlen um: 1→I, 2→II, 3→III, 4→IV, 5→V. Im Feld steuerklasse nur I, II, III, IV oder V eintragen.
+- Steuer-Brutto: Ist auf Gehaltsabrechnungen oft (unten links) bei den kumulierten Jahreswerten / Verdienstbescheinigung zu finden. Extrahiere diesen Betrag pflichtgemäß.
 
 Dokumenttext:
 `;
@@ -476,7 +632,7 @@ async function callGeminiAPI(images) {
   for (const b64 of images) {
     parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
   }
-  const body = { contents: [{ parts }], generationConfig: { temperature: 0.1 } };
+  const body = { contents: [{ parts }], generationConfig: { temperature: 0 } };
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 60000);
   let res;
@@ -533,108 +689,266 @@ async function finishUpload(payload, useVision) {
     return parsed;
   }
 
-// ===== HUMAN IN THE LOOP REVIEW =====
+// Section index for pagination
+let _reviewSections = [];  // [{title, html}]
+let _reviewCurrentIdx = 0;
+// Human-in-the-loop review state
 let currentReviewResolve = null;
 let currentParsedData = null;
+
 
 function showReviewModal(parsed, resolveUpload) {
   currentReviewResolve = resolveUpload;
   currentParsedData = parsed;
-  
-  const container = document.getElementById('review-fields-container');
-  container.innerHTML = '';
   let fieldCount = 0;
 
+  // Fields that are mandatory in the main forms (keys match state/JSON field names)
+  const REQUIRED_FIELDS = {
+    steuerdaten: new Set(['familienstand', 'steuerklasse', 'kirchensteuerpflichtig', 'sozialversicherungspflichtig']),
+    arbeitgeber: new Set(['befristung', 'bav', 'arbeitgeber_pct']),
+    einnahmen:   new Set(['brutto', 'netto', 'anzahlProJahr']),
+    hausrat:     new Set(['gesellschaft', 'versicherungsnummer', 'beitrag', 'zahlungsweise', 'wohnflaeche']),
+    gkv:         new Set(['gesellschaft', 'status']),
+  };
+  const isRequired = (cat, key) => REQUIRED_FIELDS[cat]?.has(key) ?? false;
+
+  // Predefined options for fields rendered as dropdowns
+  const FIELD_OPTIONS = {
+    familienstand:             ['geschieden', 'ledig', 'verheiratet', 'verwitwet'],
+    steuerklasse:              ['I', 'II', 'III', 'IV', 'V'],
+    kirchensteuerpflichtig:    ['ja', 'nein'],
+    sozialversicherungspflichtig: ['ja', 'nein'],
+    befristung:                ['ja', 'nein'],
+    bav:                       ['ja', 'nein'],
+    arbeitgeber_pct:           ['15', '20', '25'],
+    anzahlProJahr:             ['12', '13', '14'],
+    zahlungsweise:             ['monatlich', 'vierteljährlich', 'halbjährlich', 'jährlich'],
+    status:                    ['freiwillig versichert', 'pflichtversichert'],
+    bonus:                     ['ja', 'nein'],
+    'art':                     ['Personalausweis', 'Reisepass', 'Führerschein'],
+    geschaeftsform:            ['GmbH', 'AG', 'KG', 'GbR'],
+  };
+
+  // Helper: build a <select> element for fields with predefined options
+  const buildSelect = (category, key, currentVal, extraClass = '') => {
+    const opts = FIELD_OPTIONS[key] || [];
+    const options = ['', ...opts].map(o => {
+      const selected = o === currentVal ? ' selected' : '';
+      return `<option value="${o}"${selected}>${o === '' ? '— bitte wählen —' : o}</option>`;
+    }).join('');
+    return `<select id="review-input-${category}-${key}" class="review-select${extraClass ? ' ' + extraClass : ''}">${options}</select>`;
+  };
+
+  // Renders a row for an AI-extracted field (checked checkbox)
   const createRow = (category, key, value, label) => {
-    if (value === undefined || value === null || String(value).trim() === '') return '';
+    if (value === undefined || value === null || String(value).trim() === '') return null;
     fieldCount++;
-    const safeVal = String(value).trim().replace(/"/g, '&quot;');
+    const safeVal = String(value).trim();
+    const hasOptions = !!FIELD_OPTIONS[key];
+    const inputHtml = hasOptions
+      ? buildSelect(category, key, safeVal)
+      : `<input type="text" value="${safeVal.replace(/"/g, '&quot;')}" id="review-input-${category}-${key}">`;
     return `
       <div class="review-row">
         <label>
           <input type="checkbox" checked data-category="${category}" data-key="${key}">
           ${label}
         </label>
-        <input type="text" value="${safeVal}" id="review-input-${category}-${key}">
+        ${inputHtml}
       </div>
     `;
   };
 
-  let html = '';
+  // Renders a row for a field NOT extracted by AI (unchecked, empty, editable)
+  const createEmptyRow = (category, key, label) => {
+    const req = isRequired(category, key);
+    const reqMark = req ? '<span class="review-required-mark" title="Pflichtfeld">*</span>' : '';
+    const reqClass = req ? ' review-row--required' : '';
+    const hasOptions = !!FIELD_OPTIONS[key];
+    const inputHtml = hasOptions
+      ? buildSelect(category, key, '', `review-input--empty${req ? ' review-input--required' : ''}`)
+      : `<input type="text" value="" placeholder="—" id="review-input-${category}-${key}" class="review-input--empty${req ? ' review-input--required' : ''}">`;
+    return `
+      <div class="review-row review-row--missing${reqClass}">
+        <label>
+          <input type="checkbox" data-category="${category}" data-key="${key}">
+          <span>${label}${reqMark}</span>
+        </label>
+        ${inputHtml}
+      </div>
+    `;
+  };
 
-  // Person
-  const personMap = { vorname: 'Vorname', nachname: 'Nachname', geburtsdatum: 'Geburtsdatum', anrede: 'Anrede', geschlecht: 'Geschlecht', titel: 'Titel', staatsangehoerigkeit: 'Staatsangehörigkeit' };
-  let personHtml = '';
-  for (const [key, label] of Object.entries(personMap)) {
-    personHtml += createRow('person', key, parsed.person?.[key], label);
+  // Returns HTML for a section if at least one field was extracted, null otherwise
+  const renderSection = (category, fieldMap, parsedObj) => {
+    let extracted = '';
+    let missingRequired = '';
+    let missingOptional = '';
+    for (const [key, label] of Object.entries(fieldMap)) {
+      const row = createRow(category, key, parsedObj?.[key], label);
+      if (row !== null) {
+        extracted += row;
+      } else if (isRequired(category, key)) {
+        missingRequired += createEmptyRow(category, key, label);
+      } else {
+        missingOptional += createEmptyRow(category, key, label);
+      }
+    }
+    // Order: extracted → required-missing → optional-missing
+    return extracted ? extracted + missingRequired + missingOptional : null;
+  };
+
+  // Define field maps
+  const personMap     = { vorname: 'Vorname', nachname: 'Nachname', geburtsdatum: 'Geburtsdatum', anrede: 'Anrede', geschlecht: 'Geschlecht', titel: 'Titel', geburtsname: 'Geburtsname', staatsangehoerigkeit: 'Staatsangehörigkeit' };
+  const ausMap        = { art: 'Ausweisart', nummer: 'Dokumentnummer', behoerde: 'Behörde', ausstellungsdatum: 'Ausstellungsdatum', gueltig_bis: 'Gültig bis', geburtsort: 'Geburtsort' };
+  const adrMap        = { land: 'Land', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer', adresszusatz: 'Adresszusatz' };
+  const steuerMap     = { einkommen: 'zu verst. Einkommen', familienstand: 'Familienstand', steuerklasse: 'Steuerklasse', kirchensteuerpflichtig: 'Kirchensteuerpfl.', sozialversicherungspflichtig: 'Sozialvers.pfl.', steuerId: 'Steuer-ID', svNummer: 'SV-Nummer', steuernummer: 'Steuernummer', finanzamt: 'Finanzamt' };
+  const energieMap    = { strom_verbrauch: 'Strom Verbrauch', strom_kosten: 'Strom Kosten', strom_anbieter: 'Strom Anbieter', strom_oeko: 'Ökostrom erwünscht', strom_gewerblich: 'Strom gewerblich', gas_verbrauch: 'Gas Verbrauch', gas_kosten: 'Gas Kosten', gas_anbieter: 'Gas Anbieter', gas_oeko: 'Biogas erwünscht', gas_gewerblich: 'Gas gewerblich' };
+  const agMap         = { arbeitgeber: 'Name Arbeitgeber', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer', telefonVorwahl: 'Tele-Vorwahl', telefonNummer: 'Tele-Nummer', taetigkeit: 'Eintritt', befristung: 'Befristung', bav: 'bAV', arbeitgeber_pct: 'Anteil AG (%)', arbeitgeber_eur: 'Anteil AG (€)' };
+  const renteMap      = { renteninfoVom: 'Renteninformation vom', renteVollEM: 'Erwerbsminderungsrente', regelAltersrente: 'Bislang erreichte Regelaltersrente', kuenftigeRente: 'Künftige Rente (ohne Anpassung)', jahreEingezahlt: 'Jahre eingezahlt' };
+  const einnahmenMap  = { brutto: 'Brutto in Euro', netto: 'Netto in Euro', anzahlProJahr: 'Anzahl pro Jahr' };
+  const hausratMap    = { gesellschaft: 'Gesellschaft', versicherungsnummer: 'Versicherungsnr.', beitrag: 'Beitrag', zahlungsweise: 'Zahlungsweise', beginn: 'Beginn', ablauf: 'Ablauf', wohnflaeche: 'Wohnfläche', versicherungssumme: 'Versicherungssumme' };
+  const gkvMap        = { gesellschaft: 'Name der Gesellschaft', mitgliedsnummer: 'Mitgliedsnummer', beginn: 'Beginn', status: 'Versicherungsstatus', bonus: 'Bonusprogramm' };
+
+  // Build sections array: only include sections with at least one extracted field
+  const sectionDefs = [
+    ['Person',                          'person',      personMap,    parsed.person],
+    ['Ausweis',                         'ausweis',     ausMap,       parsed.ausweis],
+    ['Adresse',                         'adresse',     adrMap,       parsed.adresse],
+    ['Steuerdaten',                     'steuerdaten', steuerMap,    parsed.steuerdaten],
+    ['Energie (Ausgaben)',              'energie',     energieMap,   parsed.energie],
+    ['Beruf & Arbeitgeber',            'arbeitgeber', agMap,        parsed.arbeitgeber],
+    ['Rente',                           'rente',       renteMap,     parsed.rente],
+    ['Einkommen',                       'einnahmen',   einnahmenMap, parsed.einnahmen],
+    ['Hausratversicherung',             'hausrat',     hausratMap,   parsed.hausrat],
+    ['Gesetzliche Krankenversicherung', 'gkv',         gkvMap,       parsed.gkv],
+  ];
+
+  _reviewSections = [];
+  for (const [title, category, fieldMap, parsedObj] of sectionDefs) {
+    const body = renderSection(category, fieldMap, parsedObj);
+    if (body) _reviewSections.push({ title, html: body });
   }
-  if (personHtml) html += `<div class="review-category">Person</div>${personHtml}`;
 
-  // Ausweis
-  const ausMap = { art: 'Ausweisart', nummer: 'Dokumentnummer', behoerde: 'Behörde', ausstellungsdatum: 'Ausstellungsdatum', gueltig_bis: 'Gültig bis', geburtsort: 'Geburtsort' };
-  let ausHtml = '';
-  for (const [key, label] of Object.entries(ausMap)) {
-    ausHtml += createRow('ausweis', key, parsed.ausweis?.[key], label);
-  }
-  if (ausHtml) html += `<div class="review-category">Ausweis</div>${ausHtml}`;
+  // Build full html with all sections in hidden wrappers so inputs persist between pages
+  const container = document.getElementById('review-fields-container');
+  let fullHtml = '';
+  _reviewSections.forEach((sec, i) => {
+    fullHtml += `<div class="review-section-page" id="review-section-${i}" style="display:none;">${sec.html}</div>`;
+  });
+  container.innerHTML = fullHtml;
 
-  // Adresse
-  const adrMap = { land: 'Land', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer' };
-  let adrHtml = '';
-  for (const [key, label] of Object.entries(adrMap)) {
-    adrHtml += createRow('adresse', key, parsed.adresse?.[key], label);
-  }
-  if (adrHtml) html += `<div class="review-category">Adresse</div>${adrHtml}`;
+  // Auto-check + remove empty styling + update apply button on input/change
+  const autoCheckOnInput = (e) => {
+    if (e.target.classList.contains('review-input--empty') && e.target.value.trim() !== '') {
+      e.target.classList.remove('review-input--empty', 'review-input--required');
+      const row = e.target.closest('.review-row');
+      if (row) {
+        const cb = row.querySelector('input[type="checkbox"]');
+        if (cb && !cb.checked) cb.checked = true;
+      }
+    }
+    _reviewUpdateApplyBtn();
+  };
+  container.addEventListener('input', autoCheckOnInput);
+  container.addEventListener('change', autoCheckOnInput);
 
-  // Arbeitgeber
-  const agMap = { arbeitgeber: 'Name Arbeitgeber', plz: 'PLZ', ort: 'Ort', strasse: 'Straße', hausnummer: 'Hausnummer', telefonVorwahl: 'Tele-Vorwahl', telefonNummer: 'Tele-Nummer', taetigkeit: 'Tätigkeit', befristung: 'Befristung', bav: 'bAV', arbeitgeber_pct: 'Anteil AG (%)', arbeitgeber_eur: 'Anteil AG (€)' };
-  let agHtml = '';
-  for (const [key, label] of Object.entries(agMap)) {
-    agHtml += createRow('arbeitgeber', key, parsed.arbeitgeber?.[key], label);
-  }
-  if (agHtml) html += `<div class="review-category">Beruf & Arbeitgeber</div>${agHtml}`;
+  // Initial state of apply button
+  // (will be set correctly once _reviewUpdateApplyBtn runs after sections are built)
+  setTimeout(_reviewUpdateApplyBtn, 0);
 
-  // Rente
-  const renteMap = { renteVollEM: 'Erwerbsminderungsrente', regelAltersrente: 'Regelaltersrente', jahreEingezahlt: 'Jahre eingezahlt' };
-  let renteHtml = '';
-  for (const [key, label] of Object.entries(renteMap)) {
-    renteHtml += createRow('rente', key, parsed.rente?.[key], label);
-  }
-  if (renteHtml) html += `<div class="review-category">Rente</div>${renteHtml}`;
+  document.getElementById('review-modal-title').textContent = `Erkannte Daten überprüfen (${fieldCount} erkannte Felder)`;
 
-  // Hausrat
-  const hausratMap = { gesellschaft: 'Gesellschaft', versicherungsnummer: 'Versicherungsnr.', beitrag: 'Beitrag', zahlungsweise: 'Zahlungsweise', beginn: 'Beginn', ablauf: 'Ablauf', wohnflaeche: 'Wohnfläche', versicherungssumme: 'Versicherungssumme' };
-  let hausratHtml = '';
-  for (const [key, label] of Object.entries(hausratMap)) {
-    hausratHtml += createRow('hausrat', key, parsed.hausrat?.[key], label);
-  }
-  if (hausratHtml) html += `<div class="review-category">Hausratversicherung</div>${hausratHtml}`;
+  // Show first section
+  _reviewCurrentIdx = 0;
+  _reviewRenderPage();
 
-  if (fieldCount === 0) {
-    container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Keine relevanten Felder erkannt.</p>';
-  } else {
-    container.innerHTML = html;
-  }
-
-  document.getElementById('review-modal-title').textContent = `Erkannte Daten überprüfen (${fieldCount} Felder)`;
-  
   // Close standard upload modal, open review modal
-  closeModal(); 
+  closeModal();
   document.getElementById('review-modal-overlay').style.display = 'flex';
 }
+
+function _reviewRenderPage() {
+  const total = _reviewSections.length;
+  const idx = _reviewCurrentIdx;
+
+  // Show/hide section pages
+  document.querySelectorAll('.review-section-page').forEach((el, i) => {
+    el.style.display = i === idx ? '' : 'none';
+  });
+
+  // Update nav labels
+  document.getElementById('review-step-label').textContent = _reviewSections[idx]?.title || '';
+  document.getElementById('review-step-counter').textContent = `${idx + 1} / ${total}`;
+
+  // Enable/disable prev
+  document.getElementById('review-btn-prev').disabled = idx === 0;
+
+  // Next button: hide on last step, show on earlier steps
+  const nextBtn = document.getElementById('review-btn-next');
+  if (idx === total - 1) {
+    nextBtn.style.visibility = 'hidden';
+  } else {
+    nextBtn.style.visibility = '';
+    nextBtn.textContent = 'Weiter →';
+    nextBtn.disabled = false;
+    nextBtn.onclick = () => reviewNavigate(1);
+  }
+
+  _reviewUpdateApplyBtn();
+}
+
+// Checks all required fields across all section pages and en/disables the apply button
+function _reviewUpdateApplyBtn() {
+  const applyBtn = document.getElementById('review-btn-apply');
+  if (!applyBtn) return;
+
+  // A required field is satisfied when its input/select has a non-empty value
+  // (regardless of whether the checkbox is checked – the advisor must at least acknowledge it)
+  const unmet = document.querySelectorAll(
+    '#review-fields-container .review-row--required .review-input--empty, ' +
+    '#review-fields-container .review-row--required .review-input--required'
+  );
+
+  // Count fields that still have no value selected
+  let missingCount = 0;
+  unmet.forEach(el => {
+    if (!el.value || el.value.trim() === '') missingCount++;
+  });
+
+  if (missingCount > 0) {
+    applyBtn.disabled = true;
+    applyBtn.title = `Bitte alle Pflichtfelder ausfüllen (${missingCount} offen)`;
+  } else {
+    applyBtn.disabled = false;
+    applyBtn.title = '';
+  }
+}
+
+function reviewNavigate(dir) {
+  const next = _reviewCurrentIdx + dir;
+  if (next < 0 || next >= _reviewSections.length) return;
+  _reviewCurrentIdx = next;
+  _reviewRenderPage();
+}
+
 
 function applyReviewSelected() {
   document.getElementById('review-modal-overlay').style.display = 'none';
   
   clearAllKIMarkers();
-  const filledFields = { person: [], ausweis: [], adresse: [], arbeitgeber: [], rente: [], hausrat: [], radios: [] };
+  const filledFields = { person: [], ausweis: [], adresse: [], arbeitgeber: [], rente: [], hausrat: [], einnahmen: [], gkv: [], steuerdaten: [], radios: [], energie: [] };
 
-  const personIdMap = { vorname: 'p-vorname', nachname: 'p-nachname', geburtsdatum: 'p-geburtsdatum', anrede: 'p-anrede', geschlecht: 'p-geschlecht', titel: 'p-titel', staatsangehoerigkeit: 'p-staatsangehoerigkeit' };
+  const personIdMap = { vorname: 'p-vorname', nachname: 'p-nachname', geburtsdatum: 'p-geburtsdatum', anrede: 'p-anrede', geschlecht: 'p-geschlecht', titel: 'p-titel', geburtsname: 'p-geburtsname', staatsangehoerigkeit: 'p-staatsangehoerigkeit' };
   const ausIdMap = { art: 'aus-art', nummer: 'aus-nummer', behoerde: 'aus-behoerde', ausstellungsdatum: 'aus-ausstellungsdatum', gueltig_bis: 'aus-gueltigbis', geburtsort: 'aus-geburtsort' };
-  const adrIdMap = { plz: 'a-plz', ort: 'a-ort', strasse: 'a-strasse', hausnummer: 'a-hausnummer', land: 'a-land' };
+  const adrIdMap = { plz: 'a-plz', ort: 'a-ort', strasse: 'a-strasse', hausnummer: 'a-hausnummer', land: 'a-land', adresszusatz: 'a-adresszusatz' };
   const agIdMap = { arbeitgeber: 'ag-arbeitgeber', plz: 'ag-plz', ort: 'ag-ort', strasse: 'ag-strasse', hausnummer: 'ag-hausnummer', telefonVorwahl: 'ag-telvorwahl', telefonNummer: 'ag-telnummer', taetigkeit: 'ag-taetigkeit', arbeitgeber_pct: 'ag-pct', arbeitgeber_eur: 'ag-eur' };
-  const renteIdMap = { renteVollEM: 'r-em', regelAltersrente: 'r-regel', jahreEingezahlt: 'r-jahre' };
+  const renteIdMap = { renteninfoVom: 'r-info', renteVollEM: 'r-em', regelAltersrente: 'r-regel', kuenftigeRente: 'r-kuenftig', jahreEingezahlt: 'r-jahre' };
   const hausratIdMap = { gesellschaft: 'hr-gesellschaft', versicherungsnummer: 'hr-nummer', beitrag: 'hr-beitrag', zahlungsweise: 'hr-zahlung', beginn: 'hr-beginn', ablauf: 'hr-ablauf', wohnflaeche: 'hr-wfl', versicherungssumme: 'hr-vs' };
+  const einnahmenIdMap = { brutto: 'e-brutto', netto: 'e-netto', anzahlProJahr: 'e-anzahl' };
+  const gkvIdMap = { gesellschaft: 'gkv-gesellschaft', mitgliedsnummer: 'gkv-nummer', beginn: 'gkv-beginn', notizen: 'gkv-notizen' };
+  const steuerIdMap = { einkommen: 'st-einkommen', steuerId: 'st-id', svNummer: 'st-sv', steuernummer: 'st-steuernummer', finanzamt: 'st-finanzamt' };
+  const energieIdMap = { strom_verbrauch: 'en-strom-verbrauch', strom_kosten: 'en-strom-kosten', strom_anbieter: 'en-strom-anbieter', gas_verbrauch: 'en-gas-verbrauch', gas_kosten: 'en-gas-kosten', gas_anbieter: 'en-gas-anbieter' };
 
   let totalApplied = 0;
 
@@ -647,6 +961,28 @@ function applyReviewSelected() {
     if (cat === 'person' && personIdMap[key]) { state.data.person[key] = val; filledFields.person.push(personIdMap[key]); totalApplied++; }
     if (cat === 'ausweis' && ausIdMap[key]) { state.data.ausweis[key] = val; filledFields.ausweis.push(ausIdMap[key]); totalApplied++; }
     if (cat === 'adresse' && adrIdMap[key]) { state.data.adresse[key] = val; filledFields.adresse.push(adrIdMap[key]); totalApplied++; }
+    if (cat === 'steuerdaten') {
+      state.data.steuerdaten[key] = val;
+      if (['familienstand', 'steuerklasse', 'kirchensteuerpflichtig', 'sozialversicherungspflichtig'].includes(key)) {
+        filledFields.radios.push(`st-${key.replace('pflichtig', '')}`);
+      } else if (steuerIdMap[key]) {
+        filledFields.steuerdaten.push(steuerIdMap[key]);
+      }
+      totalApplied++;
+    }
+    if (cat === 'energie') {
+      state.data.energie = state.data.energie || {};
+      state.data.energie[key] = val;
+      if (['strom_oeko', 'strom_gewerblich', 'gas_oeko', 'gas_gewerblich'].includes(key)) {
+        const id = `en-${key.replace('_', '-')}`;
+        const cbEl = document.getElementById(id);
+        if (cbEl) cbEl.checked = (String(val).toLowerCase() === 'true' || val === '1');
+        filledFields.energie.push(id);
+      } else if (energieIdMap[key]) {
+        filledFields.energie.push(energieIdMap[key]);
+      }
+      totalApplied++;
+    }
     if (cat === 'arbeitgeber') {
       state.data.arbeitgeber[key] = val;
       if (key === 'befristung') filledFields.radios.push('ag-befristung');
@@ -655,19 +991,93 @@ function applyReviewSelected() {
       totalApplied++;
     }
     if (cat === 'rente' && renteIdMap[key]) { state.data.rente[key] = val; filledFields.rente.push(renteIdMap[key]); totalApplied++; }
+    if (cat === 'einnahmen' && einnahmenIdMap[key]) { state.data.einnahmen[key] = val; filledFields.einnahmen.push(einnahmenIdMap[key]); totalApplied++; }
     if (cat === 'hausrat') {
       state.data.hausrat[key] = val;
       if (key === 'zahlungsweise') filledFields.radios.push('hr-zahlung');
       else if (hausratIdMap[key]) filledFields.hausrat.push(hausratIdMap[key]);
       totalApplied++;
     }
+    if (cat === 'gkv') {
+      state.data.gkv[key] = val;
+      if (key === 'status') filledFields.radios.push('gkv-status');
+      else if (key === 'bonus') filledFields.radios.push('gkv-bonus');
+      else if (gkvIdMap[key]) filledFields.gkv.push(gkvIdMap[key]);
+      totalApplied++;
+    }
   });
 
-  // Navigation Logic based on DocType
+  // ===== DAK CONTEXT: fill Datenaktualisierung fields instead of navigating =====
+  if (state.kiContext === 'dak') {
+    // Navigate to the DAK sub-page and fill its fields
+    navigate('jeg2026', 'jeg-datenaktualisierung');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null && String(val).trim() !== '') {
+          el.value = val;
+          el.style.background = '#f0f8ff';
+          el.style.boxShadow = 'inset 3px 0 0 #1976D2';
+        }
+      };
+      const setRadio = (name, val) => {
+        const radio = document.querySelector(`input[type="radio"][name="${name}"][value="${val}"]`);
+        if (radio) radio.checked = true;
+      };
+      const setSelect = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val) {
+          for (const opt of el.options) {
+            if (opt.text === val || opt.value === val) { el.value = opt.value; break; }
+          }
+        }
+      };
+
+      // From einnahmen → aktuelle Gehaltsabrechnung fields
+      const e = currentParsedData?.einnahmen || {};
+      setVal('dak-brutto-akt',       e.brutto);
+      setVal('dak-netto-akt',        e.netto);
+      setVal('dak-steuerbrutto-akt', e.steuerbrutto);
+      setVal('dak-gehaelter-akt',    e.anzahlProJahr);
+
+      // From steuerdaten
+      const st = currentParsedData?.steuerdaten || {};
+      setSelect('dak-stk-akt', st.steuerklasse);
+
+      // From arbeitgeber
+      const ag = currentParsedData?.arbeitgeber || {};
+      setVal('dak-bav-akt',   ag.arbeitgeber_eur);
+      setVal('dak-vl-akt',    ag.vl);
+
+      // From rente
+      const r = currentParsedData?.rente || {};
+      setVal('dak-rente-regel',    r.regelAltersrente);
+      setVal('dak-rente-em',       r.renteVollEM);
+      setVal('dak-rente-jahre',    r.jahreEingezahlt);
+      setVal('dak-rente-kuenftig', r.renteKuenftig);
+      setVal('dak-rente-datum',    r.datum);
+
+      const dakFilled = [e.brutto, e.netto, r.regelAltersrente, r.renteVollEM].filter(v => v && String(v).trim() !== '').length;
+      if (dakFilled > 0) showToast(`✓ ${dakFilled} Felder in der Datenaktualisierung befüllt`);
+      if (currentReviewResolve) currentReviewResolve(dakFilled);
+      currentReviewResolve = null;
+      currentParsedData = null;
+    }));
+    state.kiContext = 'daten';
+    return;
+  }
+
+  // ===== STANDARD CONTEXT: navigate to relevant page =====
   let navPage = ['berufliche-angaben', 'arbeitgeber'];
   if (currentParsedData.docType === 'Renteninformation') navPage = ['rente', 'rente'];
+  else if (currentParsedData.docType === 'Gehaltsabrechnung' || filledFields.steuerdaten.length > 0) {
+    if (filledFields.steuerdaten.length > 0) navPage = ['persoenliche-angaben', 'steuerdaten'];
+    else navPage = ['einnahmen', 'einnahmen'];
+  }
   else if (currentParsedData.docType === 'Versicherungsvertrag') navPage = ['versicherungen', 'hausrat'];
+  else if (currentParsedData.docType === 'Gesetzliche Krankenversicherung') navPage = ['versicherungen', 'existenzrisiken'];
   else if (currentParsedData.docType === 'Ausweis') navPage = ['persoenliche-angaben', 'ausweisdaten'];
+  else if (filledFields.energie && filledFields.energie.length > 0) navPage = ['ausgaben', 'ausgaben'];
   else if (totalApplied > 0 && filledFields.person.length > filledFields.arbeitgeber.length) navPage = ['persoenliche-angaben', 'personendaten'];
 
   navigate(navPage[0], navPage[1]);
@@ -676,9 +1086,13 @@ function applyReviewSelected() {
     filledFields.person.forEach(markKIField);
     filledFields.ausweis.forEach(markKIField);
     filledFields.adresse.forEach(markKIField);
+    filledFields.steuerdaten.forEach(markKIField);
     filledFields.arbeitgeber.forEach(markKIField);
     filledFields.rente.forEach(markKIField);
     filledFields.hausrat.forEach(markKIField);
+    filledFields.einnahmen.forEach(markKIField);
+    filledFields.gkv.forEach(markKIField);
+    filledFields.energie.forEach(markKIField);
     filledFields.radios.forEach(markKIRadio);
     if (totalApplied > 0) showKIBanner(navPage[1], totalApplied);
 
@@ -687,6 +1101,7 @@ function applyReviewSelected() {
     currentParsedData = null;
   }));
 }
+
 
 function cancelReview() {
   document.getElementById('review-modal-overlay').style.display = 'none';
@@ -744,7 +1159,7 @@ async function processFileQueue(files) {
         return;
       }
       
-      let combinedParsed = { person: {}, ausweis: {}, adresse: {}, arbeitgeber: {}, einnahmen: {}, rente: {}, hausrat: {} };
+      let combinedParsed = { person: {}, ausweis: {}, adresse: {}, steuerdaten: {}, arbeitgeber: {}, einnahmen: {}, rente: {}, hausrat: {}, gkv: {} };
       let hasData = false;
       let lastDocType = 'Dokument';
 
@@ -758,7 +1173,7 @@ async function processFileQueue(files) {
           if (parsed.docType && parsed.docType !== 'Dokument' && parsed.docType !== 'Unbekannt') {
             lastDocType = parsed.docType;
           }
-          ['person', 'ausweis', 'adresse', 'arbeitgeber', 'einnahmen', 'rente', 'hausrat'].forEach(key => {
+          ['person', 'ausweis', 'adresse', 'steuerdaten', 'arbeitgeber', 'einnahmen', 'rente', 'hausrat', 'gkv'].forEach(key => {
             if (parsed[key]) {
               Object.entries(parsed[key]).forEach(([k, v]) => {
                 if (v && String(v).trim() !== '') {
@@ -871,6 +1286,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.querySelector('.sidebar-toggle')?.addEventListener('click', toggleSidebar);
 
+      // Top navigation section buttons
+      document.querySelectorAll('.top-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.dataset.section;
+          switchSection(section);
+        });
+      });
+
+      // JEG 2026 parent: toggle sub-menu open/close
+      document.getElementById('bnav-jeg2026')?.addEventListener('click', () => {
+        const sub = document.querySelector('#sidebar-beratung .bnav-sub');
+        if (sub) sub.classList.toggle('open');
+        // Also navigate to the overview page
+        navigate('jeg2026', 'jeg2026');
+        updateBnavSubActive(null);
+      });
+
+      // JEG 2026 sub-links
+      document.querySelectorAll('.bnav-sub-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.stopPropagation();
+          const page = link.dataset.page;
+          const sub  = link.dataset.sub;
+
+          // Tools & Rechner: toggle sub-sub menu instead of navigating directly
+          if (sub === 'jeg-tools') {
+            const subsub = document.getElementById('tools-subsub');
+            if (subsub) subsub.classList.toggle('open');
+            updateBnavSubActive(sub);
+            updateBnavSubSubActive(null);
+            navigate(page, sub);
+            return;
+          }
+
+          // Collapse tools subsub when switching to another item
+          const subsub = document.getElementById('tools-subsub');
+          if (subsub) subsub.classList.remove('open');
+
+          navigate(page, sub);
+          updateBnavSubActive(sub);
+          updateBnavSubSubActive(null);
+        });
+      });
+
+      // JEG Tools sub-sub-links
+      document.querySelectorAll('.bnav-subsub-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.stopPropagation();
+          const page = link.dataset.page;
+          const sub  = link.dataset.sub;
+          navigate(page, sub);
+          updateBnavSubActive('jeg-tools');
+          updateBnavSubSubActive(sub);
+        });
+      });
+
+
+      // Activate 'Daten' tab by default on load
+      switchSection('daten');
+
+
       // Modal
       document.getElementById('upload-btn')?.addEventListener('click', openModal);
       document.querySelector('.modal-close')?.addEventListener('click', closeModal);
@@ -928,6 +1404,683 @@ document.addEventListener('DOMContentLoaded', () => {
       if (defaultSub) defaultSub.classList.add('open');
       const defLink = document.querySelector('.nav-link.has-children');
       if (defLink) defLink.classList.add('open');
-
-      navigate('persoenliche-angaben', 'personendaten');
     });
+
+// ===== JEG METRIC BAR UPDATE =====
+function jegUpdateMetric(inputId, barId, min, max) {
+  const input = document.getElementById(inputId);
+  const bar   = document.getElementById(barId);
+  if (!input || !bar) return;
+  const val = parseFloat(input.value) || 0;
+  const pct = Math.min(100, Math.max(0, ((val - min) / (max - min)) * 100));
+  bar.style.width = pct.toFixed(1) + '%';
+}
+
+// ===== JEG STEP CHECKBOX TOGGLE =====
+function jegToggleStep(n) {
+  const rect  = document.getElementById('jeg-cb-rect-' + n);
+  const mark  = document.getElementById('jeg-cb-mark-' + n);
+  const done  = document.getElementById('jeg-done-' + n);
+  if (!rect) return;
+  const checked = rect.getAttribute('data-checked') === 'true';
+  if (!checked) {
+    rect.setAttribute('fill', '#1a6eb5');
+    rect.setAttribute('stroke', '#1565c0');
+    rect.setAttribute('data-checked', 'true');
+    mark.setAttribute('stroke', 'white');
+    mark.setAttribute('opacity', '1');
+    if (done) done.setAttribute('opacity', '0.25');
+  } else {
+    rect.setAttribute('fill', 'white');
+    rect.setAttribute('stroke', '#1a6eb5');
+    rect.setAttribute('data-checked', 'false');
+    mark.setAttribute('opacity', '0');
+    if (done) done.setAttribute('opacity', '0');
+  }
+}
+
+// ===== JEG TOP LEVEL TAB TOGGLE =====
+function jegSwitchTopLevel(target) {
+  // Update Top Tabs
+  document.getElementById('tab-mandant').classList.toggle('active', target === 'mandant');
+  document.getElementById('tab-potenziale').classList.toggle('active', target === 'potenziale');
+
+  // Update Toolbar Navs
+  const navMandant = document.getElementById('top-nav-mandant');
+  const navPotenziale = document.getElementById('top-nav-potenziale');
+  if (navMandant) navMandant.style.display = target === 'mandant' ? 'flex' : 'none';
+  if (navPotenziale) navPotenziale.style.display = target === 'potenziale' ? 'flex' : 'none';
+
+  // Force navigate when switching Top Level Tabs using native switchSection which handles all sidebars automatically
+  if (target === 'potenziale') {
+    // Remember last mandant section (e.g. daten, beratung)
+    if (state.activeSection !== 'pot-jeg') {
+      state.lastMandantSection = state.activeSection;
+    }
+    switchSection('pot-jeg');
+  } else if (target === 'mandant') {
+    // Restore mandant section if we are coming from potenziale
+    if (state.activeSection === 'pot-jeg') {
+      switchSection(state.lastMandantSection || 'daten');
+    }
+  }
+}
+
+// ===== JEG MANDANT / PARTNER TOGGLE =====
+const _jegPersonData = {
+  mandant: {
+    liquidity: { val: 420, min: 0, max: 2000 },
+    savings:   { val: 175, min: 0, max: 500  },
+    gapAv:     { val: 850, min: 0, max: 2000 },
+    gapExi:    { val: 650, min: 0, max: 2000 },
+  },
+  partner: {
+    liquidity: { val: 420, min: 0, max: 2000 }, // identical
+    savings:   { val: 175, min: 0, max: 500  }, // identical
+    gapAv:     { val: 520, min: 0, max: 2000 },
+    gapExi:    { val: 380, min: 0, max: 2000 },
+  },
+};
+
+function jegSwitchPerson(type) {
+  const d = _jegPersonData[type];
+  if (!d) return;
+
+  // Toggle button styles
+  ['mandant', 'partner'].forEach(t => {
+    const btn = document.getElementById('jeg-btn-' + t);
+    if (btn) btn.classList.toggle('jeg-person-btn--active', t === type);
+  });
+
+  // Helper: update one metric
+  const set = (inputId, barId, data) => {
+    const input = document.getElementById(inputId);
+    const bar   = document.getElementById(barId);
+    if (input) input.value = data.val;
+    if (bar) {
+      const pct = Math.min(100, Math.max(0, ((data.val - data.min) / (data.max - data.min)) * 100));
+      bar.style.width = pct.toFixed(1) + '%';
+    }
+  };
+
+  set('jeg-liquidity', 'jeg-liquidity-bar', d.liquidity);
+  set('jeg-savings',   'jeg-savings-bar',   d.savings);
+  set('jeg-gap-av',    'jeg-gap-av-bar',    d.gapAv);
+  set('jeg-gap-exi',   'jeg-gap-exi-bar',   d.gapExi);
+}
+
+// ===== BV JEG STEP CHECKBOX TOGGLE (Beratungsvorbereitung) =====
+function bvJegToggleStep(n) {
+  const rect  = document.getElementById('bv-jeg-cb-rect-' + n);
+  const mark  = document.getElementById('bv-jeg-cb-mark-' + n);
+  const done  = document.getElementById('bv-jeg-done-' + n);
+  if (!rect) return;
+  const checked = rect.getAttribute('data-checked') === 'true';
+  if (!checked) {
+    rect.setAttribute('fill', '#1a6eb5');
+    rect.setAttribute('stroke', '#1565c0');
+    rect.setAttribute('data-checked', 'true');
+    mark.setAttribute('stroke', 'white');
+    mark.setAttribute('opacity', '1');
+    if (done) done.setAttribute('opacity', '0.25');
+  } else {
+    rect.setAttribute('fill', 'white');
+    rect.setAttribute('stroke', '#1a6eb5');
+    rect.setAttribute('data-checked', 'false');
+    mark.setAttribute('opacity', '0');
+    if (done) done.setAttribute('opacity', '0');
+  }
+}
+
+// ===== BV JEG MANDANT / PARTNER TOGGLE (Beratungsvorbereitung) =====
+const _bvJegPersonData = {
+  mandant: {
+    liquidity: { val: 420, min: 0, max: 2000 },
+    savings:   { val: 175, min: 0, max: 500  },
+    gapAv:     { val: 850, min: 0, max: 2000 },
+    gapExi:    { val: 650, min: 0, max: 2000 },
+  },
+  partner: {
+    liquidity: { val: 420, min: 0, max: 2000 },
+    savings:   { val: 175, min: 0, max: 500  },
+    gapAv:     { val: 520, min: 0, max: 2000 },
+    gapExi:    { val: 380, min: 0, max: 2000 },
+  },
+};
+
+function bvJegSwitchPerson(type) {
+  const d = _bvJegPersonData[type];
+  if (!d) return;
+
+  ['mandant', 'partner'].forEach(t => {
+    const btn = document.getElementById('bv-jeg-btn-' + t);
+    if (btn) btn.classList.toggle('jeg-person-btn--active', t === type);
+  });
+
+  const set = (inputId, barId, data) => {
+    const input = document.getElementById(inputId);
+    const bar   = document.getElementById(barId);
+    if (input) input.value = data.val;
+    if (bar) {
+      const pct = Math.min(100, Math.max(0, ((data.val - data.min) / (data.max - data.min)) * 100));
+      bar.style.width = pct.toFixed(1) + '%';
+    }
+  };
+
+  set('bv-jeg-liquidity', 'bv-jeg-liquidity-bar', d.liquidity);
+  set('bv-jeg-savings',   'bv-jeg-savings-bar',   d.savings);
+  set('bv-jeg-gap-av',    'bv-jeg-gap-av-bar',    d.gapAv);
+  set('bv-jeg-gap-exi',   'bv-jeg-gap-exi-bar',   d.gapExi);
+}
+
+// ===== BV HANDLUNGSEMPFEHLUNGEN – direkt aus DAK-Warn-Flags =====
+function bvRefreshHandlungsempfehlungen() {
+  const list  = document.getElementById('bv-handlungsempfehlungen-list');
+  const empty = document.getElementById('bv-handlungsempfehlungen-empty');
+  if (!list) return;
+
+  const recs = [];
+
+  // Helper: prüft ob ein dak-warn-Element sichtbar ist
+  const warnVisible = id => {
+    const el = document.getElementById(id);
+    return el && el.style.display !== 'none' && el.style.display !== '';
+  };
+
+  // Helper: prüft ob ein Dokument hochgeladen wurde (dak-fname-X hat Inhalt)
+  const fileUploaded = id => {
+    const el = document.getElementById(id);
+    return el && el.textContent.trim() !== '';
+  };
+
+  // --- 1. Gehaltserhöhung erkannt (brutto oder netto gestiegen) ---
+  const bruttoWarn = warnVisible('dak-warn-brutto');
+  const nettoWarn  = warnVisible('dak-warn-netto');
+  if (bruttoWarn || nettoWarn) {
+    const art = bruttoWarn ? 'Brutto' : 'Netto';
+    recs.push({
+      icon: '📈',
+      prio: 'high',
+      kategorie: 'Einkommenssteigerung erkannt',
+      text: `${art}einkommen ist gegenüber dem Vorjahr gestiegen – <strong>BU-Absicherung überprüfen</strong> und an das gestiegene Einkommen anpassen.`
+    });
+  }
+
+  // --- 2. Strom- & Gasrechnung hochgeladen ---
+  if (fileUploaded('dak-fname-3')) {
+    recs.push({
+      icon: '⚡',
+      prio: 'medium',
+      kategorie: 'Energiekosten',
+      text: `Strom- & Gasabrechnung liegt vor – Einsparpotenzial durch <strong>Tarifoptimierung</strong> prüfen und ggf. Anbieter wechseln.`
+    });
+  }
+
+  // --- 3. Riester-Zulagenbescheinigung hochgeladen ---
+  if (fileUploaded('dak-fname-4')) {
+    // 3a. Grundzulage nicht voll ausgeschöpft → eigene Card
+    if (warnVisible('dak-warn-gz')) {
+      recs.push({
+        icon: '⚠️',
+        prio: 'high',
+        kategorie: 'Riester – Zulage nicht voll ausgeschöpft',
+        text: `Die Grundzulage beträgt weniger als 175 €. Riesterbeitrag anpassen, um die <strong>volle staatliche Zulage</strong> zu erhalten.`
+      });
+    }
+    // 3b. AV-Depot-Vergleich immer als gesonderte Card
+    recs.push({
+      icon: '🏦',
+      prio: 'medium',
+      kategorie: 'Riester – Fördervergleich empfohlen',
+      text: `Riester-Zulagenbescheinigung vorhanden – <strong>Fördervergleich Riester vs. AV-Depot</strong> durchführen und Umstiegsszenario kalkulieren.`
+    });
+  }
+
+  // --- 4. Erhöhungsanträge vorhanden ---
+  const erhoehung = (typeof _jegCurrentErhoehung !== 'undefined') ? _jegCurrentErhoehung : 0;
+  if (erhoehung >= 1) {
+    recs.push({
+      icon: '📋',
+      prio: 'medium',
+      kategorie: 'Erhöhungsanträge nutzen',
+      text: `Für diesen Mandanten ${erhoehung === 1 ? 'liegt <strong>1 Erhöhungsantrag</strong>' : `liegen <strong>${erhoehung} Erhöhungsanträge</strong>`} vor – ideale Möglichkeit, die bestehende Absicherung <strong>schnell und unkompliziert zu erhöhen</strong>. Antrag im Termin direkt ansprechen und abschließen.`
+    });
+  }
+
+  // --- Rendern ---
+  list.querySelectorAll('.bv-rec-item').forEach(el => el.remove());
+
+  if (recs.length === 0) {
+    if (empty) empty.style.display = '';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  const colorMap = {
+    high:   { bg: '#fff8e1', border: '#f9a825', badge: '#f9a825', badgeTxt: '#fff', iconColor: '#f57f17', label: 'Handlungsbedarf' },
+    medium: { bg: '#e8f5e9', border: '#43a047', badge: '#43a047', badgeTxt: '#fff', iconColor: '#2e7d32', label: 'Empfehlung'     },
+  };
+
+  recs.forEach(rec => {
+    const c = colorMap[rec.prio] || colorMap.medium;
+    const div = document.createElement('div');
+    div.className = 'bv-rec-item';
+    div.style.cssText = `display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:${c.bg};border:1px solid ${c.border};border-radius:10px;`;
+    div.innerHTML = `
+      <span style="font-size:22px;flex-shrink:0;line-height:1.3;">${rec.icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:${c.badge};color:${c.badgeTxt};letter-spacing:0.3px;">${c.label}</span>
+          <span style="font-size:12px;font-weight:600;color:${c.iconColor};">${rec.kategorie}</span>
+        </div>
+        <p style="margin:0;font-size:13px;color:#333;line-height:1.55;">${rec.text}</p>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+// Auto-refresh wenn Beratungsvorbereitung-Seite aktiv wird
+document.addEventListener('DOMContentLoaded', function() {
+  const bvPage = document.getElementById('page-jeg-beratungsvorbereitung');
+  if (!bvPage) return;
+  new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if (m.target && m.target.id === 'page-jeg-beratungsvorbereitung' && m.target.classList.contains('active')) {
+        bvRefreshHandlungsempfehlungen();
+      }
+    });
+  }).observe(bvPage, { attributes: true, attributeFilter: ['class'] });
+});
+
+// ===== JEG POTENZIALE LISTE =====
+const jegPotClients = [
+  { id: 1,  fa: '900101', name: 'Müller, Thomas',        liqui: 350, kinder: 2, riester: 'ja',   ersparnis: 120, besuch: '2025-10-14', telis: 2, fremd: 0, einheiten: 57, erhoehung: 2, active: true },
+  { id: 2,  fa: '900102', name: 'Schmidt, Julia',         liqui: 150, kinder: 1, riester: 'nein', ersparnis: 200, besuch: '2025-08-22', telis: 5, fremd: 1, einheiten: 24, erhoehung: 0, active: true },
+  { id: 3,  fa: '900103', name: 'Schneider, Michael',     liqui: 800, kinder: 0, riester: 'ja',   ersparnis: 50,  besuch: '2026-01-10', telis: 3, fremd: 5, einheiten: 16, erhoehung: 1, active: true },
+  { id: 4,  fa: '900104', name: 'Fischer, Laura',         liqui: 220, kinder: 2, riester: 'nein', ersparnis: 300, besuch: '2025-11-05', telis: 2, fremd: 4, einheiten: 37, erhoehung: 3, active: true },
+  { id: 5,  fa: '900105', name: 'Weber, Andreas',         liqui: 450, kinder: 1, riester: 'ja',   ersparnis: 180, besuch: '2025-12-12', telis: 1, fremd: 0, einheiten: 15, erhoehung: 0, active: true },
+  { id: 6,  fa: '900106', name: 'Meyer, Sarah',           liqui: 100, kinder: 0, riester: 'nein', ersparnis: 150, besuch: '2025-09-30', telis: 4, fremd: 1, einheiten: 42, erhoehung: 1, active: true },
+  { id: 7,  fa: '900107', name: 'Wagner, Christian',      liqui: 600, kinder: 3, riester: 'ja',   ersparnis: 210, besuch: '2026-02-15', telis: 1, fremd: 4, einheiten: 22, erhoehung: 2, active: true },
+  { id: 8,  fa: '900108', name: 'Becker, Anna',           liqui: 320, kinder: 1, riester: 'ja',   ersparnis: 90,  besuch: '2025-07-18', telis: 7, fremd: 1, einheiten: 38, erhoehung: 3, active: true },
+  { id: 9,  fa: '900109', name: 'Schulz, Kevin',          liqui: 50,  kinder: 0, riester: 'nein', ersparnis: 80,  besuch: '2025-05-24', telis: 5, fremd: 0, einheiten: 58, erhoehung: 0, active: true },
+  { id: 10, fa: '900110', name: 'Hoffmann, Lisa',         liqui: 410, kinder: 2, riester: 'ja',   ersparnis: 160, besuch: '2026-03-01', telis: 3, fremd: 5, einheiten: 37, erhoehung: 2, active: true },
+  { id: 11, fa: '900111', name: 'Schäfer, Daniel',        liqui: 280, kinder: 0, riester: 'nein', ersparnis: 220, besuch: '2025-11-20', telis: 6, fremd: 2, einheiten: 19, erhoehung: 1, active: true },
+  { id: 12, fa: '900112', name: 'Koch, Melanie',          liqui: 550, kinder: 3, riester: 'ja',   ersparnis: 310, besuch: '2026-01-25', telis: 4, fremd: 2, einheiten: 16, erhoehung: 0, active: true },
+  { id: 13, fa: '900113', name: 'Bauer, Stefan',          liqui: 190, kinder: 1, riester: 'nein', ersparnis: 140, besuch: '2025-10-02', telis: 2, fremd: 3, einheiten: 16, erhoehung: 3, active: true },
+  { id: 14, fa: '900114', name: 'Richter, Maria',         liqui: 700, kinder: 2, riester: 'ja',   ersparnis: 250, besuch: '2026-02-28', telis: 6, fremd: 2, einheiten: 48, erhoehung: 2, active: true },
+  { id: 15, fa: '900115', name: 'Klein, Tobias',          liqui: 380, kinder: 0, riester: 'ja',   ersparnis: 100, besuch: '2025-08-11', telis: 5, fremd: 0, einheiten: 56, erhoehung: 1, active: true },
+  { id: 16, fa: '900116', name: 'Wolf, Sabine',           liqui: 260, kinder: 1, riester: 'nein', ersparnis: 270, besuch: '2025-12-05', telis: 8, fremd: 4, einheiten: 17, erhoehung: 0, active: true },
+  { id: 17, fa: '900117', name: 'Schröder, Markus',       liqui: 480, kinder: 2, riester: 'ja',   ersparnis: 190, besuch: '2026-01-18', telis: 7, fremd: 0, einheiten: 45, erhoehung: 2, active: true },
+  { id: 18, fa: '900118', name: 'Neumann, Nadine',        liqui: 310, kinder: 0, riester: 'nein', ersparnis: 130, besuch: '2025-09-15', telis: 5, fremd: 5, einheiten: 49, erhoehung: 1, active: true },
+  { id: 19, fa: '900119', name: 'Schwarz, Patrick',       liqui: 650, kinder: 3, riester: 'ja',   ersparnis: 280, besuch: '2026-03-10', telis: 6, fremd: 4, einheiten: 22, erhoehung: 3, active: true },
+  { id: 20, fa: '900120', name: 'Zimmermann, Lena',       liqui: 210, kinder: 1, riester: 'ja',   ersparnis: 110, besuch: '2025-06-25', telis: 2, fremd: 0, einheiten: 52, erhoehung: 0, active: true },
+  { id: 21, fa: '900121', name: 'Braun, Dennis',          liqui: 120, kinder: 0, riester: 'nein', ersparnis: 160, besuch: '2025-11-12', telis: 4, fremd: 2, einheiten: 15, erhoehung: 2, active: true },
+  { id: 22, fa: '900122', name: 'Krüger, Katharina',      liqui: 520, kinder: 2, riester: 'ja',   ersparnis: 240, besuch: '2026-02-05', telis: 4, fremd: 0, einheiten: 34, erhoehung: 1, active: true },
+  { id: 23, fa: '900123', name: 'Hofmann, Felix',         liqui: 370, kinder: 0, riester: 'ja',   ersparnis: 150, besuch: '2025-10-28', telis: 5, fremd: 3, einheiten: 50, erhoehung: 0, active: true },
+  { id: 24, fa: '900124', name: 'Lange, Vanessa',         liqui: 290, kinder: 1, riester: 'nein', ersparnis: 210, besuch: '2025-12-20', telis: 6, fremd: 1, einheiten: 33, erhoehung: 3, active: true },
+  { id: 25, fa: '900125', name: 'Schmitt, Florian',       liqui: 440, kinder: 2, riester: 'ja',   ersparnis: 170, besuch: '2026-01-08', telis: 6, fremd: 1, einheiten: 52, erhoehung: 2, active: true }
+];
+
+let jegPotSortCol = 'name';
+let jegPotSortDesc = false;
+
+function jegRenderPotTable() {
+  const tbody = document.getElementById('jeg-pot-tbody');
+  if (!tbody) return;
+  
+  const filterName = (document.getElementById('filter-name').value || '').toLowerCase();
+  const filterRiester = document.getElementById('filter-riester').value;
+  const filterLiqui = parseInt(document.getElementById('filter-liqui').value) || 0;
+  const filterKinder = parseInt(document.getElementById('filter-kinder').value) || 0;
+  const filterErsparnis = parseInt(document.getElementById('filter-ersparnis').value) || 0;
+  const filterBesuch = document.getElementById('filter-besuch').value;
+  const filterErhoehung = parseInt(document.getElementById('filter-erhoehung')?.value) || 0;
+  const filterTelis = parseInt(document.getElementById('filter-telis').value) || 0;
+  const filterFremd = parseInt(document.getElementById('filter-fremd').value) || 0;
+  const filterEinheiten = parseInt(document.getElementById('filter-einheiten').value) || 0;
+
+  let filtered = jegPotClients.filter(c => {
+    if (!c.active) return false;
+    if (filterName && !c.name.toLowerCase().includes(filterName)) return false;
+    if (filterRiester !== 'all' && c.riester !== filterRiester) return false;
+    if (c.liqui < filterLiqui) return false;
+    if (c.kinder < filterKinder) return false;
+    if (c.ersparnis < filterErsparnis) return false;
+    if (c.telis < filterTelis) return false;
+    if (c.fremd < filterFremd) return false;
+    if (c.einheiten < filterEinheiten) return false;
+    
+    if (filterBesuch !== 'all') {
+      const year = parseInt(c.besuch.split('-')[0], 10);
+      if (filterBesuch === 'vor2026' && year >= 2026) return false;
+      if (filterBesuch === 'vor2025' && year >= 2025) return false;
+      if (filterBesuch === 'vor2024' && year >= 2024) return false;
+    }
+
+    if (c.erhoehung < filterErhoehung) return false;
+    return true;
+  });
+
+  // Update KPI Cards
+  const count = filtered.length;
+  let sumLiqui = 0, sumVertraege = 0, sumEinheiten = 0;
+
+  filtered.forEach(c => {
+    sumLiqui += c.liqui;
+    sumVertraege += (c.telis + c.fremd);
+    sumEinheiten += c.einheiten;
+  });
+
+  const elCount = document.getElementById('pot-kpi-count');
+  const elLiqui = document.getElementById('pot-kpi-liqui');
+  const elVertraege = document.getElementById('pot-kpi-vertraege');
+  const elEinheiten = document.getElementById('pot-kpi-einheiten');
+
+  if (elCount) elCount.innerText = count;
+  if (elLiqui) elLiqui.innerText = count > 0 ? Math.round(sumLiqui / count) + ' €' : '0 €';
+  if (elVertraege) elVertraege.innerText = count > 0 ? (sumVertraege / count).toFixed(1) : '0.0';
+  if (elEinheiten) elEinheiten.innerText = count > 0 ? Math.round(sumEinheiten / count) : '0';
+
+  filtered.sort((a, b) => {
+    let valA = a[jegPotSortCol];
+    let valB = b[jegPotSortCol];
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+
+    if (valA < valB) return jegPotSortDesc ? 1 : -1;
+    if (valA > valB) return jegPotSortDesc ? -1 : 1;
+    return 0;
+  });
+
+  tbody.innerHTML = filtered.map(c => `
+    <tr>
+      <td><a href="#" class="jeg-pot-name-link" onclick="jegOpenMandantJEG(event, ${c.liqui}, ${c.ersparnis}, '${c.name.replace(/'/g, "\\'")}', '${c.fa}', ${c.erhoehung})"
+        title="JEG 2026 für ${c.name.replace(/"/g,'&quot;')} öffnen">${c.name}</a></td>
+      <td class="text-center">${c.liqui} €</td>
+      <td class="text-center">${c.ersparnis} €</td>
+      <td class="text-center">${c.riester === 'ja' ? 'Ja' : 'Nein'}</td>
+      <td class="text-center">${c.kinder}</td>
+      <td class="text-center">${c.telis}</td>
+      <td class="text-center">${c.fremd}</td>
+      <td class="text-center">${c.einheiten}</td>
+      <td class="text-center">${c.erhoehung}</td>
+      <td class="text-center">${jegFormatDate(c.besuch)}</td>
+      <td class="text-center">
+        <label class="jeg-pot-switch">
+          <input type="checkbox" onchange="jegDeactivatePotClient(${c.id})" checked>
+          <span class="jeg-pot-slider"></span>
+        </label>
+      </td>
+    </tr>
+  `).join('');
+
+  jegUpdateSortIcons();
+}
+
+let _jegCurrentErhoehung = 0;
+
+window.jegOpenMandantJEG = function(event, liqui, ersparnis, name, fa, erhoehung) {
+  event.preventDefault();
+  _jegCurrentErhoehung = erhoehung || 0;
+
+  // Build the header meta text: "Name (FA-Nr. XXXXX)"
+  const metaText = name + ' (FA-Nr. ' + (fa || '') + ')';
+  try { localStorage.setItem('jeg_last_mandant_meta', metaText); } catch(e) {}
+
+  // Update internal person data so Mandant/Partner toggle keeps these values
+  if (typeof _jegPersonData !== 'undefined') {
+    _jegPersonData.mandant.liquidity.val = liqui;
+    _jegPersonData.mandant.savings.val   = ersparnis;
+  }
+
+  jegSwitchTopLevel('mandant');
+
+  setTimeout(function() {
+    switchSection('beratung');
+    navigate('jeg2026', 'jeg2026');
+    updateBnavSubActive(null);
+    updateBnavSubSubActive(null);
+
+    // Open JEG sub-menu in sidebar
+    const bnavSub = document.querySelector('#sidebar-beratung .bnav-sub');
+    if (bnavSub) bnavSub.classList.add('open');
+
+    const main = document.querySelector('main') || document.querySelector('.main-content') || document.documentElement;
+    if (main) main.scrollTop = 0;
+    window.scrollTo(0, 0);
+
+    setTimeout(function() {
+      const elLiqui = document.getElementById('jeg-liquidity');
+      if (elLiqui) { elLiqui.value = liqui; if (typeof jegUpdateMetric === 'function') jegUpdateMetric('jeg-liquidity', 'jeg-liquidity-bar', 0, 2000); }
+      const elSavings = document.getElementById('jeg-savings');
+      if (elSavings) { elSavings.value = ersparnis; if (typeof jegUpdateMetric === 'function') jegUpdateMetric('jeg-savings', 'jeg-savings-bar', 0, 500); }
+
+      // Show "Name (FA-Nr. XXXXX)" in hero meta line (JEG 2026 page)
+      const heroMeta = document.getElementById('jeg-hero-meta');
+      if (heroMeta) heroMeta.textContent = metaText;
+
+      // ── Mirror to Beratungsvorbereitung page ──────────────────────────
+      const bvHeroMeta = document.getElementById('bv-hero-meta');
+      if (bvHeroMeta) bvHeroMeta.textContent = metaText;
+
+      // ── Mirror to Datenaktualisierung page ────────────────────────────
+      const dakHeroMeta = document.getElementById('dak-hero-meta');
+      if (dakHeroMeta) dakHeroMeta.textContent = metaText;
+
+      const bvLiqui = document.getElementById('bv-jeg-liquidity');
+      if (bvLiqui) {
+        bvLiqui.value = liqui;
+        if (typeof jegUpdateMetric === 'function') jegUpdateMetric('bv-jeg-liquidity', 'bv-jeg-liquidity-bar', 0, 2000);
+      }
+      const bvSavings = document.getElementById('bv-jeg-savings');
+      if (bvSavings) {
+        bvSavings.value = ersparnis;
+        if (typeof jegUpdateMetric === 'function') jegUpdateMetric('bv-jeg-savings', 'bv-jeg-savings-bar', 0, 500);
+      }
+    }, 80);
+  }, 50);
+};
+
+// On page load: restore last visited mandant in hero meta (both pages)
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const last = localStorage.getItem('jeg_last_mandant_meta');
+    if (last) {
+      const heroMeta = document.getElementById('jeg-hero-meta');
+      if (heroMeta) heroMeta.textContent = last;
+      const bvHeroMeta = document.getElementById('bv-hero-meta');
+      if (bvHeroMeta) bvHeroMeta.textContent = last;
+      const dakHeroMeta = document.getElementById('dak-hero-meta');
+      if (dakHeroMeta) dakHeroMeta.textContent = last;
+    }
+  } catch(e) {}
+});
+
+function jegFormatDate(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+function jegSortPotTable(col) {
+  if (jegPotSortCol === col) {
+    jegPotSortDesc = !jegPotSortDesc;
+  } else {
+    jegPotSortCol = col;
+    jegPotSortDesc = false;
+  }
+  jegRenderPotTable();
+}
+
+function jegUpdateSortIcons() {
+  const icons = document.querySelectorAll('.sort-icon');
+  icons.forEach(ic => ic.innerHTML = '');
+  const activeIcon = document.getElementById('sort-icon-' + jegPotSortCol);
+  if (activeIcon) {
+    activeIcon.innerHTML = jegPotSortDesc ? '▼' : '▲';
+  }
+}
+
+function jegDeactivatePotClient(id) {
+  const c = jegPotClients.find(x => x.id === id);
+  if (c) {
+    c.active = false;
+    jegRenderPotTable();
+  }
+}
+
+// Initial render slightly delayed to ensure DOM
+setTimeout(() => {
+  if (document.getElementById('jeg-pot-tbody')) jegRenderPotTable();
+}, 100);
+
+// ===== JEG COUNTDOWN LOGIC =====
+function initJegCountdown() {
+  const targetDate = new Date("2026-12-31T23:59:59").getTime();
+
+  function update() {
+    const elDays = document.getElementById("jeg-cd-days");
+    const elHours = document.getElementById("jeg-cd-hours");
+    const elMinutes = document.getElementById("jeg-cd-minutes");
+    const elSeconds = document.getElementById("jeg-cd-seconds");
+
+    // Only update if we are on the page containing the countdown
+    if (!elDays || !elHours || !elMinutes || !elSeconds) return;
+
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      elDays.innerText = "00";
+      elHours.innerText = "00";
+      elMinutes.innerText = "00";
+      elSeconds.innerText = "00";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    elDays.innerText = String(days).padStart(2, '0');
+    elHours.innerText = String(hours).padStart(2, '0');
+    elMinutes.innerText = String(minutes).padStart(2, '0');
+    elSeconds.innerText = String(seconds).padStart(2, '0');
+  }
+
+  update();
+  // We use setInterval and don't clear it because the app is a single DOM SPA and we might navigate away and back
+  setInterval(update, 1000);
+}
+
+// Start countdown wrapper
+setTimeout(initJegCountdown, 500);
+
+// ===== GENERIC VOICE DICTATION FOR JEG TEXTAREAS =====
+let jegGenericRecognition = null;
+let jegGenericRecordingId = null;
+
+window.jegGenericUpdateCharCount = function(baseId) {
+  const ta = document.getElementById(baseId);
+  const counter = document.getElementById(baseId + '-count');
+  if (ta && counter) counter.textContent = ta.value.length + ' Zeichen';
+};
+
+window.jegGenericSave = function(baseId) {
+  const ta = document.getElementById(baseId);
+  if (ta) {
+    localStorage.setItem('jeg_notes_' + baseId, ta.value);
+    if(typeof showToast === 'function') showToast('Notizen gespeichert.');
+  }
+};
+
+window.jegGenericVoiceToggle = function(baseId) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    if(typeof showToast === 'function') showToast('Spracheingabe wird von diesem Browser nicht unterstützt.');
+    return;
+  }
+  
+  if (jegGenericRecordingId === baseId) {
+    if (jegGenericRecognition) jegGenericRecognition.stop();
+    return;
+  } else if (jegGenericRecordingId) {
+    if (jegGenericRecognition) jegGenericRecognition.stop();
+  }
+
+  jegGenericRecognition = new SpeechRecognition();
+  jegGenericRecognition.lang = 'de-DE';
+  jegGenericRecognition.continuous = true;
+  jegGenericRecognition.interimResults = true;
+
+  jegGenericRecognition.onstart = function () {
+    jegGenericRecordingId = baseId;
+    jegGenericSetMicState(baseId, true);
+  };
+
+  jegGenericRecognition.onresult = function (e) {
+    const ta = document.getElementById(baseId);
+    const status = document.getElementById(baseId + '-status');
+    if (!ta) return;
+
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) final += t + ' ';
+        else interim += t;
+    }
+
+    if (status) status.textContent = interim ? '🎤 ' + interim : '';
+    if (final) {
+        ta.value += final;
+        jegGenericUpdateCharCount(baseId);
+    }
+  };
+
+  jegGenericRecognition.onerror = function (e) {
+    const status = document.getElementById(baseId + '-status');
+    if (status) status.textContent = 'Fehler: ' + (e.error === 'no-speech' ? 'Kein Ton' : e.error);
+    jegGenericSetMicState(baseId, false);
+    jegGenericRecordingId = null;
+  };
+
+  jegGenericRecognition.onend = function () {
+    jegGenericSetMicState(baseId, false);
+    const status = document.getElementById(baseId + '-status');
+    if (status) status.textContent = '';
+    jegGenericRecordingId = null;
+  };
+
+  jegGenericRecognition.start();
+};
+
+window.jegGenericSetMicState = function(baseId, active) {
+  const btn = document.getElementById(baseId + '-mic');
+  const label = document.getElementById(baseId + '-mic-label');
+  if (!btn || !label) return;
+  if (active) {
+    btn.style.background = '#c62828';
+    btn.style.animation = 'jekPulse 1s infinite';
+    label.textContent = 'Stop';
+  } else {
+    btn.style.background = 'var(--blue-accent)';
+    btn.style.animation = '';
+    label.textContent = 'Sprache';
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['jeg-themen', 'jeg-ziele'].forEach(id => {
+    const ta = document.getElementById(id);
+    if (ta) {
+      const saved = localStorage.getItem('jeg_notes_' + id);
+      if (saved) {
+        ta.value = saved;
+        jegGenericUpdateCharCount(id);
+      }
+    }
+  });
+});
+

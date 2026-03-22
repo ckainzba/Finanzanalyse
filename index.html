@@ -6,8 +6,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TOS Mandant – Finanzberatung</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_foerder-rechner.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: { preflight: false },
+      theme: {
+        extend: {
+          colors: {
+            'riester-main': '#646464',
+            'riester-light': '#e8e8e8',
+            'riester-dark': '#2d2d2d',
+            'riester-medium': '#4a4a4a',
+            'av-depot-main': '#006fb9',
+            'av-depot-light': '#d9edf7',
+            'av-depot-dark': '#004a7a',
+            'av-depot-medium': '#005a94',
+            'button-blue': '#023e84'
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -15,9 +37,10 @@
 
     <!-- HEADER -->
     <header id="header">
-      <div class="header-sidebar-area">
-        <div class="logo">TOS</div>
-        <div class="mandant-label">Mandant</div>
+      <div class="logo">TOS</div>
+      <div class="top-tabs">
+        <button class="top-tab active" id="tab-mandant" onclick="jegSwitchTopLevel('mandant')">Mandant</button>
+        <button class="top-tab" id="tab-potenziale" onclick="jegSwitchTopLevel('potenziale')">Potenziale</button>
       </div>
       <div class="header-main-area">
         <div class="spacer"></div>
@@ -45,7 +68,15 @@
           </div>
         </div>
         <div class="toolbar-mandant-space">
-          <button class="daten-btn">Daten</button>
+          <nav class="top-nav" id="top-nav-mandant">
+            <button class="top-nav-btn" id="tnav-dashboard" data-section="dashboard">Dashboard</button>
+            <button class="top-nav-btn" id="tnav-daten" data-section="daten">Daten</button>
+            <button class="top-nav-btn" id="tnav-beratung" data-section="beratung">Beratung</button>
+            <button class="top-nav-btn" id="tnav-vertraege" data-section="vertraege">Verträge</button>
+          </nav>
+          <nav class="top-nav" id="top-nav-potenziale" style="display: none;">
+            <button class="top-nav-btn" id="tnav-pot-jeg" data-section="pot-jeg">JEG 2026</button>
+          </nav>
         </div>
       </div>
       <div class="spacer"></div>
@@ -65,6 +96,7 @@
               <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="personendaten">Personendaten</div>
               <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="ausweisdaten">Ausweisdaten</div>
               <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="kontaktdaten">Kontaktdaten</div>
+              <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="steuerdaten">Steuerdaten</div>
               <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="hobbys">Hobbys</div>
               <div class="sub-nav-link" data-page="persoenliche-angaben" data-sub="tiere">Tiere</div>
             </div>
@@ -143,9 +175,95 @@
         </nav>
       </aside>
 
+      <!-- BERATUNGS-SIDEBAR -->
+      <aside id="sidebar-beratung">
+        <nav id="beratung-nav">
+          <!-- TELIS System -->
+          <div class="nav-item">
+            <div class="bnav-label">TELIS System</div>
+          </div>
+          <!-- Haushaltsplanung -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children">
+              <span>Haushaltsplanung</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+          <!-- Existenz -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children">
+              <span class="bnav-icon bnav-icon--existenz">A</span>
+              <span>Existenz</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+          <!-- Altersvorsorge -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children">
+              <span class="bnav-icon bnav-icon--alters">B</span>
+              <span>Altersvorsorge</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+          <!-- Service -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children">
+              <span class="bnav-icon bnav-icon--service">C</span>
+              <span>Service</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+          <!-- Chance -->
+          <div class="nav-item">
+            <div class="bnav-link">
+              <span class="bnav-icon bnav-icon--chance">D</span>
+              <span>Chance</span>
+            </div>
+          </div>
+          <!-- Kindervorsorge -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children">
+              <span>Kindervorsorge</span>
+              <span class="chevron">›</span>
+            </div>
+          </div>
+          <!-- Servicefeedback -->
+          <div class="nav-item">
+            <div class="bnav-link">
+              <span>Servicefeedback</span>
+            </div>
+          </div>
+          <!-- JEG 2026 -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children bnav-jeg-parent" id="bnav-jeg2026" data-page="jeg2026"
+              data-sub="jeg2026">
+              <span>JEG 2026</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="bnav-sub open">
+              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-datenaktualisierung">Datenaktualisierung
+              </div>
+              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-beratungsvorbereitung">Beratungsvorbereitung</div>
+              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-themen">Themen</div>
+              <div class="bnav-sub-group">
+                <div class="bnav-sub-link bnav-sub-parent" data-page="jeg2026" data-sub="jeg-tools">Tools &amp; Rechner
+                  <span class="chevron-inline">›</span></div>
+                <div class="bnav-subsub" id="tools-subsub">
+                  <div class="bnav-subsub-link" data-page="jeg2026" data-sub="jeg-foerder">Förder-Vergleichsrechner
+                  </div>
+                  <div class="bnav-subsub-link" data-page="jeg2026" data-sub="jeg-fruehstart">Frühstart-Rentenrechner
+                  </div>
+                </div>
+              </div>
+              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-checkliste">Abschluss</div>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
       <!-- MAIN -->
       <main id="main">
-        <button class="ki-btn-floating" id="upload-btn" title="Daten per KI erfassen">
+        <button class="ki-btn-floating ki-btn-daten-only" id="upload-btn" title="Daten per KI erfassen">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
@@ -199,14 +317,20 @@
           <p class="page-meta">FA-Nummer: 1290456</p>
           <h1 class="page-title">Ausweisdaten</h1>
           <div class="field-grid grid-3">
-            <div class="field-group"><label>Ausweisart</label><input id="aus-art" type="text" placeholder="Personalausweis"></div>
-            <div class="field-group"><label>Ausweisnummer</label><input id="aus-nummer" type="text" placeholder=""></div>
-            <div class="field-group"><label>Ausstellungsbehörde</label><input id="aus-behoerde" type="text" placeholder=""></div>
+            <div class="field-group"><label>Ausweisart</label><input id="aus-art" type="text"
+                placeholder="Personalausweis"></div>
+            <div class="field-group"><label>Ausweisnummer</label><input id="aus-nummer" type="text" placeholder="">
+            </div>
+            <div class="field-group"><label>Ausstellungsbehörde</label><input id="aus-behoerde" type="text"
+                placeholder=""></div>
           </div>
           <div class="field-grid grid-3">
-            <div class="field-group"><label>Ausstellungsdatum</label><input id="aus-ausstellungsdatum" type="text" placeholder="TT.MM.JJJJ"></div>
-            <div class="field-group"><label>Gültig bis</label><input id="aus-gueltigbis" type="text" placeholder="TT.MM.JJJJ"></div>
-            <div class="field-group"><label>Geburtsort</label><input id="aus-geburtsort" type="text" placeholder=""></div>
+            <div class="field-group"><label>Ausstellungsdatum</label><input id="aus-ausstellungsdatum" type="text"
+                placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Gültig bis</label><input id="aus-gueltigbis" type="text"
+                placeholder="TT.MM.JJJJ"></div>
+            <div class="field-group"><label>Geburtsort</label><input id="aus-geburtsort" type="text" placeholder="">
+            </div>
           </div>
           <div class="form-actions">
             <button class="btn btn-outline" data-action="save">Speichern</button>
@@ -226,6 +350,67 @@
             <div class="field-group"><label>E-Mail</label><input type="email" placeholder=""></div>
             <div class="field-group"><label>Website</label><input type="text" placeholder=""></div>
           </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" data-action="save">Speichern</button>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: STEUERDATEN ============ -->
+        <div class="page" id="page-steuerdaten">
+          <p class="page-meta">FA-Nummer: 1290456</p>
+          <h1 class="page-title">Steuerliche Angaben</h1>
+          
+          <div class="field-grid grid-1" style="max-width: 400px;">
+            <div class="field-group"><label>zu versteuerndes Einkommen pro Jahr in Euro</label><input id="st-einkommen" type="text" placeholder="0,00"></div>
+          </div>
+          
+          <div class="field-grid grid-1" style="max-width: 600px;">
+            <div class="field-group">
+              <label class="required">Familienstand</label>
+              <div class="radio-group">
+                <label><input type="radio" name="st-familienstand" value="geschieden"> geschieden</label>
+                <label><input type="radio" name="st-familienstand" value="ledig" checked> ledig</label>
+                <label><input type="radio" name="st-familienstand" value="verheiratet"> verheiratet</label>
+                <label><input type="radio" name="st-familienstand" value="verwitwet"> verwitwet</label>
+              </div>
+            </div>
+            
+            <div class="field-group">
+              <label class="required">Steuerklasse</label>
+              <div class="radio-group">
+                <label><input type="radio" name="st-steuerklasse" value="I" checked> I</label>
+                <label><input type="radio" name="st-steuerklasse" value="II"> II</label>
+                <label><input type="radio" name="st-steuerklasse" value="III"> III</label>
+                <label><input type="radio" name="st-steuerklasse" value="IV"> IV</label>
+                <label><input type="radio" name="st-steuerklasse" value="V"> V</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="field-grid grid-2">
+            <div class="field-group">
+              <label class="required">kirchensteuerpflichtig</label>
+              <div class="radio-group">
+                <label><input type="radio" name="st-kirchensteuer" value="ja"> ja</label>
+                <label><input type="radio" name="st-kirchensteuer" value="nein" checked> nein</label>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="required">sozialversicherungspflichtig</label>
+              <div class="radio-group">
+                <label><input type="radio" name="st-sozialversicherung" value="ja" checked> ja</label>
+                <label><input type="radio" name="st-sozialversicherung" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Sozialversicherungsnummer</label><input id="st-sv" type="text" placeholder=""></div>
+            <div class="field-group"><label>Steuernummer</label><input id="st-steuernummer" type="text" placeholder=""></div>
+            <div class="field-group"><label>Steueridentifikationsnummer</label><input id="st-id" type="text" placeholder=""></div>
+            <div class="field-group"><label>Ort des Finanzamtes</label><input id="st-finanzamt" type="text" placeholder=""></div>
+          </div>
+
           <div class="form-actions">
             <button class="btn btn-outline" data-action="save">Speichern</button>
           </div>
@@ -314,7 +499,7 @@
                 placeholder=""></div>
           </div>
           <div class="field-grid grid-2">
-            <div class="field-group"><label>tätig seit</label><input id="ag-taetigkeit" type="text"
+            <div class="field-group"><label>Eintritt</label><input id="ag-taetigkeit" type="text"
                 placeholder="TT.MM.JJJJ"></div>
             <div class="field-group">
               <label class="required">Befristung</label>
@@ -473,8 +658,14 @@
 
           <div class="income-section">
             <h2 class="section-title">Einkommen</h2>
-            <p class="empty-msg">Es wurde kein Einkommen angelegt.</p>
-            <button class="btn btn-add">+ Einkommen hinzufügen</button>
+            <div class="field-grid grid-3">
+              <div class="field-group"><label class="required">Brutto in Euro</label><input id="e-brutto" type="text"
+                  placeholder="0,00"></div>
+              <div class="field-group"><label class="required">Netto in Euro</label><input id="e-netto" type="text"
+                  placeholder="0,00"></div>
+              <div class="field-group"><label class="required">Anzahl pro Jahr</label><input id="e-anzahl" type="text"
+                  placeholder="0"></div>
+            </div>
           </div>
           <hr class="section-divider">
 
@@ -515,6 +706,52 @@
             <div class="field-group"><label>Sparrate monatlich in Euro</label><input type="text" placeholder="0,00">
             </div>
           </div>
+          
+          <hr class="section-divider">
+          <h2 class="section-title">Energie</h2>
+          
+          <div class="field-grid grid-2" style="gap: 24px;">
+            <!-- STROM -->
+            <div class="energie-box">
+              <h3 style="font-size:16px; margin-bottom:16px; color:var(--button-blue); font-weight: 500;">Strom</h3>
+              <div class="field-grid grid-2">
+                <div class="field-group"><label>Verbrauch in kWh im Jahr</label><input id="en-strom-verbrauch" type="text" placeholder="0"></div>
+                <div class="field-group"><label>Kosten brutto jährlich in Euro</label><input id="en-strom-kosten" type="text" placeholder="0,00"></div>
+              </div>
+              <div class="field-grid grid-2">
+                <div class="field-group"><label>Anbieter</label><input id="en-strom-anbieter" type="text" placeholder=""></div>
+                <div class="field-group" style="padding-top: 24px;">
+                  <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: normal; font-size: 13px;">
+                    <input type="checkbox" id="en-strom-oeko" style="width:16px; height:16px; margin: 0;"> Ökostrom gewünscht
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 13px;">
+                    <input type="checkbox" id="en-strom-gewerblich" style="width:16px; height:16px; margin: 0;"> gewerbliche Nutzung
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- GAS -->
+            <div class="energie-box">
+              <h3 style="font-size:16px; margin-bottom:16px; color:var(--button-blue); font-weight: 500;">Gas</h3>
+              <div class="field-grid grid-2">
+                <div class="field-group"><label>Verbrauch in kWh im Jahr</label><input id="en-gas-verbrauch" type="text" placeholder="0"></div>
+                <div class="field-group"><label>Kosten brutto jährlich in Euro</label><input id="en-gas-kosten" type="text" placeholder="0,00"></div>
+              </div>
+              <div class="field-grid grid-2">
+                <div class="field-group"><label>Anbieter</label><input id="en-gas-anbieter" type="text" placeholder=""></div>
+                <div class="field-group" style="padding-top: 24px;">
+                  <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: normal; font-size: 13px;">
+                    <input type="checkbox" id="en-gas-oeko" style="width:16px; height:16px; margin: 0;"> Biogas gewünscht
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; font-size: 13px;">
+                    <input type="checkbox" id="en-gas-gewerblich" style="width:16px; height:16px; margin: 0;"> gewerbliche Nutzung
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="form-actions">
             <button class="btn btn-outline" data-action="save">Speichern</button>
           </div>
@@ -644,6 +881,45 @@
         <div class="page" id="page-existenzrisiken">
           <p class="page-meta">FA-Nummer: 1290456</p>
           <h1 class="page-title">Existenzrisiken</h1>
+
+          <!-- GESETZLICHE KRANKENVERSICHERUNG -->
+          <h2 class="section-title">Gesetzliche Krankenversicherung</h2>
+          <div class="field-grid grid-1" style="max-width: 400px;">
+            <div class="field-group"><label class="required">Name der Gesellschaft</label><input id="gkv-gesellschaft"
+                type="text" placeholder=""></div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group"><label>Mitgliedsnummer</label><input id="gkv-nummer" type="text" placeholder="">
+            </div>
+            <div class="field-group"><label>Beginn</label><input id="gkv-beginn" type="text" placeholder="TT.MM.JJJJ">
+            </div>
+          </div>
+          <div class="field-grid grid-2">
+            <div class="field-group">
+              <label class="required">Versicherungsstatus</label>
+              <div class="radio-group">
+                <label><input type="radio" name="gkv-status" value="freiwillig versichert"> freiwillig
+                  versichert</label>
+                <label><input type="radio" name="gkv-status" value="pflichtversichert"> pflichtversichert</label>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Bonusprogramm</label>
+              <div class="radio-group">
+                <label><input type="radio" name="gkv-bonus" value="ja"> ja</label>
+                <label><input type="radio" name="gkv-bonus" value="nein"> nein</label>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid grid-1">
+            <div class="field-group"><label>Notizen für Berater*in</label>
+              <textarea id="gkv-notizen"
+                style="border:1px solid var(--border);border-radius:4px;padding:8px;font-size:13px;min-height:80px;resize:vertical;"
+                placeholder=""></textarea>
+            </div>
+          </div>
+          <hr class="section-divider">
+
           <div class="income-section">
             <h2 class="section-title">Berufsunfähigkeitsversicherung</h2>
             <p class="empty-msg">Keine BU-Versicherung angelegt.</p>
@@ -713,6 +989,1953 @@
           </div>
         </div>
 
+        <!-- ============ PAGE: DASHBOARD (leer) ============ -->
+        <div class="page" id="page-dashboard">
+          <h1 class="page-title" style="color:var(--text-muted);margin-top:60px;text-align:center;">Dashboard</h1>
+          <p style="text-align:center;color:var(--text-muted);font-size:14px;">Dieser Bereich ist noch nicht verfügbar.
+          </p>
+        </div>
+
+        <!-- ============ PAGE: VERTRÄGE (leer) ============ -->
+        <div class="page" id="page-vertraege">
+          <h1 class="page-title" style="color:var(--text-muted);margin-top:60px;text-align:center;">Verträge</h1>
+          <p style="text-align:center;color:var(--text-muted);font-size:14px;">Dieser Bereich hat noch keinen Inhalt.
+          </p>
+        </div>
+
+
+        <!-- ============ PAGE: JEG 2026 ============ -->
+        <div class="page" id="page-jeg2026">
+
+          <!-- ==== NEW WHITE TWO-COLUMN HEADER ==== -->
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta" id="jeg-hero-meta">Jahresservice 2026</p>
+              <h1 class="jeg-page-hero-title">Jahresendkontrolltermin</h1>
+              <p class="jeg-page-hero-desc" id="jeg-hero-subtitle">Der Jahresendkontrolltermin ist ein zentrales Instrument unserer Beratungsphilosophie. Unser Berater überprüft gemeinsam mit Ihnen alle relevanten Daten, nutzt noch verfügbare staatliche Förderungen des laufenden Jahres und passt Ihr finanzielles Konzept an veränderte Rahmenbedingungen an &ndash; damit Sie optimal aufgestellt ins neue Jahr starten.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_jahresend.png" alt="Beratungsgespräch Jahresendkontrolltermin" class="jeg-page-hero-image">
+            </div>
+          </div>
+
+          <div class="jeg-page-center">
+
+            <!-- ===== GROSSES KREISLAUF-DIAGRAMM (zentriert) ===== -->
+            <div style="display:flex; justify-content:center; margin-bottom:40px;">
+              <svg viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg"
+                   style="width:min(560px,100%); height:auto; overflow:visible;">
+                <defs>
+                  <marker id="ca1" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
+                  <marker id="ca2" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
+                  <marker id="ca3" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
+                  <marker id="ca4" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
+                  <linearGradient id="cgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1a3a5c"/>
+                    <stop offset="100%" stop-color="#1a6eb5"/>
+                  </linearGradient>
+                  <linearGradient id="igrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1565c0"/>
+                    <stop offset="100%" stop-color="#2196f3"/>
+                  </linearGradient>
+                  <filter id="ish" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(21,101,192,0.25)"/>
+                  </filter>
+                  <filter id="cshadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(26,58,92,0.30)"/>
+                  </filter>
+                </defs>
+
+                <!-- Dotted track ring -->
+                <circle cx="350" cy="350" r="155" fill="none" stroke="#c8d8eb" stroke-width="2" stroke-dasharray="6 5" opacity="0.9"/>
+
+                <!-- Arcs (gap 12° per icon) -->
+                <path d="M 381.9 197.3 A 155 155 0 0 1 500.7 381.9" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca1)"/>
+                <path d="M 500.7 381.9 A 155 155 0 0 1 381.9 502.7" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca2)"/>
+                <path d="M 318.1 502.7 A 155 155 0 0 1 199.3 381.9" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca3)"/>
+                <path d="M 199.3 318.1 A 155 155 0 0 1 318.1 197.3" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca4)"/>
+
+                <!-- CENTER BADGE -->
+                <circle cx="350" cy="350" r="95" fill="url(#cgrad)" filter="url(#cshadow)"/>
+                <circle cx="350" cy="350" r="89" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="2"/>
+                <text x="350" y="332" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.8)" letter-spacing="4">JEG</text>
+                <text x="350" y="368" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="38" font-weight="800" fill="#fff">2026</text>
+                <text x="350" y="390" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="11" fill="rgba(255,255,255,0.55)" letter-spacing="3">KREISLAUF</text>
+
+                <!-- STEP 1: TOP (350, 195) -->
+                <circle cx="350" cy="195" r="36" fill="url(#igrad)" filter="url(#ish)"/>
+                <g transform="translate(333,178)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="2" width="30" height="28" rx="3"/>
+                  <line x1="10" y1="0" x2="10" y2="6"/><line x1="22" y1="0" x2="22" y2="6"/>
+                  <line x1="1" y1="11" x2="31" y2="11"/>
+                  <circle cx="16" cy="20" r="2.5" fill="white" stroke="none"/>
+                </g>
+                <text x="350" y="135" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5" letter-spacing="1">1</text>
+                <text x="350" y="118" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Termin vereinbaren</text>
+                <text x="350" y="99" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">JEG-Termin mit dem Mandanten abstimmen</text>
+
+                <!-- STEP 2: RIGHT (505, 350) -->
+                <circle cx="505" cy="350" r="36" fill="url(#igrad)" filter="url(#ish)"/>
+                <g transform="translate(489,334)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+                  <polyline points="0 2 0 11 9 11"/>
+                  <path d="M1,19 a14,14 0 1,0 1,-8"/>
+                </g>
+                <text x="570" y="338" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">2</text>
+                <text x="570" y="356" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Daten</text>
+                <text x="570" y="375" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">aktualisieren</text>
+                <text x="570" y="393" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Dokumente einlesen</text>
+                <text x="570" y="408" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">&amp; Angaben prüfen</text>
+
+                <!-- STEP 3: BOTTOM (350, 505) -->
+                <circle cx="350" cy="505" r="36" fill="url(#igrad)" filter="url(#ish)"/>
+                <g transform="translate(333,488)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 1h24a3 3 0 0 1 3 3v28a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3z"/>
+                  <line x1="7" y1="11" x2="25" y2="11"/>
+                  <line x1="7" y1="18" x2="25" y2="18"/>
+                  <line x1="7" y1="25" x2="17" y2="25"/>
+                </g>
+                <text x="350" y="560" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">3</text>
+                <text x="350" y="578" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Beratung vorbereiten</text>
+                <text x="350" y="597" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Themen &amp; Empfehlungen aufbereiten</text>
+
+                <!-- STEP 4: LEFT (195, 350) -->
+                <circle cx="195" cy="350" r="36" fill="url(#igrad)" filter="url(#ish)"/>
+                <g transform="translate(179,334)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+                  <path d="M22 29v-3a6 6 0 0 0-6-6H8a6 6 0 0 0-6 6v3"/>
+                  <circle cx="12" cy="11" r="5"/>
+                  <path d="M30 29v-2a6 6 0 0 0-4-5.65"/>
+                  <path d="M2 7a4 4 0 0 1 0 8"/>
+                </g>
+                <text x="130" y="338" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">4</text>
+                <text x="130" y="356" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Beratung</text>
+                <text x="130" y="375" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">durchführen</text>
+                <text x="130" y="393" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Termin umsetzen</text>
+                <text x="130" y="408" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">&amp; abschließen</text>
+              </svg>
+            </div>
+
+            <!-- ===== SCHRITT-FÜR-SCHRITT-ANLEITUNG ===== -->
+            <div style="max-width:900px; margin:0 auto 48px;">
+              <h2 style="font-size:20px; font-weight:700; color:#1a3a5c; margin:0 0 24px; text-align:center; letter-spacing:-0.2px;">So bereiten Sie den JEG-Termin vor</h2>
+
+              <div style="display:flex; flex-direction:column; gap:14px;">
+
+                <!-- Schritt 1 -->
+                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">1</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Termin vereinbaren</div>
+                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">JEG-Termin mit dem Mandanten abstimmen und in der Kalenderplanung erfassen. Checkliste &amp; benötigte Unterlagen vorab kommunizieren, damit der Mandant vorbereitet ist.</div>
+                  </div>
+
+                </div>
+
+                <!-- Schritt 2 -->
+                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">2</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Daten aktualisieren</div>
+                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Gehaltsnachweise, Renteninformation, Strom-/Gasrechnung und Riester-Bescheinigung hochladen. Die KI liest die relevanten Kennzahlen automatisch aus – Änderungen zum Vorjahr werden direkt gekennzeichnet.</div>
+                  </div>
+
+                </div>
+
+                <!-- Schritt 3 -->
+                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">3</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Beratung vorbereiten</div>
+                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Mandanten-Kennzahlen analysieren, Handlungsempfehlungen prüfen und Gesprächsschwerpunkte festlegen. Fördervergleiche (Riester vs. AV-Depot) und Themenagenda für den Termin aufbereiten.</div>
+                  </div>
+
+                </div>
+
+                <!-- Schritt 4 -->
+                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
+                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">4</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Beratung durchführen</div>
+                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Termin mit dem Mandanten umsetzen: Themen strukturiert besprechen, staatliche Förderungen optimal nutzen, Förderbedarf identifizieren und konkrete Maßnahmen vereinbaren. Dokumentation abschließen.</div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+        </div><!-- /.jeg-page-center -->
+
+        </div><!-- End page-jeg2026 -->
+
+        <!-- ============ PAGE: JEG-BERATUNGSVORBEREITUNG ============ -->
+        <div class="page" id="page-jeg-beratungsvorbereitung">
+
+          <!-- ==== NEW WHITE TWO-COLUMN HEADER ==== -->
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta" id="bv-hero-meta">Jahresservice 2026</p>
+              <h1 class="jeg-page-hero-title">Beratungsvorbereitung</h1>
+              <p class="jeg-page-hero-desc">Eine gründliche Vorbereitung ist der Schlüssel zu einem erfolgreichen Beratungstermin. Analysieren Sie die aktuellen Kennzahlen Ihres Mandanten, identifizieren Sie Optimierungspotenziale und legen Sie die Gesprächsschwerpunkte fest &ndash; so schaffen Sie die ideale Grundlage für eine zielgerichtete und wertvolle Beratung.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_beratungsvorbereitung.png" alt="Beratungsvorbereitung" class="jeg-page-hero-image">
+            </div>
+          </div>
+
+
+          <!-- Mandant KPI Cards – Full Width -->
+          <div class="bv-metrics-fullwidth">
+
+            <!-- Mandant / Partner toggle -->
+            <div class="jeg-person-toggle" style="grid-column: 1 / -1; margin-bottom: 8px;">
+              <button class="jeg-person-btn jeg-person-btn--active" id="bv-jeg-btn-mandant" onclick="bvJegSwitchPerson('mandant')">Mandant</button>
+              <button class="jeg-person-btn" id="bv-jeg-btn-partner" onclick="bvJegSwitchPerson('partner')">Partner</button>
+            </div>
+
+              <!-- Card 1 (top-left): Liquidität -->
+              <div class="jeg-metric-card jeg-metric-card--liquidity">
+                <div class="jeg-metric-header">
+                  <div class="jeg-metric-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="5" width="20" height="14" rx="2"/>
+                      <line x1="2" y1="10" x2="22" y2="10"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="jeg-metric-title">Verfügbare Liquidität</div>
+                    <div class="jeg-metric-subtitle">Freie Mittel nach allen Ausgaben</div>
+                  </div>
+                </div>
+                <div class="jeg-metric-value-row">
+                  <input class="jeg-metric-input" id="bv-jeg-liquidity" type="number" value="420" min="0" max="9999"
+                    oninput="jegUpdateMetric('bv-jeg-liquidity','bv-jeg-liquidity-bar', 0, 2000)">
+                  <span class="jeg-metric-unit">€ / Monat</span>
+                </div>
+                <div class="jeg-metric-bar-wrap">
+                  <div class="jeg-metric-bar jeg-metric-bar--blue" id="bv-jeg-liquidity-bar" style="width:21%"></div>
+                </div>
+                <div class="jeg-metric-hint">Investierbares Potenzial für Vorsorge &amp; Vermögensaufbau</div>
+              </div>
+
+              <!-- Card 2 (top-right): Kosteneinsparungen -->
+              <div class="jeg-metric-card jeg-metric-card--savings">
+                <div class="jeg-metric-header">
+                  <div class="jeg-metric-icon jeg-metric-icon--green">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="1" x2="12" y2="23"/>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="jeg-metric-title">Kosteneinsparungen</div>
+                    <div class="jeg-metric-subtitle">Mögliche Entlastung durch Optimierung</div>
+                  </div>
+                </div>
+                <div class="jeg-metric-value-row">
+                  <input class="jeg-metric-input jeg-metric-input--green" id="bv-jeg-savings" type="number" value="175" min="0" max="9999"
+                    oninput="jegUpdateMetric('bv-jeg-savings','bv-jeg-savings-bar', 0, 500)">
+                  <span class="jeg-metric-unit">€ / Monat</span>
+                </div>
+                <div class="jeg-metric-bar-wrap">
+                  <div class="jeg-metric-bar jeg-metric-bar--green" id="bv-jeg-savings-bar" style="width:35%"></div>
+                </div>
+                <div class="jeg-metric-hint">Energie, Versicherungen &amp; Beitragsoptimierungen zusammen</div>
+              </div>
+
+              <!-- Card 3 (bottom-left): Absicherungslücke AV -->
+              <div class="jeg-metric-card jeg-metric-card--gap">
+                <div class="jeg-metric-header">
+                  <div class="jeg-metric-icon jeg-metric-icon--red">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="jeg-metric-title">Absicherungslücke AV</div>
+                    <div class="jeg-metric-subtitle">Monatliches Defizit in der Altersvorsorge</div>
+                  </div>
+                </div>
+                <div class="jeg-metric-value-row">
+                  <input class="jeg-metric-input jeg-metric-input--red" id="bv-jeg-gap-av" type="number" value="850" min="0" max="9999"
+                    oninput="jegUpdateMetric('bv-jeg-gap-av','bv-jeg-gap-av-bar', 0, 2000)">
+                  <span class="jeg-metric-unit">€ / Monat</span>
+                </div>
+                <div class="jeg-metric-bar-wrap">
+                  <div class="jeg-metric-bar jeg-metric-bar--red" id="bv-jeg-gap-av-bar" style="width:43%"></div>
+                </div>
+                <div class="jeg-metric-hint">Differenz zwischen Wunschrente (2.500 €) und gesetzlicher Rente (1.650 €)</div>
+              </div>
+
+              <!-- Card 4 (bottom-right): Absicherungslücke EXI -->
+              <div class="jeg-metric-card jeg-metric-card--exi">
+                <div class="jeg-metric-header">
+                  <div class="jeg-metric-icon jeg-metric-icon--orange">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="jeg-metric-title">Absicherungslücke EXI</div>
+                    <div class="jeg-metric-subtitle">Monatliches Defizit bei Existenzrisiken</div>
+                  </div>
+                </div>
+                <div class="jeg-metric-value-row">
+                  <input class="jeg-metric-input jeg-metric-input--orange" id="bv-jeg-gap-exi" type="number" value="650" min="0" max="9999"
+                    oninput="jegUpdateMetric('bv-jeg-gap-exi','bv-jeg-gap-exi-bar', 0, 2000)">
+                  <span class="jeg-metric-unit">€ / Monat</span>
+                </div>
+                <div class="jeg-metric-bar-wrap">
+                  <div class="jeg-metric-bar jeg-metric-bar--orange" id="bv-jeg-gap-exi-bar" style="width:33%"></div>
+                </div>
+                <div class="jeg-metric-hint">Fehlende Absicherung bei BU, Todesfall &amp; schwerer Krankheit</div>
+              </div><!-- /.jeg-metric-card--exi -->
+
+          </div><!-- /.bv-metrics-fullwidth -->
+
+          <div class="jeg-page-center">
+
+          <!-- ==== HANDLUNGSEMPFEHLUNGEN ==== -->
+          <div style="margin-top:32px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+              <h2 style="margin:0; font-size:18px; font-weight:700; color:var(--text);">Handlungsempfehlungen</h2>
+              <button onclick="bvRefreshHandlungsempfehlungen()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border:1.5px solid var(--blue-accent);background:#fff;color:var(--blue-accent);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;" title="Aus Datenaktualisierung aktualisieren">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Aktualisieren
+              </button>
+            </div>
+            <div id="bv-handlungsempfehlungen-list" style="display:flex; flex-direction:column; gap:10px;">
+              <!-- Dynamisch befüllt durch bvRefreshHandlungsempfehlungen() -->
+              <p id="bv-handlungsempfehlungen-empty" style="font-size:13px; color:var(--text-muted); padding:16px 0;">
+                Noch keine Handlungsempfehlungen vorhanden. Bitte zuerst Dokumente in der Datenaktualisierung auslesen.
+              </p>
+            </div>
+          </div>
+
+          <!-- ==== NEUE NOTIZBEREICHE ==== -->
+          <div style="display:flex; gap:24px; margin-top:32px; padding-bottom:32px;">
+            <!-- 1. Sonstige Themen -->
+            <div style="flex:1; padding:20px; border:1px solid var(--border); border-radius:10px; background:#fff;">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
+                <span style="font-size:22px;">💬</span>
+                <div>
+                  <h2 style="margin:0 0 4px; font-size:16px; font-weight:700; color:var(--text);">Sonstige Themen im Haushalt, die angesprochen werden sollen</h2>
+                  <p style="margin:0; font-size:13px; color:var(--text-muted);">z.B. offene Aufträge, Unterlagen, Vertragsmanagement...</p>
+                </div>
+              </div>
+              <div style="position:relative;">
+                <textarea id="bv-jeg-themen"
+                  style="width:100%;min-height:140px;border:2px solid var(--border);border-radius:8px;padding:12px 12px 40px 12px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s;box-sizing:border-box;"
+                  placeholder="Notizen manuell oder per Sprache eingeben..."
+                  onfocus="this.style.borderColor='var(--blue-accent)'"
+                  onblur="this.style.borderColor='var(--border)'; jegGenericSave('bv-jeg-themen');"
+                  oninput="jegGenericUpdateCharCount('bv-jeg-themen')"></textarea>
+                <button id="bv-jeg-themen-mic" onclick="jegGenericVoiceToggle('bv-jeg-themen')"
+                  title="Spracheingabe starten / stoppen"
+                  style="position:absolute;bottom:10px;right:10px;display:flex;align-items:center;gap:6px;padding:6px 12px;border:none;border-radius:20px;background:var(--blue-accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;z-index:2;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/>
+                  </svg>
+                  <span id="bv-jeg-themen-mic-label">Sprache</span>
+                </button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                <span id="bv-jeg-themen-status" style="font-size:11px;color:var(--text-muted);"></span>
+                <span id="bv-jeg-themen-count" style="font-size:11px;color:var(--text-muted);">0 Zeichen</span>
+              </div>
+            </div>
+
+            <!-- 2. Beratungsziele -->
+            <div style="flex:1; padding:20px; border:1px solid var(--border); border-radius:10px; background:#fff;">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:16px;">
+                <span style="font-size:22px;">🎯</span>
+                <div>
+                  <h2 style="margin:0 0 4px; font-size:16px; font-weight:700; color:var(--text);">Beratungsziele</h2>
+                  <p style="margin:0; font-size:13px; color:var(--text-muted);">Persönliche Ziele und Wünsche für den aktuellen Termin</p>
+                </div>
+              </div>
+              <div style="position:relative;">
+                <textarea id="bv-jeg-ziele"
+                  style="width:100%;min-height:140px;border:2px solid var(--border);border-radius:8px;padding:12px 12px 40px 12px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s;box-sizing:border-box;"
+                  placeholder="Ziele manuell oder per Sprache eingeben..."
+                  onfocus="this.style.borderColor='var(--blue-accent)'"
+                  onblur="this.style.borderColor='var(--border)'; jegGenericSave('bv-jeg-ziele');"
+                  oninput="jegGenericUpdateCharCount('bv-jeg-ziele')"></textarea>
+                <button id="bv-jeg-ziele-mic" onclick="jegGenericVoiceToggle('bv-jeg-ziele')"
+                  title="Spracheingabe starten / stoppen"
+                  style="position:absolute;bottom:10px;right:10px;display:flex;align-items:center;gap:6px;padding:6px 12px;border:none;border-radius:20px;background:var(--blue-accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;z-index:2;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/>
+                  </svg>
+                  <span id="bv-jeg-ziele-mic-label">Sprache</span>
+                </button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                <span id="bv-jej-ziele-status" style="font-size:11px;color:var(--text-muted);"></span>
+                <span id="bv-jeg-ziele-count" style="font-size:11px;color:var(--text-muted);">0 Zeichen</span>
+              </div>
+            </div>
+          </div><!-- /.note-areas -->
+
+        </div><!-- /.jeg-page-center -->
+        </div><!-- End page-jeg-beratungsvorbereitung -->
+        <!-- ============ PAGE: JEG – DATENAKTUALISIERUNG ============ -->
+        <div class="page" id="page-jeg-datenaktualisierung">
+          <!-- ==== WHITE TWO-COLUMN HEADER (wie JEG 2026 / Beratungsvorbereitung) ==== -->
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta" id="dak-hero-meta">Jahresservice 2026</p>
+              <h1 class="jeg-page-hero-title">Datenaktualisierung</h1>
+              <p class="jeg-page-hero-desc">Laden Sie die aktuellen Dokumente Ihres Mandanten hoch &ndash; die KI liest die relevanten Kennzahlen automatisch aus und kennzeichnet Veränderungen zum Vorjahr. Fehlende Werte können jederzeit manuell ergänzt werden.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_datenaktualisierung.png" alt="Datenaktualisierung" class="jeg-page-hero-image">
+            </div>
+          </div>
+
+          <div style="padding:24px 40px;max-width:1100px;margin:0 auto;">
+
+            <!-- ===== SCHRITT 1: DOKUMENTE HOCHLADEN ===== -->
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">1</div>
+              <div>
+                <div style="font-weight:600;font-size:16px;color:var(--text);">Dokumente hochladen</div>
+                <div style="font-size:13px;color:var(--text-muted);">Laden Sie die vorhandenen Dokumente hoch &ndash; nicht vorhandene k&ouml;nnen &uuml;bersprungen werden.</div>
+              </div>
+            </div>
+
+            <!-- 5 Upload-Karten -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+
+              <!-- Karte 1: Dez-Gehalt Vorjahr -->
+              <div class="dak-upload-card" id="dak-card-0">
+                <div class="dak-card-icon">📄</div>
+                <div class="dak-card-label">DEZ.-ABRECHNUNG VORJAHR</div>
+                <div class="dak-card-year">2025</div>
+                <div class="dak-card-sub">Dezember-Gehaltsabrechnung 2025</div>
+                <label class="dak-file-btn">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V13a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                  Datei ausw&auml;hlen
+                  <input type="file" accept=".pdf,image/jpeg,image/png" onchange="dakFileSelected(0, this)" style="display:none;">
+                </label>
+                <div class="dak-file-hint">PDF, JPG oder PNG &middot; bis 20 MB</div>
+                <div class="dak-file-name" id="dak-fname-0"></div>
+              </div>
+
+              <!-- Karte 2: Aktuelle Gehaltsabrechnung -->
+              <div class="dak-upload-card" id="dak-card-1">
+                <div class="dak-card-icon" style="color:#1976d2">📊</div>
+                <div class="dak-card-label">AKTUELLE GEHALTSABRECHNUNG</div>
+                <div class="dak-card-year" style="color:#1976d2">2026</div>
+                <div class="dak-card-sub">Aktuelle Gehaltsabrechnung 2026</div>
+                <label class="dak-file-btn">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V13a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                  Datei ausw&auml;hlen
+                  <input type="file" accept=".pdf,image/jpeg,image/png" onchange="dakFileSelected(1, this)" style="display:none;">
+                </label>
+                <div class="dak-file-hint">PDF, JPG oder PNG &middot; bis 20 MB</div>
+                <div class="dak-file-name" id="dak-fname-1"></div>
+              </div>
+
+              <!-- Karte 3: Renteninformation -->
+              <div class="dak-upload-card" id="dak-card-2">
+                <div class="dak-card-icon">📋</div>
+                <div class="dak-card-label">RENTENINFORMATION</div>
+                <div class="dak-card-year" style="color:#388e3c;">DRV</div>
+                <div class="dak-card-sub">Aktueller Rentenbescheid der DRV</div>
+                <label class="dak-file-btn">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V13a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                  Datei ausw&auml;hlen
+                  <input type="file" accept=".pdf,image/jpeg,image/png" onchange="dakFileSelected(2, this)" style="display:none;">
+                </label>
+                <div class="dak-file-hint">PDF, JPG oder PNG &middot; bis 20 MB</div>
+                <div class="dak-file-name" id="dak-fname-2"></div>
+              </div>
+
+              <!-- Karte 4: Strom & Gas -->
+              <div class="dak-upload-card" id="dak-card-3">
+                <div class="dak-card-icon">⚡</div>
+                <div class="dak-card-label">STROM- &amp; GASABRECHNUNG</div>
+                <div class="dak-card-year" style="color:#f57c00;">Energie</div>
+                <div class="dak-card-sub">Jahresabrechnung Strom und Gas</div>
+                <label class="dak-file-btn">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V13a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                  Datei ausw&auml;hlen
+                  <input type="file" accept=".pdf,image/jpeg,image/png" onchange="dakFileSelected(3, this)" style="display:none;">
+                </label>
+                <div class="dak-file-hint">PDF, JPG oder PNG &middot; bis 20 MB</div>
+                <div class="dak-file-name" id="dak-fname-3"></div>
+              </div>
+
+              <!-- Karte 5: Riester-Zulagenbescheinigung -->
+              <div class="dak-upload-card" id="dak-card-4">
+                <div class="dak-card-icon" style="color:#7b1fa2">🏦</div>
+                <div class="dak-card-label">RIESTER-ZULAGENBESCHEINIGUNG</div>
+                <div class="dak-card-year" style="color:#7b1fa2;">Riester</div>
+                <div class="dak-card-sub">Zulagenbescheinigung des Anbieters</div>
+                <label class="dak-file-btn">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L11 6.414V13a1 1 0 11-2 0V6.414L6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3z"/><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/></svg>
+                  Datei ausw&auml;hlen
+                  <input type="file" accept=".pdf,image/jpeg,image/png" onchange="dakFileSelected(4, this)" style="display:none;">
+                </label>
+                <div class="dak-file-hint">PDF, JPG oder PNG &middot; bis 20 MB</div>
+                <div class="dak-file-name" id="dak-fname-4"></div>
+              </div>
+            </div>
+
+            <!-- Auslesen-Button + Status -->
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;">
+              <button class="btn btn-primary" id="dak-analyze-btn" onclick="dakAnalyzeAll()" style="padding:10px 28px;font-size:14px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="margin-right:6px;vertical-align:-3px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Dokumente KI-gestützt auslesen
+              </button>
+              <span id="dak-status" style="font-size:13px;color:var(--text-muted);"></span>
+            </div>
+            <div class="progress-bar-wrap" id="dak-progress-wrap" style="margin-bottom:24px;">
+              <div class="progress-bar" id="dak-progress-bar" style="width:0%"></div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ===== SCHRITT 2: KENNZAHLEN-VERGLEICH ===== -->
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:4px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">2</div>
+              <div>
+                <div style="font-weight:600;font-size:16px;color:var(--text);">Kennzahlen pr&uuml;fen &amp; erg&auml;nzen</div>
+                <div style="font-size:13px;color:var(--text-muted);">KI-erkannte Werte k&ouml;nnen manuell &uuml;berschrieben werden.</div>
+              </div>
+            </div>
+
+            <!-- GEHALTSVERGLEICH -->
+            <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+              <div style="padding:14px 20px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">📊</span>
+                <span style="font-weight:600;font-size:14px;color:var(--text);">Kennzahlen-Vergleich Gehalt</span>
+              </div>
+              <table class="dak-table">
+                <thead>
+                 <tr>
+                    <th>Kennzahl</th>
+                    <th style="color:#1976d2;">Dez. 2025</th>
+                    <th style="color:#0d47a1;">Aktuell 2026</th>
+                    <th>&Delta; &Auml;nderung</th>
+                    <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="dak-transfer-row" data-src="dak-brutto-akt" data-target="e-brutto" data-state-cat="einnahmen" data-state-key="brutto">
+                    <td>Brutto (Monat)</td>
+                    <td><input class="dak-cell-input" id="dak-brutto-dez" type="text" placeholder="–" oninput="dakCalcDelta('brutto')"></td>
+                    <td><input class="dak-cell-input" id="dak-brutto-akt" type="text" placeholder="–" oninput="dakCalcDelta('brutto')"></td>
+                    <td><span id="dak-delta-brutto" class="dak-delta">–</span><span class="dak-warn" id="dak-warn-brutto" style="display:none;" data-tooltip="&#9888; Einkommenssteigerung erkannt! BU-H&ouml;he &uuml;berpr&uuml;fen &ndash; die Berufsunf&auml;higkeitsversicherung sollte an das gestiegene Einkommen angepasst werden.">!</span></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-netto-akt" data-target="e-netto" data-state-cat="einnahmen" data-state-key="netto">
+                    <td>Netto (Monat)</td>
+                    <td><input class="dak-cell-input" id="dak-netto-dez" type="text" placeholder="–" oninput="dakCalcDelta('netto')"></td>
+                    <td><input class="dak-cell-input" id="dak-netto-akt" type="text" placeholder="–" oninput="dakCalcDelta('netto')"></td>
+                    <td><span id="dak-delta-netto" class="dak-delta">–</span><span class="dak-warn" id="dak-warn-netto" style="display:none;" data-tooltip="&#9888; Einkommenssteigerung erkannt! BU-H&ouml;he &uuml;berpr&uuml;fen &ndash; die Berufsunf&auml;higkeitsversicherung sollte an das gestiegene Nettoeinkommen angepasst werden.">!</span></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-steuerbrutto-akt" data-target="e-steuerbrutto" data-state-cat="einnahmen" data-state-key="steuerbrutto">
+                    <td>Steuer-Brutto (Jahr)</td>
+                    <td><input class="dak-cell-input" id="dak-steuerbrutto-dez" type="text" placeholder="–" oninput="dakCalcDelta('steuerbrutto')"></td>
+                    <td><input class="dak-cell-input" id="dak-steuerbrutto-akt" type="text" placeholder="–" oninput="dakCalcDelta('steuerbrutto')"></td>
+                    <td><span id="dak-delta-steuerbrutto" class="dak-delta">–</span></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
+                  </tr>
+
+
+
+                  <tr class="dak-transfer-row" data-src="dak-kk-akt" data-target="gkv-gesellschaft" data-state-cat="gkv" data-state-key="gesellschaft">
+                    <td>Krankenkasse</td>
+                    <td><input class="dak-cell-input" id="dak-kk-dez" type="text" placeholder="–" style="max-width:180px;"></td>
+                    <td><input class="dak-cell-input" id="dak-kk-akt" type="text" placeholder="–" style="max-width:180px;"></td>
+                    <td><span class="dak-delta">–</span></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
+                  </tr>
+
+
+
+
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- RENTENINFORMATION -->
+            <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+              <div style="padding:14px 20px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">📋</span>
+                <span style="font-weight:600;font-size:14px;color:var(--text);">Renteninformation (DRV)</span>
+              </div>
+              <table class="dak-table">
+                <thead>
+                 <tr>
+                    <th>Kennzahl</th>
+                    <th>Wert</th>
+                    <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="dak-transfer-row" data-src="dak-rente-datum" data-target="r-info" data-state-cat="rente" data-state-key="renteninfoVom">
+                    <td>Renteninformation vom</td>
+                    <td><input class="dak-cell-input" id="dak-rente-datum" type="text" placeholder="TT.MM.JJJJ" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-rente-regel" data-target="r-regel" data-state-cat="rente" data-state-key="regelAltersrente">
+                    <td>Regelaltersrente (bisher erreicht)</td>
+                    <td><input class="dak-cell-input" id="dak-rente-regel" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-rente-kuenftig" data-target="r-kuenftig" data-state-cat="rente" data-state-key="kuenftigeRente">
+                    <td>K&uuml;nftige Rente ohne Anpassung</td>
+                    <td><input class="dak-cell-input" id="dak-rente-kuenftig" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-rente-em" data-target="r-em" data-state-cat="rente" data-state-key="renteVollEM">
+                    <td>Rente wegen Erwerbsminderung</td>
+                    <td><input class="dak-cell-input" id="dak-rente-em" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+
+            <script>
+            window.dakTransferAll = function() {
+              let count = 0;
+              document.querySelectorAll('.dak-transfer-row').forEach(function(row) {
+                const cb = row.querySelector('.dak-cb');
+                if (!cb || !cb.checked) return;
+                const srcId    = row.dataset.src;
+                const targetId = row.dataset.target;
+                const stateCat = row.dataset.stateCat;
+                const stateKey = row.dataset.stateKey;
+                if (!srcId || !targetId) return;
+                const srcEl = document.getElementById(srcId);
+                const val   = srcEl ? srcEl.value.trim() : '';
+                if (!val) return;
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) { targetEl.value = val; }
+                if (typeof state !== 'undefined' && state.data && stateCat && stateKey && state.data[stateCat] !== undefined) {
+                  state.data[stateCat][stateKey] = val;
+                }
+                count++;
+              });
+              if (count > 0) {
+                showToast('\u2713 ' + count + ' Felder in Daten \u00FCbernommen.');
+              } else {
+                showToast('Keine Felder ausgew\u00E4hlt oder bef\u00FCllt.');
+              }
+            };
+            // Call after KI fills fields to auto-check rows with values
+            window.dakAutoCheckKIFields = function() {
+              document.querySelectorAll('.dak-transfer-row').forEach(function(row) {
+                const cb    = row.querySelector('.dak-cb');
+                const srcId = row.dataset.src;
+                if (!cb || !srcId) return;
+                const el = document.getElementById(srcId);
+                cb.checked = !!(el && el.value && el.value.trim() !== '' && el.value.trim() !== '\u2013');
+              });
+            };
+            </script>
+
+            <style>
+              .dak-transfer-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 10px;
+                font-size: 11px;
+                font-weight: 600;
+                border: 1.5px solid var(--blue-accent);
+                border-radius: 5px;
+                background: #fff;
+                color: var(--blue-accent);
+                cursor: pointer;
+                white-space: nowrap;
+                transition: background .15s, color .15s;
+              }
+              .dak-transfer-btn:hover { background: var(--blue-accent); color: #fff; }
+              .dak-transfer-btn.transferred { background: #e8f5e9; border-color: #43a047; color: #2e7d32; }
+            </style>
+            <script>
+            window.dakTransferRente = function(srcId, targetId, stateCategory, stateKey) {
+              const src = document.getElementById(srcId);
+              const target = document.getElementById(targetId);
+              if (!src || !src.value.trim()) { showToast('Kein Wert vorhanden – bitte erst auslesen oder manuell eintragen.'); return; }
+              const val = src.value.trim();
+              // Write into the Daten-form field
+              if (target) {
+                target.value = val;
+              }
+              // Update the app state so navigation doesn't overwrite it
+              if (typeof state !== 'undefined' && state.data && state.data[stateCategory] !== undefined) {
+                state.data[stateCategory][stateKey] = val;
+              }
+              // Visual feedback on the button
+              const btn = event.currentTarget;
+              const prev = btn.textContent;
+              btn.textContent = '✓ Übernommen';
+              btn.classList.add('transferred');
+              setTimeout(() => { btn.textContent = prev; btn.classList.remove('transferred'); }, 2000);
+              showToast('Wert in Daten → Rente übernommen.');
+            };
+            </script>
+
+
+
+            <!-- ENERGIE -->
+            <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+              <div style="padding:14px 20px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">⚡</span>
+                <span style="font-weight:600;font-size:14px;color:var(--text);">Strom &amp; Gas</span>
+              </div>
+              <table class="dak-table">
+                <thead>
+                  <tr>
+                    <th>Kennzahl</th>
+                    <th>Wert</th>
+                    <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="dak-transfer-row" data-src="dak-strom-kosten" data-target="en-strom-kosten" data-state-cat="energie" data-state-key="strom_kosten">
+                    <td>Jahreskosten Strom</td>
+                    <td><input class="dak-cell-input" id="dak-strom-kosten" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-strom-kwh" data-target="en-strom-verbrauch" data-state-cat="energie" data-state-key="strom_verbrauch">
+                    <td>Jahresverbrauch Strom (kWh)</td>
+                    <td><input class="dak-cell-input" id="dak-strom-kwh" type="text" placeholder="0" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-gas-kosten" data-target="en-gas-kosten" data-state-cat="energie" data-state-key="gas_kosten">
+                    <td>Jahreskosten Gas</td>
+                    <td><input class="dak-cell-input" id="dak-gas-kosten" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                  <tr class="dak-transfer-row" data-src="dak-gas-kwh" data-target="en-gas-verbrauch" data-state-cat="energie" data-state-key="gas_verbrauch">
+                    <td>Jahresverbrauch Gas (kWh)</td>
+                    <td><input class="dak-cell-input" id="dak-gas-kwh" type="text" placeholder="0" style="max-width:160px;"></td>
+                    <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- ÜBERNAHME-BUTTON Energie -->
+            <div style="display:flex;justify-content:flex-end;margin-bottom:32px;margin-top:4px;">
+              <button onclick="dakTransferAll()" style="display:inline-flex;align-items:center;gap:8px;padding:11px 28px;font-size:14px;font-weight:700;background:var(--blue-accent);color:#fff;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(25,118,210,.25);transition:background .2s;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+                Ausgew&auml;hlte Daten &uuml;bernehmen
+              </button>
+            </div>
+
+            <!-- RIESTER-ZULAGENBESCHEINIGUNG -->
+            <div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+              <div style="padding:14px 20px;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">🏦</span>
+                <span style="font-weight:600;font-size:14px;color:var(--text);">Riester-Zulagenbescheinigung</span>
+              </div>
+              <table class="dak-table">
+                <thead>
+                  <tr>
+                    <th>Kennzahl</th>
+                    <th>Wert</th>
+                    <th style="color:#7b1fa2;white-space:nowrap;">Förderung AV-Depot</th>
+                    <th style="width:90px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Beitragsjahr</td>
+                    <td><input class="dak-cell-input" id="dak-riester-bj" type="text" placeholder="JJJJ" style="max-width:120px;"></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Geleistete Altersvorsorgebeitr&auml;ge</td>
+                    <td><input class="dak-cell-input" id="dak-riester-av" type="text" placeholder="0,00 &euro;" style="max-width:160px;" oninput="dakCalcAvDepot()"></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Grundzulage</td>
+                    <td><input class="dak-cell-input" id="dak-riester-gz" type="text" placeholder="0,00 &euro;" style="max-width:160px;" oninput="dakCheckRiesterGrundzulage(); dakCalcZulagenSum();"><span class="dak-warn" id="dak-warn-gz" style="display:none;margin-left:8px;" data-tooltip="&#9888; Grundzulage unter 175 &euro;! Aktuellen Riesterbeitrag &uuml;berpr&uuml;fen, um die volle staatliche Zulage zu erhalten. F&ouml;rdersystematik (Riester vs. AV-Depot) vergleichen.">!</span></td>
+                    <td><span id="dak-avd-gz" style="font-size:13px;font-weight:600;color:#7b1fa2;">–</span></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <!-- Dynamische Kinderzulagen -->
+                <tbody id="dak-kz-body">
+                  <!-- Kinderzulagen werden hier dynamisch eingef&uuml;gt -->
+                </tbody>
+                <!-- Summenzeile -->
+                <tbody id="dak-kz-sum-body">
+                  <tr style="background:#f8f4ff;border-top:2px solid #7b1fa2;">
+                    <td style="font-weight:700;font-size:13px;padding:10px 16px;">Zulagen gesamt</td>
+                    <td style="padding:10px 16px;">
+                      <span id="dak-sum-riester" style="font-size:14px;font-weight:700;color:#1a237e;">–</span>
+                    </td>
+                    <td style="padding:10px 16px;">
+                      <span id="dak-sum-avd" style="font-size:14px;font-weight:700;color:#7b1fa2;">–</span>
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4" style="padding:10px 16px;">
+                      <button onclick="dakAddKinderzulage('', false)" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;font-size:12px;font-weight:600;border:1.5px solid #7b1fa2;border-radius:5px;background:#fff;color:#7b1fa2;cursor:pointer;transition:background .15s,color .15s;" onmouseover="this.style.background='#7b1fa2';this.style.color='#fff'" onmouseout="this.style.background='#fff';this.style.color='#7b1fa2'">
+                        <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg>
+                        Kinderzulage hinzuf&uuml;gen
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-outline" onclick="showToast('Daten gespeichert.')">Speichern</button>
+            </div>
+
+          </div>
+
+          <!-- ===== INLINE STYLES für Upload-Karten & Tabelle ===== -->
+          <style>
+            .dak-upload-card {
+              background: #fff;
+              border: 2px dashed var(--border);
+              border-radius: 12px;
+              padding: 28px 20px 20px;
+              text-align: center;
+              transition: border-color .2s, box-shadow .2s;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 8px;
+            }
+            .dak-upload-card.has-file {
+              border-color: #43a047;
+              border-style: solid;
+              background: #f1f8e9;
+            }
+            .dak-card-icon  { font-size: 32px; line-height: 1; }
+            .dak-card-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-muted); }
+            .dak-card-year  { font-size: 32px; font-weight: 800; color: var(--blue-accent); line-height: 1.1; }
+            .dak-card-sub   { font-size: 13px; color: var(--text-muted); }
+            .dak-file-btn {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 8px 20px;
+              background: var(--blue-accent);
+              color: #fff;
+              border-radius: 6px;
+              font-size: 13px;
+              font-weight: 500;
+              cursor: pointer;
+              margin-top: 4px;
+              transition: background .2s;
+            }
+            .dak-file-btn:hover { background: #1a3f8f; }
+            .dak-file-hint { font-size: 11px; color: var(--text-muted); }
+            .dak-file-name { font-size: 12px; color: #43a047; font-weight: 500; min-height: 16px; word-break: break-all; }
+
+            .dak-table { width: 100%; border-collapse: collapse; }
+            .dak-table thead th {
+              padding: 10px 16px;
+              text-align: left;
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: .05em;
+              text-transform: uppercase;
+              color: var(--text-muted);
+              border-bottom: 1px solid var(--border);
+            }
+            .dak-table tbody td {
+              padding: 8px 16px;
+              font-size: 13px;
+              color: var(--text);
+              border-bottom: 1px solid #f0f0f0;
+              vertical-align: middle;
+            }
+            .dak-table tbody tr:last-child td { border-bottom: none; }
+            .dak-cell-input {
+              width: 100%;
+              max-width: 180px;
+              border: 1px solid transparent;
+              border-radius: 4px;
+              padding: 4px 8px;
+              font-size: 13px;
+              background: #f8fafc;
+              transition: border-color .15s, background .15s;
+            }
+            .dak-cell-input:focus {
+              outline: none;
+              border-color: var(--blue-accent);
+              background: #fff;
+            }
+            .dak-cell-input.ki-set { background: #e8f5e9; }
+            .dak-delta { font-size: 13px; font-weight: 600; }
+            .dak-delta.pos { color: #2e7d32; }
+            .dak-delta.neg { color: #c62828; }
+
+            /* === Warning-Badge + Tooltip === */
+            .dak-warn {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 22px;
+              height: 22px;
+              margin-left: 8px;
+              background: #e65100;
+              color: #fff;
+              font-weight: 900;
+              font-size: 13px;
+              border-radius: 50%;
+              cursor: help;
+              position: relative;
+              vertical-align: middle;
+              flex-shrink: 0;
+              box-shadow: 0 0 0 3px rgba(230,81,0,.25);
+              animation: dak-pulse 1.8s infinite;
+            }
+            @keyframes dak-pulse {
+              0%,100% { box-shadow: 0 0 0 3px rgba(230,81,0,.25); }
+              50%      { box-shadow: 0 0 0 7px rgba(230,81,0,.07); }
+            }
+            .dak-warn::after {
+              content: attr(data-tooltip);
+              position: absolute;
+              bottom: calc(100% + 10px);
+              right: -10px;
+              left: auto;
+              transform: none;
+              background: #1a237e;
+              color: #fff;
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 1.55;
+              padding: 10px 14px;
+              border-radius: 8px;
+              white-space: normal;
+              width: 280px;
+              text-align: left;
+              pointer-events: none;
+              opacity: 0;
+              transition: opacity .2s;
+              z-index: 9999;
+              box-shadow: 0 4px 18px rgba(0,0,0,.22);
+            }
+            .dak-warn::before {
+              content: '';
+              position: absolute;
+              bottom: calc(100% + 4px);
+              right: 7px;
+              left: auto;
+              transform: none;
+              border: 6px solid transparent;
+              border-top-color: #1a237e;
+              pointer-events: none;
+              opacity: 0;
+              transition: opacity .2s;
+            }
+            .dak-warn:hover::after,
+            .dak-warn:hover::before { opacity: 1; }
+          </style>
+
+          <!-- ===== INLINE SCRIPT: Upload-Logik & Gemini-Analyse ===== -->
+          <script>
+          (function(){
+            const dakFiles = [null, null, null, null, null];
+            const dakLabels = ['Dez-Gehaltsabrechnung 2025', 'Aktuelle Gehaltsabrechnung 2026', 'Renteninformation', 'Strom- & Gasabrechnung', 'Riester-Zulagenbescheinigung'];
+
+            window.dakFileSelected = function(idx, input) {
+              const file = input.files[0];
+              dakFiles[idx] = file || null;
+              const nameEl = document.getElementById('dak-fname-' + idx);
+              const card   = document.getElementById('dak-card-' + idx);
+              if (file) {
+                nameEl.textContent = file.name;
+                card.classList.add('has-file');
+              } else {
+                nameEl.textContent = '';
+                card.classList.remove('has-file');
+              }
+            };
+
+            // ---- Delta-Berechnung ----
+            function parseDE(s) {
+              if (!s) return NaN;
+              const n = parseFloat(s.replace(/\./g,'').replace(',','.').replace(/[^\d.-]/g,''));
+              return isNaN(n) ? NaN : n;
+            }
+            function fmtDE(n) {
+              return n.toLocaleString('de-DE', {minimumFractionDigits:2,maximumFractionDigits:2}) + ' €';
+            }
+            window.dakCalcDelta = function(key) {
+              const v = parseDE(document.getElementById('dak-'+key+'-dez')?.value);
+              const a = parseDE(document.getElementById('dak-'+key+'-akt')?.value);
+              const el = document.getElementById('dak-delta-'+key);
+              if (!el) return;
+              if (isNaN(v) || isNaN(a)) { el.textContent = '–'; el.className = 'dak-delta'; }
+              else {
+                const diff = a - v;
+                const pct  = v !== 0 ? (diff/Math.abs(v)*100).toFixed(1) : '';
+                const sign = diff > 0 ? '+' : '';
+                el.textContent = sign + fmtDE(diff) + (pct ? ' (' + sign + pct + '%)' : '');
+                el.className   = 'dak-delta ' + (diff > 0 ? 'pos' : diff < 0 ? 'neg' : '');
+              }
+              // BU-Warnhinweis: bei Einkommenssteigerung
+              if (key === 'brutto' || key === 'netto') {
+                const warn = document.getElementById('dak-warn-' + key);
+                if (warn) {
+                  const diff = isNaN(v) || isNaN(a) ? 0 : a - v;
+                  warn.style.display = diff > 0 ? 'inline-flex' : 'none';
+                }
+              }
+            };
+            window.dakCheckRiesterGrundzulage = function() {
+              const el  = document.getElementById('dak-riester-gz');
+              const warn= document.getElementById('dak-warn-gz');
+              if (!el || !warn) return;
+              const raw = el.value.replace(/\./g,'').replace(',','.').replace(/[^\d.-]/g,'');
+              const val = parseFloat(raw);
+              warn.style.display = (!isNaN(val) && val > 0 && val < 175) ? 'inline-flex' : 'none';
+              // Gesamtsumme aktualisieren
+              if (typeof dakCalcZulagenSum === 'function') dakCalcZulagenSum();
+            };
+
+            const DAK_PROMPT = `Du analysierst ein deutsches Dokument für eine Finanzberatungs-App. Extrahiere NUR die folgenden Felder und gib ein JSON-Objekt zurück (kein Markdown, keine Erklärungen):
+
+{
+  "docType": "gehaltsabrechnung_dez|gehaltsabrechnung_akt|renteninformation|energie|riester|unbekannt",
+  "brutto": "",
+  "netto": "",
+  "steuerBrutto": "",
+  "steuerklasse": "",
+  "kirchensteuer": "ja|nein",
+  "krankenversicherung": "GKV|PKV",
+  "krankenkasseName": "",
+  "kvZusatzbeitrag": "",
+  "vlBeitrag": "",
+  "bavBeitrag": "",
+  "riesterEigenbeitrag": "",
+  "kinderfreibetrag": "",
+  "anzahlGehaelter": "",
+  "renteninformationDatum": "TT.MM.JJJJ",
+  "regelAltersrente": "",
+  "kuenftigeRente": "",
+  "renteEM": "",
+  "jahreEingezahlt": "",
+  "stromKosten": "",
+  "stromKwh": "",
+  "gasKosten": "",
+  "gasKwh": "",
+  "riesterBeitragsjahr": "",
+  "riesterAltersvorsorgebeitraege": "",
+  "riesterGrundzulage": "",
+  "riesterKinderzulagen": []
+}
+
+Regeln:
+- Lass Felder leer ("") wenn nicht im Dokument vorhanden
+- Keine erfundenen Daten
+- Deutsche Zahlenformate beibehalten (z.B. "3.450,00")
+- Bei Gehaltsabrechnungen: "brutto" und "netto" sind die monatlichen Werte des aktuellen Abrechnungsmonats
+- "steuerBrutto": Diesen Wert (Steuer-Brutto) findest du auf Gehaltsabrechnungen oft unten links bei den kumulierten Jahreswerten / Verdienstbescheinigung. Extrahiere diesen Wert.
+- "krankenkasseName": vollständiger Name der Krankenkasse aus dem Kopfbereich der Gehaltsabrechnung (z.B. "Techniker Krankenkasse", "AOK Bayern", "BARMER"). Steht meist neben dem Label "Krankenkasse" im Kopfteil.
+- "bavBeitrag": Arbeitgeberanteil zur betrieblichen Altersvorsorge. Typischerweise Lohnart 5200 ("bAV AG-Pflichtz,lfd", "bAV AG-Zuschuss" o.ä.). Nur den AG-Betrag extrahieren.
+- "vlBeitrag": Vermögenswirksame Leistungen des Arbeitgebers (z.B. Lohnart 4900 "VL-Zuschuss AG" o.ä.)
+- Manche deutschen Lohnabrechnungen schreiben Daten komprimiert ohne Trennzeichen und mit 2-stelliger Jahreszahl, z.B. "010120" = 01.01.2020. Wandle solche 6-stelligen Datumsangaben (TTMMJJ) in TT.MM.JJJJ um.
+- Riester-Zulagenbescheinigung ("Bescheinigung nach § 92 EStG"): Setze docType = "riester". Das Dokument hat zwei getrennte Abschnitte:
+  1. "Im abgelaufenen Beitragsjahr" – hier stehen die "geleisteten Altersvorsorgebeiträge (Beiträge und Tilgungsleistungen ohne Zulage)" → diesen Betrag in "riesterAltersvorsorgebeitraege" eintragen; das danebenstehende Jahr (z.B. 2024) in "riesterBeitragsjahr".
+  2. "für das Beitragsjahr JJJJ" (oft ein Jahr früher) – hier stehen die erhaltenen Zulagen: Grundzulage → "riesterGrundzulage"; jede Kinderzulage als einzelner Eintrag im Array "riesterKinderzulagen" (nur den Euro-Betrag, z.B. ["254,24", "254,23"]).
+`;
+
+
+            async function dakRenderPDF(file) {
+              const pdfjsLib = window['pdfjs-dist/build/pdf'];
+              if (!pdfjsLib) throw new Error('PDF.js nicht geladen');
+              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+              const buf  = await file.arrayBuffer();
+              const pdf  = await pdfjsLib.getDocument({data: buf}).promise;
+              const page = await pdf.getPage(1);
+              const vp   = page.getViewport({scale: 1.2});
+              const cv   = document.createElement('canvas');
+              cv.width = vp.width; cv.height = vp.height;
+              await page.render({canvasContext: cv.getContext('2d'), viewport: vp}).promise;
+              return cv.toDataURL('image/jpeg', 0.75).split(',')[1];
+            }
+
+            async function dakCallGemini(base64) {
+              const key   = getGeminiKey ? getGeminiKey() : localStorage.getItem('gemini_api_key') || '';
+              const model = (typeof getGeminiModel === 'function') ? getGeminiModel() : 'gemini-2.0-flash';
+              if (!key) throw new Error('Kein Gemini API Key gespeichert');
+              const url  = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+              const body = { contents: [{ parts: [{text: DAK_PROMPT}, {inlineData:{mimeType:'image/jpeg',data:base64}}] }], generationConfig:{temperature:0.1} };
+              const res  = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+              if (!res.ok) { const e = await res.text(); throw new Error('Gemini ' + res.status + ': ' + e.slice(0,200)); }
+              const data = await res.json();
+              let raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              raw = raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+              const s = raw.indexOf('{'), e2 = raw.lastIndexOf('}');
+              if (s<0||e2<0) throw new Error('Kein JSON: ' + raw.slice(0,100));
+              return JSON.parse(raw.slice(s, e2+1));
+            }
+
+            function dakApplyResult(r, isDez) {
+              function set(id, val) {
+                if (!val) return;
+                const el = document.getElementById(id);
+                if (el) { el.value = val; el.classList.add('ki-set'); }
+              }
+              const sfx = isDez ? '-dez' : '-akt';
+              set('dak-brutto'     + sfx, r.brutto);
+              set('dak-netto'      + sfx, r.netto);
+              set('dak-steuerbrutto'+ sfx, r.steuerBrutto);
+              set('dak-stk'        + sfx, r.steuerklasse);
+              set('dak-kirche'     + sfx, r.kirchensteuer);
+              set('dak-kv'         + sfx, r.krankenversicherung);
+              set('dak-kk'         + sfx, r.krankenkasseName);
+              set('dak-kvz'        + sfx, r.kvZusatzbeitrag);
+              set('dak-vl'         + sfx, r.vlBeitrag);
+              set('dak-bav'        + sfx, r.bavBeitrag);
+              set('dak-riester'    + sfx, r.riesterEigenbeitrag);
+              set('dak-kfb'        + sfx, r.kinderfreibetrag);
+              set('dak-gehaelter'  + sfx, r.anzahlGehaelter);
+              // Rente
+              set('dak-rente-datum',    r.renteninformationDatum);
+              set('dak-rente-regel',    r.regelAltersrente);
+              set('dak-rente-kuenftig', r.kuenftigeRente);
+              set('dak-rente-em',       r.renteEM);
+              set('dak-rente-jahre',    r.jahreEingezahlt);
+              // Energie
+              set('dak-strom-kosten',    r.stromKosten);
+              set('dak-strom-kwh',       r.stromKwh);
+              set('dak-gas-kosten',      r.gasKosten);
+              set('dak-gas-kwh',         r.gasKwh);
+              // Riester-Zulagenbescheinigung
+              set('dak-riester-bj',      r.riesterBeitragsjahr);
+              set('dak-riester-av',      r.riesterAltersvorsorgebeitraege);
+              set('dak-riester-gz',      r.riesterGrundzulage);
+              // Programmatic set() doesn't fire oninput – check manually
+              if (typeof dakCheckRiesterGrundzulage === 'function') dakCheckRiesterGrundzulage();
+              if (Array.isArray(r.riesterKinderzulagen) && r.riesterKinderzulagen.length > 0) {
+                document.querySelectorAll('.dak-kz-row').forEach(tr => tr.remove());
+                r.riesterKinderzulagen.forEach(betrag => dakAddKinderzulage(betrag, true));
+              }
+              // Delta
+              ['brutto','netto','steuerbrutto','kvz','vl','bav','riester','kfb'].forEach(k => dakCalcDelta(k));
+            }
+
+            window.dakAnalyzeAll = function() {
+              const tasks = dakFiles.map((f,i) => f ? {file:f, idx:i} : null).filter(Boolean);
+              if (tasks.length === 0) { showToast('Bitte mindestens ein Dokument hochladen.'); return; }
+              const btn = document.getElementById('dak-analyze-btn');
+              const bar = document.getElementById('dak-progress-bar');
+              const wrap= document.getElementById('dak-progress-wrap');
+              const st  = document.getElementById('dak-status');
+              btn.disabled = true;
+              wrap.classList.add('visible');
+              bar.style.background = '';
+              bar.style.width = '5%';
+
+              (async () => {
+                let done = 0;
+                for (const {file, idx} of tasks) {
+                  st.textContent = `Analysiere ${dakLabels[idx]} …`;
+                  try {
+                    const isPDF = file.type === 'application/pdf';
+                    const b64   = isPDF ? await dakRenderPDF(file) : await new Promise((res,rej)=>{
+                      const r = new FileReader();
+                      r.onload = e => res(e.target.result.split(',')[1]);
+                      r.onerror = rej;
+                      r.readAsDataURL(file);
+                    });
+                    const result = await dakCallGemini(b64);
+                    const isDez  = idx === 0;
+                    dakApplyResult(result, isDez);
+                    done++;
+                    bar.style.width = Math.round((done / tasks.length) * 100) + '%';
+                  } catch(err) {
+                    console.error('DAK Fehler', dakLabels[idx], err);
+                    st.innerHTML = `<span style="color:#c62828">Fehler bei ${dakLabels[idx]}: ${String(err.message).replace(/</g,'&lt;').slice(0,120)}</span>`;
+                    bar.style.background = '#e53935';
+                  }
+                }
+                if (!st.innerHTML.includes('Fehler')) {
+                  st.textContent = '✓ Analyse abgeschlossen';
+                  showToast('KI-Analyse abgeschlossen – bitte Werte prüfen.');
+                  if (typeof dakAutoCheckKIFields === 'function') dakAutoCheckKIFields();
+                }
+                btn.disabled = false;
+              })();
+            };
+
+            // ---- Kinderzulagen dynamisch hinzufügen ----
+            let kzCounter = 0;
+            window.dakAddKinderzulage = function(betrag, isKi) {
+              const tbody = document.getElementById('dak-kz-body');
+              if (!tbody) return;
+              const idx = ++kzCounter;
+              const tr = document.createElement('tr');
+              tr.className = 'dak-kz-row';
+              tr.dataset.kzIdx = idx;
+              tr.innerHTML = `
+                <td>Kinderzulage ${idx}</td>
+                <td>
+                  <input class="dak-cell-input${isKi ? ' ki-set' : ''}" id="dak-kz-${idx}" type="text" placeholder="0,00 &euro;" style="max-width:160px;" value="${betrag || ''}" oninput="dakCalcAvDepot()">
+                </td>
+                <td><span id="dak-avd-kz-${idx}" style="font-size:13px;font-weight:600;color:#7b1fa2;">–</span></td>
+                <td><button onclick="dakRemoveKinderzulage(this)" style="font-size:11px;padding:3px 8px;border:1px solid #e53935;border-radius:4px;background:#fff;color:#e53935;cursor:pointer;">Entfernen</button></td>
+              `;
+              tbody.appendChild(tr);
+              // Trigger recalc after DOM insert
+              setTimeout(dakCalcAvDepot, 0);
+            };
+            window.dakRemoveKinderzulage = function(btn) {
+              btn.closest('tr').remove();
+              dakCalcAvDepot();
+            };
+            // ---- AV-Depot Förderungsberechnung ----
+            window.dakCalcAvDepot = function() {
+              const parseDE = s => {
+                if (!s) return NaN;
+                return parseFloat(String(s).replace(/\./g,'').replace(',','.').replace(/[^\d.-]/g,''));
+              };
+              const fmtEUR = n => isNaN(n) ? '–' : n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+
+              const avVal = parseDE(document.getElementById('dak-riester-av')?.value);
+
+              // Grundzulage: bis 1200 × 0,30; 1201-1800 zusätzlich × 0,20; max 480
+              let gzAvd = NaN;
+              if (!isNaN(avVal) && avVal > 0) {
+                const part1 = Math.min(avVal, 1200) * 0.30;
+                const part2 = avVal > 1200 ? Math.min(avVal - 1200, 600) * 0.20 : 0;
+                gzAvd = Math.min(part1 + part2, 480);
+              }
+              const gzEl = document.getElementById('dak-avd-gz');
+              if (gzEl) gzEl.textContent = fmtEUR(gzAvd);
+
+              // Kinderzulagen: geleistete AV-Beiträge × 0,25 je Kind; max 300
+              document.querySelectorAll('.dak-kz-row').forEach(row => {
+                const idx  = row.dataset.kzIdx;
+                let kzAvd = NaN;
+                if (!isNaN(avVal) && avVal > 0) {
+                  kzAvd = Math.min(avVal * 0.25, 300);
+                }
+                const kzEl = document.getElementById('dak-avd-kz-' + idx);
+                if (kzEl) kzEl.textContent = fmtEUR(kzAvd);
+              });
+
+              // Gesamtsumme berechnen und anzeigen
+              dakCalcZulagenSum();
+            };
+
+            // ---- Zulagen-Summe berechnen ----
+            window.dakCalcZulagenSum = function() {
+              const parseDE = s => {
+                if (!s) return NaN;
+                return parseFloat(String(s).replace(/\./g,'').replace(',','.').replace(/[^\d.-]/g,''));
+              };
+              const fmtEUR = n => isNaN(n) ? '–' : n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+
+              // Riester-Summe: Grundzulage + alle Kinderzulagen (aus Eingabefeldern)
+              let riesterSum = 0;
+              let riesterValid = false;
+              const gzRiesterEl = document.getElementById('dak-riester-gz');
+              const gzRiesterVal = parseDE(gzRiesterEl?.value);
+              if (!isNaN(gzRiesterVal) && gzRiesterVal > 0) {
+                riesterSum += gzRiesterVal;
+                riesterValid = true;
+              }
+              document.querySelectorAll('.dak-kz-row').forEach(row => {
+                const idx = row.dataset.kzIdx;
+                const kzEl = document.getElementById('dak-kz-' + idx);
+                const kzVal = parseDE(kzEl?.value);
+                if (!isNaN(kzVal) && kzVal > 0) { riesterSum += kzVal; riesterValid = true; }
+              });
+              const sumRiesterEl = document.getElementById('dak-sum-riester');
+              if (sumRiesterEl) sumRiesterEl.textContent = riesterValid ? fmtEUR(riesterSum) : '–';
+
+              // AV-Depot-Summe: aus den berechneten Anzeige-Spans
+              let avdSum = 0;
+              let avdValid = false;
+              const gzAvdEl = document.getElementById('dak-avd-gz');
+              const gzAvdText = gzAvdEl?.textContent?.trim();
+              const gzAvdVal = parseDE(gzAvdText);
+              if (!isNaN(gzAvdVal) && gzAvdVal > 0) { avdSum += gzAvdVal; avdValid = true; }
+              document.querySelectorAll('.dak-kz-row').forEach(row => {
+                const idx = row.dataset.kzIdx;
+                const kzAvdEl = document.getElementById('dak-avd-kz-' + idx);
+                const kzAvdVal = parseDE(kzAvdEl?.textContent);
+                if (!isNaN(kzAvdVal) && kzAvdVal > 0) { avdSum += kzAvdVal; avdValid = true; }
+              });
+              const sumAvdEl = document.getElementById('dak-sum-avd');
+              if (sumAvdEl) sumAvdEl.textContent = avdValid ? fmtEUR(avdSum) : '–';
+            };
+          })();
+          </script>
+
+        </div>
+
+        <!-- ============ PAGE: JEG – THEMEN ============ -->
+        <div class="page" id="page-jeg-themen">
+          <div class="jeg-hero" style="padding:24px 40px;">
+            <div class="jeg-hero-badge">JEG 2026</div>
+            <h1 class="jeg-hero-title" style="font-size:24px;">Themen</h1>
+          </div>
+          <div class="jeg-intro">
+            <p>Hier werden die relevanten Beratungsthemen f&uuml;r den Jahresendkontrolltermin aufgelistet.</p>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: JEG – TOOLS & RECHNER (Übersicht) ============ -->
+        <div class="page" id="page-jeg-tools">
+          <div class="jeg-hero" style="padding:24px 40px;">
+            <div class="jeg-hero-badge">JEG 2026</div>
+            <h1 class="jeg-hero-title" style="font-size:24px;">Tools &amp; Rechner</h1>
+          </div>
+          <div class="jeg-intro">
+            <p>Bitte w&auml;hlen Sie einen Rechner aus dem Men&uuml; auf der linken Seite.</p>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: JEG – FÖRDER-VERGLEICHSRECHNER ============ -->
+        <div class="page" id="page-jeg-foerder">
+          <div class="jeg-hero" style="padding:24px 40px;">
+            <div class="jeg-hero-badge">JEG 2026 &middot; Tools &amp; Rechner</div>
+            <h1 class="jeg-hero-title" style="font-size:24px;">F&ouml;rder-Vergleichsrechner</h1>
+          </div>
+
+          <!-- ===== RECHNER CONTENT (aus foerder-rechner.html) ===== -->
+          <div class="bg-white px-4 pb-8 md:px-8" style="max-width:1400px;margin:0 auto;">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              <!-- Left Column - Inputs -->
+              <div class="space-y-6">
+
+                <!-- Persönliche Daten -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                  <h2 class="text-lg blue-heading mb-4">
+                    <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                      <circle cx="12" cy="7" r="4" fill="#9AB2CE" />
+                      <path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#023e84" stroke-width="2" stroke-linecap="round" fill="none" />
+                    </svg>
+                    Pers&ouml;nliche Daten
+                  </h2>
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Jahresbruttoeinkommen</label>
+                      <span class="text-lg font-semibold" id="income-display">45.000 &euro;</span>
+                    </div>
+                    <input type="range" id="income-slider" min="0" max="200000" step="1000" value="45000" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>0 &euro;</span><span>200.000 &euro;</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="text-sm text-gray-700 block mb-2">Familienstand</label>
+                    <select id="marital-status" class="w-full bg-white border-2 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 marital-status-select">
+                      <option value="single">ledig</option>
+                      <option value="married">verheiratet</option>
+                      <option value="single-parent">Alleinerziehend (Mit Kindern, ohne Partner)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Kinder -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                  <h2 class="text-lg blue-heading mb-4">
+                    <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                      <circle cx="9" cy="6" r="2.5" fill="#9AB2CE" />
+                      <circle cx="15" cy="6" r="2.5" fill="#9AB2CE" />
+                      <path d="M5 15c0-2.2 1.8-4 4-4s4 1.8 4 4v3H5v-3z" fill="#9AB2CE" stroke="#023e84" stroke-width="1.2" />
+                      <path d="M11 15c0-2.2 1.8-4 4-4s4 1.8 4 4v3h-8v-3z" fill="#9AB2CE" stroke="#023e84" stroke-width="1.2" />
+                    </svg>
+                    Kinder mit Kindergeldanspruch
+                  </h2>
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Kinder geboren vor 2008</label>
+                      <span class="text-sm font-semibold" id="children-before-display">0</span>
+                    </div>
+                    <input type="range" id="children-before-slider" min="0" max="6" step="1" value="0" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>0</span><span>6</span></div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Kinder geboren ab 2008</label>
+                      <span class="text-sm font-semibold" id="children-after-display">0</span>
+                    </div>
+                    <input type="range" id="children-after-slider" min="0" max="6" step="1" value="0" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>0</span><span>6</span></div>
+                  </div>
+                </div>
+
+                <!-- Eigenbeitrag -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                  <h2 class="text-lg blue-heading mb-4">
+                    <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" fill="#9AB2CE" />
+                      <path d="M14.5 8.5C13.5 7.5 12 7 10.5 7.5C9 8 8 9.5 8 11M8 11h5M8 13h5M8 13c0 1.5 1 3 2.5 3.5 1.5.5 3 0 4-1" stroke="#023e84" stroke-width="2" stroke-linecap="round" fill="none" />
+                    </svg>
+                    Ihr Eigenbeitrag
+                  </h2>
+                  <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Eigenbeitrag pro Jahr</label>
+                      <span class="text-lg font-semibold" id="contribution-display">1.200 &euro;</span>
+                    </div>
+                    <input type="range" id="contribution-slider" min="60" max="2100" step="10" value="1200" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>60 &euro;</span><span>2.100 &euro;</span></div>
+                  </div>
+                  <button id="optimal-button" class="w-full bg-white text-button-blue font-semibold py-3 px-4 rounded-lg border-2 riester-button hover:bg-blue-50 transition-colors">
+                    Beitrag f&uuml;r volle Riester-Zulage verwenden (<span id="optimal-amount">1625</span> &euro;)
+                  </button>
+                </div>
+
+                <!-- Ansparphase -->
+                <div class="bg-white rounded-xl input-card-shadow p-6">
+                  <h2 class="text-lg blue-heading mb-4">
+                    <svg class="section-icon" fill="none" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" fill="#9AB2CE" />
+                      <path d="M12 6v6l4 4" stroke="#023e84" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    </svg>
+                    Ansparphase
+                  </h2>
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Alter bei Vertragsbeginn</label>
+                      <span class="text-lg font-semibold"><span id="start-age-display">30</span> Jahre</span>
+                    </div>
+                    <input type="range" id="start-age-slider" min="18" max="60" step="1" value="30" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>18 Jahre</span><span>60 Jahre</span></div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Geplantes Rentenalter</label>
+                      <span class="text-lg font-semibold"><span id="retirement-age-display">67</span> Jahre</span>
+                    </div>
+                    <input type="range" id="retirement-age-slider" min="62" max="70" step="1" value="67" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>62 Jahre</span><span>70 Jahre</span></div>
+                  </div>
+                  <div class="mt-6">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Nettorendite Riester</label>
+                      <span class="text-lg font-semibold"><span id="riester-return-display">3,0</span> %</span>
+                    </div>
+                    <input type="range" id="riester-return-slider" min="0" max="9" step="0.1" value="3.0" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>0 %</span><span>9 %</span></div>
+                  </div>
+                  <div class="mt-6">
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm text-gray-700">Nettorendite AV-Depot</label>
+                      <span class="text-lg font-semibold"><span id="av-return-display">3,0</span> %</span>
+                    </div>
+                    <input type="range" id="av-return-slider" min="0" max="9" step="0.1" value="3.0" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-1"><span>0 %</span><span>9 %</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column - Results -->
+              <div class="space-y-6">
+
+                <!-- Comparison Grid -->
+                <div class="comparison-grid">
+
+                  <!-- Riester Column -->
+                  <div id="riester-column" class="product-column space-y-4">
+                    <div class="bg-riester-main rounded-xl shadow-sm p-6 text-white">
+                      <div class="text-xl font-bold opacity-90 mb-2">Riester-Rente</div>
+                      <div class="text-xs mb-1">Gesch&auml;tzte monatliche Rente (brutto)</div>
+                      <div class="text-4xl font-bold mb-1"><span id="header-monthly-pension">302,00</span> &euro;</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">Staatliche Zulagen</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Grundzulage</span><span class="font-semibold text-green-600">+<span id="basic-subsidy">175,00</span> &euro;</span></div>
+                        <div id="child-subsidy-row" class="flex justify-between" style="display:none;"><span class="text-sm text-gray-600">Kinderzulagen</span><span class="font-semibold text-green-600">+<span id="child-subsidy">0,00</span> &euro;</span></div>
+                        <div class="flex justify-between pt-2 border-t"><span class="text-sm font-semibold">Zulagen gesamt</span><span class="font-semibold text-green-600"><span id="total-allowances">129,23</span> &euro;</span></div>
+                      </div>
+                    </div>
+                    <div id="warning-card" class="bg-orange-50 border-l-4 border-orange-400 rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold text-orange-800 mb-2">Mindesteigenbeitrag nicht erreicht</h3>
+                      <p class="text-sm text-orange-700">F&uuml;r die volle Zulage ben&ouml;tigen Sie mindestens <span class="font-semibold" id="minimum-required">1.625,00</span> &euro; Eigenbeitrag pro Jahr.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">G&uuml;nstigerpr&uuml;fung</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Zus&auml;tzliche Steuerersparnis</span><span class="font-semibold text-green-600">+<span id="tax-savings">189,78</span> &euro;</span></div>
+                      </div>
+                      <p id="guenstigerpruefung-text" class="text-xs text-gray-500 mt-3">Der Sonderausgabenabzug ist f&uuml;r Sie g&uuml;nstiger als die Zulagen.</p>
+                    </div>
+                    <div class="bg-riester-light rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold text-riester-dark mb-4">Ihre Gesamtf&ouml;rderung</h3>
+                      <div class="mb-5">
+                        <div class="text-3xl font-bold text-riester-dark mb-1"><span id="summary-total">319,01</span> &euro;</div>
+                        <div class="text-sm text-riester-medium">F&ouml;rderquote: <span id="subsidy-rate">26,6</span> %</div>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 border-t border-gray-300 pt-4">
+                        <div><div class="text-sm text-riester-medium">Zulagen</div><div class="text-xl font-bold text-riester-dark"><span id="summary-subsidies">129,23</span> &euro;</div></div>
+                        <div><div class="text-sm text-riester-medium">Steuerersparnis</div><div class="text-xl font-bold text-riester-dark"><span id="summary-tax">189,78</span> &euro;</div></div>
+                      </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">Prognose (bei <span id="riester-return-title">3,0</span>% Nettorendite)</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Laufzeit</span><span class="font-semibold"><span id="duration">37</span> Jahre</span></div>
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">J&auml;hrliche Einzahlung</span><span class="font-semibold"><span id="annual-payment">1.329,23</span> &euro;</span></div>
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Gesch&auml;tztes Endkapital</span><span class="font-semibold"><span id="end-capital">90.599,64</span> &euro;</span></div>
+                        <div class="flex justify-between pt-2 border-t"><span class="text-sm font-semibold">Gesch&auml;tzte monatliche Rente (brutto)</span><span class="font-semibold"><span id="monthly-pension">302,00</span> &euro;</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- AV-Depot Column -->
+                  <div id="av-depot-column" class="product-column space-y-4">
+                    <div class="bg-av-depot-main rounded-xl shadow-sm p-6 text-white">
+                      <div class="text-xl font-bold opacity-90 mb-2">AV-Depot</div>
+                      <div class="text-xs mb-1">Gesch&auml;tzte monatliche Rente (brutto)</div>
+                      <div class="text-4xl font-bold mb-1"><span id="av-header-monthly-pension">353,33</span> &euro;</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">Staatliche Zulagen</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Grundzulage</span><span class="font-semibold text-green-600">+<span id="av-grundzulage-total">360,00</span> &euro;</span></div>
+                        <div id="av-child-subsidy-row" class="flex justify-between" style="display:none;"><span class="text-sm text-gray-600">Kinderzulagen</span><span class="font-semibold text-green-600">+<span id="av-child-subsidy">0,00</span> &euro;</span></div>
+                        <div class="flex justify-between pt-2 border-t"><span class="text-sm font-semibold">Zulagen gesamt</span><span class="font-semibold text-green-600"><span id="av-total-allowances">360,00</span> &euro;</span></div>
+                      </div>
+                    </div>
+                    <div id="av-warning-card" class="bg-orange-50 border-l-4 border-orange-400 rounded-xl shadow-sm p-6" style="display:none;">
+                      <h3 class="font-semibold text-orange-800 mb-2">Mindesteigenbeitrag nicht erreicht</h3>
+                      <p class="text-sm text-orange-700">Der Mindesteigenbeitrag betr&auml;gt <span class="font-semibold" id="av-minimum-required">120,00</span> &euro;.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">G&uuml;nstigerpr&uuml;fung</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Zus&auml;tzliche Steuerersparnis</span><span class="font-semibold text-green-600">+<span id="av-tax-savings">140,00</span> &euro;</span></div>
+                      </div>
+                      <p id="av-guenstigerpruefung-text" class="text-xs text-gray-500 mt-3">Der Sonderausgabenabzug ist f&uuml;r Sie g&uuml;nstiger als die Zulagen.</p>
+                    </div>
+                    <div class="bg-av-depot-light rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold text-av-depot-dark mb-4">Ihre Gesamtf&ouml;rderung</h3>
+                      <div class="mb-5">
+                        <div class="text-3xl font-bold text-av-depot-dark mb-1"><span id="av-summary-total">500,00</span> &euro;</div>
+                        <div class="text-sm text-av-depot-medium">F&ouml;rderquote: <span id="av-subsidy-rate">41,7</span> %</div>
+                      </div>
+                      <div class="grid grid-cols-2 gap-4 border-t border-gray-300 pt-4">
+                        <div><div class="text-sm text-av-depot-medium">Zulagen</div><div class="text-xl font-bold text-av-depot-dark"><span id="av-summary-subsidies">360,00</span> &euro;</div></div>
+                        <div><div class="text-sm text-av-depot-medium">Steuerersparnis</div><div class="text-xl font-bold text-av-depot-dark"><span id="av-summary-tax">140,00</span> &euro;</div></div>
+                      </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                      <h3 class="font-semibold mb-4">Prognose (bei <span id="av-return-title">3,0</span>% Nettorendite)</h3>
+                      <div class="space-y-2">
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Laufzeit</span><span class="font-semibold"><span id="av-duration">37</span> Jahre</span></div>
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">J&auml;hrliche Einzahlung</span><span class="font-semibold"><span id="av-annual-payment">1.560,00</span> &euro;</span></div>
+                        <div class="flex justify-between"><span class="text-sm text-gray-600">Gesch&auml;tztes Endkapital</span><span class="font-semibold"><span id="av-end-capital">106.000,00</span> &euro;</span></div>
+                        <div class="flex justify-between pt-2 border-t"><span class="text-sm font-semibold">Gesch&auml;tzte monatliche Rente (brutto)</span><span class="font-semibold"><span id="av-monthly-pension">353,33</span> &euro;</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Comparison Summary -->
+                <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl shadow-lg p-6 border-2 border-gray-200">
+                  <h3 class="font-bold text-gray-900 mb-4 text-center text-xl">&#x1F4CA; Ihre Gesamtf&ouml;rderung im Vergleich</h3>
+                  <div class="bg-white rounded-lg p-4 mb-4 text-center">
+                    <p id="comparison-recommendation" class="text-lg font-semibold text-blue-700">Riester bietet f&uuml;r Sie die bessere F&ouml;rderung!</p>
+                  </div>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-lg p-4 text-center"><div class="text-xs text-gray-600 mb-1">Zulagen-Differenz</div><div class="text-lg font-bold"><span id="comparison-subsidies-diff" class="text-green-600">230,77</span> &euro;</div><div class="text-xs text-gray-500 mt-1">AV-Depot h&ouml;her</div></div>
+                    <div class="bg-white rounded-lg p-4 text-center"><div class="text-xs text-gray-600 mb-1">Steuer-Differenz</div><div class="text-lg font-bold"><span id="comparison-tax-diff" class="text-red-600">49,78</span> &euro;</div><div class="text-xs text-gray-500 mt-1">Riester h&ouml;her</div></div>
+                    <div class="bg-white rounded-lg p-4 text-center"><div class="text-xs text-gray-600 mb-1">Gesamt-Differenz</div><div class="text-lg font-bold"><span id="comparison-total-diff" class="text-green-600">180,99</span> &euro;</div><div class="text-xs text-gray-500 mt-1">j&auml;hrlich</div></div>
+                    <div class="bg-white rounded-lg p-4 text-center"><div class="text-xs text-gray-600 mb-1">Kapital-Differenz</div><div class="text-lg font-bold"><span id="comparison-capital-diff" class="text-green-600">15.400,36</span> &euro;</div><div class="text-xs text-gray-500 mt-1">bei Rentenbeginn</div></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Wichtiger Hinweis -->
+            <div class="mt-8 bg-red-50 border-l-4 border-red-400 rounded-xl shadow-sm p-6">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-lg font-semibold text-red-800">Wichtiger Hinweis</h3>
+                  <p class="mt-2 text-sm text-red-700">Die Berechnungen und Informationen dieses Rechners dienen ausschlie&szlig;lich allgemeinen Informationszwecken und stellen keine steuerliche, rechtliche oder finanzielle Beratung dar. F&uuml;r die Vollst&auml;ndigkeit, Richtigkeit und Aktualit&auml;t der Angaben wird keine Haftung &uuml;bernommen.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- ===== END RECHNER CONTENT ===== -->
+        </div>
+
+        <!-- ============ PAGE: JEG – FRÜHSTART-RENTENRECHNER ============ -->
+        <div class="page" id="page-jeg-fruehstart">
+          <div class="jeg-hero" style="padding:24px 40px;">
+            <div class="jeg-hero-badge">JEG 2026 · Tools &amp; Rechner</div>
+            <h1 class="jeg-hero-title" style="font-size:24px;">Fr&uuml;hstart-Rentenrechner</h1>
+          </div>
+          <div class="jeg-intro">
+            <p>Inhalt folgt.</p>
+          </div>
+        </div>
+
+        <!-- ============ PAGE: JEG – CHECKLISTE & NOTIZEN ============ -->
+        <div class="page" id="page-jeg-checkliste">
+          <div class="jeg-hero" style="padding:24px 40px;">
+            <div class="jeg-hero-badge">JEG 2026</div>
+            <h1 class="jeg-hero-title" style="font-size:24px;">Abschluss</h1>
+          </div>
+
+          <div style="padding:24px 40px;max-width:860px;margin:0 auto;">
+
+            <!-- NOTIZFELD -->
+            <div class="daten-section" style="padding:0;border:none;">
+              <div class="daten-section-header" style="margin-bottom:16px;">
+                <span class="daten-section-icon">📝</span>
+                <div>
+                  <h2 class="daten-section-title">Notizen zum JEG-Termin</h2>
+                  <p class="daten-section-sub">Stichpunkte, Vereinbarungen oder To-dos – per Tastatur oder Sprache</p>
+                </div>
+              </div>
+
+              <!-- Textarea + Mikrofon-Button -->
+              <div style="position:relative;">
+                <textarea id="jeg-notizen"
+                  style="width:100%;min-height:220px;border:2px solid var(--border);border-radius:8px;padding:14px 14px 48px 14px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s;box-sizing:border-box;"
+                  placeholder="Notizen hier eingeben oder Mikrofon-Taste nutzen …"
+                  onfocus="this.style.borderColor='var(--blue-accent)'"
+                  onblur="this.style.borderColor='var(--border)'"
+                  oninput="jekUpdateCharCount()"></textarea>
+
+                <!-- Mikrofon-Button (inside textarea, bottom-right) -->
+                <button id="jeg-mic-btn" onclick="jekToggleVoice()"
+                  title="Spracheingabe starten / stoppen"
+                  style="position:absolute;bottom:10px;right:10px;display:flex;align-items:center;gap:6px;padding:7px 14px;border:none;border-radius:20px;background:var(--blue-accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;z-index:2;">
+                  <svg id="jej-mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <rect x="9" y="2" width="6" height="11" rx="3"/>
+                    <path d="M5 10a7 7 0 0 0 14 0"/>
+                    <line x1="12" y1="19" x2="12" y2="22"/>
+                    <line x1="8" y1="22" x2="16" y2="22"/>
+                  </svg>
+                  <span id="jeg-mic-label">Sprache</span>
+                </button>
+              </div>
+
+              <!-- Status-Zeile -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+                <span id="jeg-voice-status" style="font-size:12px;color:var(--text-muted);"></span>
+                <span id="jeg-char-count" style="font-size:12px;color:var(--text-muted);">0 Zeichen</span>
+              </div>
+
+              <!-- Aktions-Buttons -->
+              <div class="form-actions" style="margin-top:16px;">
+                <button class="btn btn-outline" onclick="jekClearNotes()">Löschen</button>
+                <button class="btn btn-primary" onclick="jekSaveNotes()">Notizen speichern</button>
+              </div>
+            </div>
+
+          </div>
+
+          <script>
+          // ===== JEG Notizen & Spracheingabe =====
+          (function () {
+            const STORAGE_KEY = 'jeg_notizen';
+
+            // Gespeicherte Notizen laden
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+              document.addEventListener('DOMContentLoaded', function () {
+                const ta = document.getElementById('jeg-notizen');
+                if (ta) { ta.value = saved; jekUpdateCharCount(); }
+              });
+            }
+
+            window.jekUpdateCharCount = function () {
+              const ta = document.getElementById('jeg-notizen');
+              const counter = document.getElementById('jeg-char-count');
+              if (ta && counter) counter.textContent = ta.value.length + ' Zeichen';
+            };
+
+            window.jekSaveNotes = function () {
+              const ta = document.getElementById('jeg-notizen');
+              if (!ta) return;
+              localStorage.setItem(STORAGE_KEY, ta.value);
+              showToast('Notizen gespeichert.');
+            };
+
+            window.jekClearNotes = function () {
+              const ta = document.getElementById('jeg-notizen');
+              if (!ta) return;
+              if (ta.value && !confirm('Alle Notizen löschen?')) return;
+              ta.value = '';
+              localStorage.removeItem(STORAGE_KEY);
+              jekUpdateCharCount();
+            };
+
+            // ===== Web Speech API =====
+            let recognition = null;
+            let isRecording = false;
+
+            window.jekToggleVoice = function () {
+              const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+              if (!SpeechRecognition) {
+                showToast('Spracheingabe wird von diesem Browser nicht unterstützt (Chrome/Edge empfohlen).');
+                return;
+              }
+
+              if (isRecording) {
+                recognition.stop();
+                return;
+              }
+
+              recognition = new SpeechRecognition();
+              recognition.lang = 'de-DE';
+              recognition.continuous = true;
+              recognition.interimResults = true;
+
+              let interimStart = -1; // Position where interim text starts in textarea
+
+              recognition.onstart = function () {
+                isRecording = true;
+                jekSetMicState(true);
+              };
+
+              recognition.onresult = function (e) {
+                const ta = document.getElementById('jeg-notizen');
+                const status = document.getElementById('jeg-voice-status');
+                if (!ta) return;
+
+                let interim = '';
+                let final = '';
+                for (let i = e.resultIndex; i < e.results.length; i++) {
+                  const t = e.results[i][0].transcript;
+                  if (e.results[i].isFinal) final += t + ' ';
+                  else interim += t;
+                }
+
+                // Show interim in status bar
+                if (status) status.textContent = interim ? '🎤 ' + interim : '';
+
+                // Append final text to textarea
+                if (final) {
+                  ta.value += final;
+                  jekUpdateCharCount();
+                }
+              };
+
+              recognition.onerror = function (e) {
+                const status = document.getElementById('jeg-voice-status');
+                if (status) status.textContent = 'Fehler: ' + (e.error === 'no-speech' ? 'Kein Ton erkannt.' : e.error);
+                jekSetMicState(false);
+                isRecording = false;
+              };
+
+              recognition.onend = function () {
+                isRecording = false;
+                jekSetMicState(false);
+                const status = document.getElementById('jeg-voice-status');
+                if (status) status.textContent = '';
+              };
+
+              recognition.start();
+            };
+
+            function jekSetMicState(active) {
+              const btn = document.getElementById('jeg-mic-btn');
+              const label = document.getElementById('jeg-mic-label');
+              if (!btn || !label) return;
+              if (active) {
+                btn.style.background = '#c62828';
+                btn.style.animation = 'jekPulse 1s infinite';
+                label.textContent = 'Stop';
+              } else {
+                btn.style.background = 'var(--blue-accent)';
+                btn.style.animation = '';
+                label.textContent = 'Sprache';
+              }
+            }
+
+            // Pulse animation for mic
+            if (!document.getElementById('jeg-pulse-style')) {
+              const style = document.createElement('style');
+              style.id = 'jeg-pulse-style';
+              style.textContent = '@keyframes jekPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }';
+              document.head.appendChild(style);
+            }
+
+            // Init char count when page becomes active
+            const observer = new MutationObserver(function () {
+              const ta = document.getElementById('jeg-notizen');
+              if (ta && !ta.dataset.initialized) {
+                ta.dataset.initialized = '1';
+                const s = localStorage.getItem(STORAGE_KEY);
+                if (s) ta.value = s;
+                jekUpdateCharCount();
+              }
+            });
+            const pageEl = document.getElementById('page-jeg-checkliste');
+            if (pageEl) observer.observe(pageEl, { attributeFilter: ['class'] });
+          })();
+          </script>
+          <!-- PDF Download Button -->
+          <div class="form-actions" style="margin-top:32px;margin-bottom:24px;">
+            <button onclick="generateJEGPdf()" id="jeg-pdf-btn"
+              style="display:flex;align-items:center;gap:10px;padding:10px 24px;background:#023e84;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:'Segoe UI',Arial,sans-serif;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(2,62,132,0.22);transition:all 0.2s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <polyline points="9 15 12 18 15 15"/>
+              </svg>
+              Beratungsprotokoll als PDF herunterladen
+            </button>
+          </div>
+        </div> <!-- End page-jeg-checkliste -->
+
+        <!-- ===== POTENZIALE: JEG 2026 ===== -->
+        <div class="page" id="page-pot-jeg">
+          <p class="page-meta">Potenzialliste</p>
+          <h1 class="page-title">Jahresendkontrolltermin - JEG 2026</h1>
+
+          <div class="jeg-countdown-container" id="jeg-countdown-container">
+            <div class="jeg-countdown-title">Noch verbleibende Zeit bis zum Jahresende:</div>
+            <div class="jeg-countdown-timer">
+              <div class="jeg-cd-block">
+                <div class="jeg-cd-val" id="jeg-cd-days">00</div>
+                <div class="jeg-cd-label">Tage</div>
+              </div>
+              <div class="jeg-cd-sep">:</div>
+              <div class="jeg-cd-block">
+                <div class="jeg-cd-val" id="jeg-cd-hours">00</div>
+                <div class="jeg-cd-label">Stunden</div>
+              </div>
+              <div class="jeg-cd-sep">:</div>
+              <div class="jeg-cd-block">
+                <div class="jeg-cd-val" id="jeg-cd-minutes">00</div>
+                <div class="jeg-cd-label">Minuten</div>
+              </div>
+              <div class="jeg-cd-sep">:</div>
+              <div class="jeg-cd-block">
+                <div class="jeg-cd-val" id="jeg-cd-seconds">00</div>
+                <div class="jeg-cd-label">Sekunden</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="jeg-kpi-grid" style="margin-bottom:24px;">
+            <div class="jeg-kpi-card kpi-blue">
+              <div class="kpi-label">Anzahl Mandanten</div>
+              <div class="kpi-val" id="pot-kpi-count">0</div>
+            </div>
+            <div class="jeg-kpi-card kpi-yellow">
+              <div class="kpi-label">Ø Liquidität</div>
+              <div class="kpi-val" id="pot-kpi-liqui">0 €</div>
+            </div>
+            <div class="jeg-kpi-card kpi-blue">
+              <div class="kpi-label">Vertragsdichte</div>
+              <div class="kpi-val" id="pot-kpi-vertraege">0.0</div>
+            </div>
+            <div class="jeg-kpi-card kpi-green">
+              <div class="kpi-label">Ø Einheiten</div>
+              <div class="kpi-val" id="pot-kpi-einheiten">0</div>
+            </div>
+          </div>
+
+          <div class="jeg-pot-filters">
+            <div class="filter-group">
+              <label for="filter-name">Name</label>
+              <input type="text" id="filter-name" placeholder="Suchen..." oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-liqui">Liquidität mind. (€)</label>
+              <input type="number" id="filter-liqui" min="0" placeholder="250" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-kinder">Kinder (n. 2019) mind.</label>
+              <input type="number" id="filter-kinder" min="0" placeholder="1" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-riester">Riester</label>
+              <select id="filter-riester" onchange="jegRenderPotTable()">
+                <option value="all">Alle</option>
+                <option value="ja">Vorhanden</option>
+                <option value="nein">Nicht vorhanden</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-ersparnis">Ersparnis mind. (€)</label>
+              <input type="number" id="filter-ersparnis" min="0" placeholder="100" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-besuch">Letzter Kontakt</label>
+              <select id="filter-besuch" onchange="jegRenderPotTable()">
+                <option value="all">Alle</option>
+                <option value="vor2026">Vor 2026</option>
+                <option value="vor2025">Vor 2025</option>
+                <option value="vor2024">Vor 2024</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-erhoehung">Erhöhungsanträge mind.</label>
+              <input type="number" id="filter-erhoehung" min="0" max="3" placeholder="1" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-telis">TELIS mind.</label>
+              <input type="number" id="filter-telis" min="0" placeholder="1" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-fremd">Fremd mind.</label>
+              <input type="number" id="filter-fremd" min="0" placeholder="1" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-einheiten">Einheiten mind.</label>
+              <input type="number" id="filter-einheiten" min="0" placeholder="10" oninput="jegRenderPotTable()">
+            </div>
+
+            <div class="filter-spacer"></div>
+          </div>
+
+          <div class="jeg-pot-table-wrapper">
+            <table class="jeg-pot-table">
+              <thead>
+                <tr>
+                  <th onclick="jegSortPotTable('name')" style="cursor:pointer">Name, Vorname <span class="sort-icon" id="sort-icon-name"></span></th>
+                  <th onclick="jegSortPotTable('liqui')" style="cursor:pointer" class="text-center">Liquidität <span class="sort-icon" id="sort-icon-liqui"></span></th>
+                  <th onclick="jegSortPotTable('ersparnis')" style="cursor:pointer" class="text-center">Ersparnis <span class="sort-icon" id="sort-icon-ersparnis"></span></th>
+                  <th onclick="jegSortPotTable('riester')" style="cursor:pointer" class="text-center">Riester-Vertrag <span class="sort-icon" id="sort-icon-riester"></span></th>
+                  <th onclick="jegSortPotTable('kinder')" style="cursor:pointer" class="text-center">Kinder (nach 2019) <span class="sort-icon" id="sort-icon-kinder"></span></th>
+                  <th onclick="jegSortPotTable('telis')" style="cursor:pointer" class="text-center">TELIS-Verträge <span class="sort-icon" id="sort-icon-telis"></span></th>
+                  <th onclick="jegSortPotTable('fremd')" style="cursor:pointer" class="text-center">Fremdverträge <span class="sort-icon" id="sort-icon-fremd"></span></th>
+                  <th onclick="jegSortPotTable('einheiten')" style="cursor:pointer" class="text-center">Einheiten <span class="sort-icon" id="sort-icon-einheiten"></span></th>
+                  <th onclick="jegSortPotTable('erhoehung')" style="cursor:pointer" class="text-center">Erhöhungsanträge <span class="sort-icon" id="sort-icon-erhoehung"></span></th>
+                  <th onclick="jegSortPotTable('besuch')" style="cursor:pointer" class="text-center">Letzter Kontakt <span class="sort-icon" id="sort-icon-besuch"></span></th>
+                  <th class="text-center">Deaktivieren</th>
+                </tr>
+              </thead>
+              <tbody id="jeg-pot-tbody">
+                <!-- Data will be injected here by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>
@@ -762,16 +2985,26 @@
   <div id="review-modal-overlay" class="modal-overlay">
     <div id="review-modal" class="modal review-modal-content">
       <div class="modal-header">
-        <h3 id="review-modal-title">Erkannte Daten überprüfen (0 Felder)</h3>
+        <h3 id="review-modal-title">Erkannte Daten überprüfen</h3>
         <button class="modal-close" id="review-modal-close" title="Schließen">&times;</button>
       </div>
       <div class="modal-body review-modal-body">
-        <p class="review-instructions">Bitte prüfen Sie die von der KI erkannten Daten. Sie können Werte anpassen oder Felder abwählen, die nicht übernommen werden sollen.</p>
+        <p class="review-instructions">Bitte prüfen Sie die von der KI erkannten Daten. Sie können Werte anpassen oder
+          Felder abwählen, die nicht übernommen werden sollen.</p>
+        <!-- Step navigation -->
+        <div class="review-step-nav" id="review-step-nav">
+          <button class="review-step-btn" id="review-btn-prev" onclick="reviewNavigate(-1)">&#8592; Zurück</button>
+          <div class="review-step-info">
+            <span id="review-step-label" class="review-step-section"></span>
+            <span id="review-step-counter" class="review-step-counter"></span>
+          </div>
+          <button class="review-step-btn review-step-btn--next" id="review-btn-next" onclick="reviewNavigate(1)">Weiter &#8594;</button>
+        </div>
         <div id="review-fields-container"></div>
       </div>
       <div class="modal-footer review-modal-footer">
         <button class="btn btn-outline" id="review-btn-cancel">Abbrechen</button>
-        <button class="btn btn-primary" id="review-btn-apply">Daten übernehmen</button>
+        <button class="btn btn-primary" id="review-btn-apply" disabled>Daten übernehmen</button>
       </div>
     </div>
   </div>
@@ -780,7 +3013,10 @@
   <div id="toast"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="app.js"></script>
+  <script src="jeg_pdf.js"></script>
+  <script src="foerder-rechner.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       drawQR('rente-qr', '#1565C0');

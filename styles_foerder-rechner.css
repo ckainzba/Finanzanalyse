@@ -1,0 +1,315 @@
+/* Custom Range Slider Styling */
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(to right, #023e84 0%, #023e84 var(--range-progress, 0%), #e5e7eb var(--range-progress, 0%), #e5e7eb 100%);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: transparent;
+    border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #023e84;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 2;
+    margin-top: -7px;
+    /* Center the thumb on the track (20px thumb - 6px track) / 2 */
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #012a5c;
+    transform: scale(1.1);
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-progress {
+    height: 6px;
+    background: #023e84;
+    border-radius: 3px 0 0 3px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #023e84;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: #012a5c;
+    transform: scale(1.1);
+}
+
+/* Microsoft Edge/IE */
+input[type="range"]::-ms-fill-lower {
+    background: #023e84;
+    border-radius: 3px 0 0 3px;
+}
+
+input[type="range"]::-ms-fill-upper {
+    background: #e5e7eb;
+    border-radius: 0 3px 3px 0;
+}
+
+input[type="range"]::-ms-track {
+    height: 6px;
+    background: transparent;
+    border-radius: 3px;
+    border: none;
+    color: transparent;
+}
+
+input[type="range"]::-ms-thumb {
+    width: 20px;
+    height: 20px;
+    background: #023e84;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-ms-thumb:hover {
+    background: #012a5c;
+    transform: scale(1.1);
+}
+
+
+
+/* Button hover effects */
+button {
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Select dropdown styling */
+select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Marital Status Select - white with blue border */
+.marital-status-select {
+    border-color: #023e84;
+}
+
+.marital-status-select:focus {
+    border-color: #023e84;
+    ring-color: #023e84;
+}
+
+/* Riester Button - white with blue border */
+.riester-button {
+    border-color: #023e84;
+}
+
+.riester-button:hover {
+    background-color: #f0f9ff;
+}
+
+
+
+/* Responsive font sizing */
+@media (max-width: 640px) {
+    h2 {
+        font-size: 1rem;
+    }
+
+    h3 {
+        font-size: 0.95rem;
+    }
+}
+
+/* Print styles (optional) */
+@media print {
+    body {
+        background: white;
+    }
+
+    .bg-gray-100 {
+        background: white;
+    }
+
+    input[type="range"],
+    button,
+    select {
+        display: none;
+    }
+}
+
+/* Comparison Grid Layout */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Product Column Styling */
+.product-column {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Better Product Highlight */
+.product-column.better-product {
+    position: relative;
+}
+
+.product-column.better-product::before {
+    content: '✓ Höhere Rente';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #023e84;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgba(2, 62, 132, 0.4);
+    z-index: 10;
+    white-space: nowrap;
+}
+
+.product-column.better-product {
+    box-shadow: 0 0 0 3px rgba(2, 62, 132, 0.3);
+    border-radius: 1rem;
+}
+
+/* Smooth animations for comparison values */
+.comparison-grid .font-bold {
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.comparison-grid .font-bold:hover {
+    transform: scale(1.05);
+}
+
+/* Custom colors for Riester and AV-Depot sections */
+.bg-riester-main {
+    background-color: #646464;
+}
+
+.bg-riester-light {
+    background-color: #e8e8e8;
+}
+
+.text-riester-dark {
+    color: #2d2d2d;
+}
+
+.text-riester-medium {
+    color: #4a4a4a;
+}
+
+.bg-av-depot-main {
+    background-color: #006fb9;
+}
+
+.bg-av-depot-light {
+    background-color: #d9edf7;
+}
+
+.text-av-depot-dark {
+    color: #004a7a;
+}
+
+.text-av-depot-medium {
+    color: #005a94;
+}
+
+.text-button-blue {
+    color: #023e84;
+}
+
+/* Main Heading */
+.main-heading {
+    font-family: 'Segoe UI Semibold', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
+    color: #023e84;
+}
+
+/* Section Headings with Icons */
+.blue-heading {
+    font-family: 'Segoe UI Semibold', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
+    color: #023e84;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #023e84;
+    flex-shrink: 0;
+}
+
+/* Enhanced shadow for input cards */
+.input-card-shadow {
+    box-shadow: 0 0 20px -3px rgba(0, 0, 0, 0.15), 0 0 10px -2px rgba(0, 0, 0, 0.1);
+}
+
+.input-card-shadow:hover {
+    box-shadow: 0 0 35px -3px rgba(0, 0, 0, 0.2), 0 0 18px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* Override Tailwind shadow-sm for result/Förderung cards */
+.shadow-sm {
+    box-shadow: 0 0 15px -2px rgba(0, 0, 0, 0.12), 0 0 8px -1px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Stronger shadow for comparison summary */
+.shadow-lg {
+    box-shadow: 0 0 25px -2px rgba(0, 0, 0, 0.15), 0 0 15px -2px rgba(0, 0, 0, 0.1) !important;
+}
