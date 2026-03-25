@@ -2814,6 +2814,100 @@ Regeln:
           <p class="page-meta">Potenzialliste</p>
           <h1 class="page-title">Jahresendkontrolltermin - JEG 2026</h1>
 
+          <!-- ===== EINHEITEN-ZIELE PRO MONAT ===== -->
+          <div class="jeg-monthly-targets" id="jeg-monthly-targets">
+            <div class="jeg-monthly-targets-title">Einheiten-Ziel je Monat</div>
+            <div class="jeg-monthly-targets-grid">
+              <div class="jeg-mt-item">
+                <label for="jeg-ziel-sep">September</label>
+                <input type="number" id="jeg-ziel-sep" min="0" placeholder="z.B. 20"
+                  oninput="jegSaveMonthlyTargets()"
+                  onfocus="this.select()">
+              </div>
+              <div class="jeg-mt-item">
+                <label for="jeg-ziel-okt">Oktober</label>
+                <input type="number" id="jeg-ziel-okt" min="0" placeholder="z.B. 20"
+                  oninput="jegSaveMonthlyTargets()"
+                  onfocus="this.select()">
+              </div>
+              <div class="jeg-mt-item">
+                <label for="jeg-ziel-nov">November</label>
+                <input type="number" id="jeg-ziel-nov" min="0" placeholder="z.B. 20"
+                  oninput="jegSaveMonthlyTargets()"
+                  onfocus="this.select()">
+              </div>
+              <div class="jeg-mt-item">
+                <label for="jeg-ziel-dez">Dezember</label>
+                <input type="number" id="jeg-ziel-dez" min="0" placeholder="z.B. 20"
+                  oninput="jegSaveMonthlyTargets()"
+                  onfocus="this.select()">
+              </div>
+            </div>
+            <div class="jeg-mt-total">
+              Einheiten-Ziel gesamt: <span id="jeg-ziel-total">–</span>
+            </div>
+          </div>
+
+          <script>
+          // ===== Einheiten-Ziele: Speichern & Laden =====
+          (function () {
+            const KEYS = ['jeg-ziel-sep', 'jeg-ziel-okt', 'jeg-ziel-nov', 'jeg-ziel-dez'];
+            const STORAGE_KEY = 'jeg_monthly_targets';
+
+            window.jegSaveMonthlyTargets = function () {
+              const vals = {};
+              KEYS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) vals[id] = el.value;
+              });
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(vals));
+              jegUpdateMonthlyTotal();
+            };
+
+            function jegUpdateMonthlyTotal() {
+              const totalEl = document.getElementById('jeg-ziel-total');
+              if (!totalEl) return;
+              let sum = 0;
+              let hasAny = false;
+              KEYS.forEach(id => {
+                const el = document.getElementById(id);
+                const v = el ? parseInt(el.value, 10) : NaN;
+                if (!isNaN(v) && v > 0) { sum += v; hasAny = true; }
+              });
+              totalEl.textContent = hasAny ? sum : '–';
+            }
+
+            function jegLoadMonthlyTargets() {
+              const raw = localStorage.getItem(STORAGE_KEY);
+              if (!raw) return;
+              try {
+                const vals = JSON.parse(raw);
+                KEYS.forEach(id => {
+                  const el = document.getElementById(id);
+                  if (el && vals[id] !== undefined) el.value = vals[id];
+                });
+              } catch (e) {}
+              jegUpdateMonthlyTotal();
+            }
+
+            // Load on page activation (MutationObserver on class change)
+            const pageEl = document.getElementById('page-pot-jeg');
+            if (pageEl) {
+              const obs = new MutationObserver(function () {
+                if (pageEl.classList.contains('active')) jegLoadMonthlyTargets();
+              });
+              obs.observe(pageEl, { attributeFilter: ['class'] });
+            }
+
+            // Also load immediately on DOMContentLoaded
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', jegLoadMonthlyTargets);
+            } else {
+              jegLoadMonthlyTargets();
+            }
+          })();
+          </script>
+
           <div class="jeg-countdown-container" id="jeg-countdown-container">
             <div class="jeg-countdown-title">Noch verbleibende Zeit bis zum Jahresende:</div>
             <div class="jeg-countdown-timer">
@@ -2897,16 +2991,22 @@ Regeln:
               <input type="number" id="filter-erhoehung" min="0" max="3" placeholder="1" oninput="jegRenderPotTable()">
             </div>
             <div class="filter-group">
-              <label for="filter-telis">TELIS mind.</label>
-              <input type="number" id="filter-telis" min="0" placeholder="1" oninput="jegRenderPotTable()">
-            </div>
-            <div class="filter-group">
-              <label for="filter-fremd">Fremd mind.</label>
-              <input type="number" id="filter-fremd" min="0" placeholder="1" oninput="jegRenderPotTable()">
+              <label for="filter-vertraege">Verträge mind.</label>
+              <input type="number" id="filter-vertraege" min="0" placeholder="1" oninput="jegRenderPotTable()">
             </div>
             <div class="filter-group">
               <label for="filter-einheiten">Einheiten mind.</label>
               <input type="number" id="filter-einheiten" min="0" placeholder="10" oninput="jegRenderPotTable()">
+            </div>
+            <div class="filter-group">
+              <label for="filter-status">Status</label>
+              <div class="jeg-status-chips" id="filter-status-chips">
+                <button type="button" class="jeg-chip jeg-chip--offen" data-status="offen" onclick="jegToggleStatusChip(this)">offen</button>
+                <button type="button" class="jeg-chip jeg-chip--terminiert" data-status="terminiert" onclick="jegToggleStatusChip(this)">terminiert</button>
+                <button type="button" class="jeg-chip jeg-chip--nicht-erreicht" data-status="nicht erreicht" onclick="jegToggleStatusChip(this)">nicht erreicht</button>
+                <button type="button" class="jeg-chip jeg-chip--erledigt" data-status="erledigt" onclick="jegToggleStatusChip(this)">erledigt</button>
+                <button type="button" class="jeg-chip jeg-chip--kein-Interesse" data-status="kein Interesse" onclick="jegToggleStatusChip(this)">kein Interesse</button>
+              </div>
             </div>
 
             <div class="filter-spacer"></div>
@@ -2921,12 +3021,12 @@ Regeln:
                   <th onclick="jegSortPotTable('ersparnis')" style="cursor:pointer" class="text-center">Ersparnis <span class="sort-icon" id="sort-icon-ersparnis"></span></th>
                   <th onclick="jegSortPotTable('riester')" style="cursor:pointer" class="text-center">Riester-Vertrag <span class="sort-icon" id="sort-icon-riester"></span></th>
                   <th onclick="jegSortPotTable('kinder')" style="cursor:pointer" class="text-center">Kinder (nach 2019) <span class="sort-icon" id="sort-icon-kinder"></span></th>
-                  <th onclick="jegSortPotTable('telis')" style="cursor:pointer" class="text-center">TELIS-Verträge <span class="sort-icon" id="sort-icon-telis"></span></th>
-                  <th onclick="jegSortPotTable('fremd')" style="cursor:pointer" class="text-center">Fremdverträge <span class="sort-icon" id="sort-icon-fremd"></span></th>
+                  <th onclick="jegSortPotTable('vertraege')" style="cursor:pointer" class="text-center">Verträge <span class="sort-icon" id="sort-icon-vertraege"></span></th>
                   <th onclick="jegSortPotTable('einheiten')" style="cursor:pointer" class="text-center">Einheiten <span class="sort-icon" id="sort-icon-einheiten"></span></th>
                   <th onclick="jegSortPotTable('erhoehung')" style="cursor:pointer" class="text-center">Erhöhungsanträge <span class="sort-icon" id="sort-icon-erhoehung"></span></th>
                   <th onclick="jegSortPotTable('besuch')" style="cursor:pointer" class="text-center">Letzter Kontakt <span class="sort-icon" id="sort-icon-besuch"></span></th>
-                  <th class="text-center">Deaktivieren</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Datum</th>
                 </tr>
               </thead>
               <tbody id="jeg-pot-tbody">

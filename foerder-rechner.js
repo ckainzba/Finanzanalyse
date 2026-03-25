@@ -283,20 +283,20 @@ function calculateForecast() {
 // AV-Depot Calculation Functions
 
 function calculateAVGrundzulageStufe1() {
-    // 30% on first 1,200€ contribution (max 360€)
-    const tier1Max = 1200;
-    const tier1Rate = 0.30;
-    const tier1Contribution = Math.min(state.contribution, tier1Max);
+    // 0,50 € pro Euro Eigenbeitrag auf die ersten 360 € (max. 180 €)
+    const tier1Threshold = 360;
+    const tier1Rate = 0.50;
+    const tier1Contribution = Math.min(state.contribution, tier1Threshold);
     return tier1Contribution * tier1Rate;
 }
 
 function calculateAVGrundzulageStufe2() {
-    // 20% on contributions between 1,201€ and 1,800€ (max 120€)
-    if (state.contribution <= 1200) return 0;
+    // 0,25 € pro Euro Eigenbeitrag für 361 € bis 1.800 € (max. 360 €)
+    if (state.contribution <= 360) return 0;
 
-    const tier2Start = 1200;
-    const tier2Max = 1800;
-    const tier2Rate = 0.20;
+    const tier2Start = 360;
+    const tier2Max   = 1800;
+    const tier2Rate  = 0.25;
 
     const tier2Contribution = Math.min(state.contribution - tier2Start, tier2Max - tier2Start);
     return Math.max(0, tier2Contribution * tier2Rate);
@@ -307,11 +307,11 @@ function calculateAVGrundzulageTotal() {
 }
 
 function calculateAVKinderzulage() {
-    // 25% of contribution per child, max 300€ per child
+    // 1 € Kinderzulage pro eingezahltem Euro Eigenbeitrag, max. 300 € pro Kind
     const totalChildren = state.childrenBefore2008 + state.childrenAfter2008;
     if (totalChildren === 0) return 0;
 
-    const perChildSubsidy = Math.min(state.contribution * 0.25, 300);
+    const perChildSubsidy = Math.min(state.contribution, 300);
     return perChildSubsidy * totalChildren;
 }
 

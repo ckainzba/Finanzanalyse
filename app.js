@@ -1694,31 +1694,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== JEG POTENZIALE LISTE =====
 const jegPotClients = [
-  { id: 1,  fa: '900101', name: 'Müller, Thomas',        liqui: 350, kinder: 2, riester: 'ja',   ersparnis: 120, besuch: '2025-10-14', telis: 2, fremd: 0, einheiten: 57, erhoehung: 2, active: true },
-  { id: 2,  fa: '900102', name: 'Schmidt, Julia',         liqui: 150, kinder: 1, riester: 'nein', ersparnis: 200, besuch: '2025-08-22', telis: 5, fremd: 1, einheiten: 24, erhoehung: 0, active: true },
-  { id: 3,  fa: '900103', name: 'Schneider, Michael',     liqui: 800, kinder: 0, riester: 'ja',   ersparnis: 50,  besuch: '2026-01-10', telis: 3, fremd: 5, einheiten: 16, erhoehung: 1, active: true },
-  { id: 4,  fa: '900104', name: 'Fischer, Laura',         liqui: 220, kinder: 2, riester: 'nein', ersparnis: 300, besuch: '2025-11-05', telis: 2, fremd: 4, einheiten: 37, erhoehung: 3, active: true },
-  { id: 5,  fa: '900105', name: 'Weber, Andreas',         liqui: 450, kinder: 1, riester: 'ja',   ersparnis: 180, besuch: '2025-12-12', telis: 1, fremd: 0, einheiten: 15, erhoehung: 0, active: true },
-  { id: 6,  fa: '900106', name: 'Meyer, Sarah',           liqui: 100, kinder: 0, riester: 'nein', ersparnis: 150, besuch: '2025-09-30', telis: 4, fremd: 1, einheiten: 42, erhoehung: 1, active: true },
-  { id: 7,  fa: '900107', name: 'Wagner, Christian',      liqui: 600, kinder: 3, riester: 'ja',   ersparnis: 210, besuch: '2026-02-15', telis: 1, fremd: 4, einheiten: 22, erhoehung: 2, active: true },
-  { id: 8,  fa: '900108', name: 'Becker, Anna',           liqui: 320, kinder: 1, riester: 'ja',   ersparnis: 90,  besuch: '2025-07-18', telis: 7, fremd: 1, einheiten: 38, erhoehung: 3, active: true },
-  { id: 9,  fa: '900109', name: 'Schulz, Kevin',          liqui: 50,  kinder: 0, riester: 'nein', ersparnis: 80,  besuch: '2025-05-24', telis: 5, fremd: 0, einheiten: 58, erhoehung: 0, active: true },
-  { id: 10, fa: '900110', name: 'Hoffmann, Lisa',         liqui: 410, kinder: 2, riester: 'ja',   ersparnis: 160, besuch: '2026-03-01', telis: 3, fremd: 5, einheiten: 37, erhoehung: 2, active: true },
-  { id: 11, fa: '900111', name: 'Schäfer, Daniel',        liqui: 280, kinder: 0, riester: 'nein', ersparnis: 220, besuch: '2025-11-20', telis: 6, fremd: 2, einheiten: 19, erhoehung: 1, active: true },
-  { id: 12, fa: '900112', name: 'Koch, Melanie',          liqui: 550, kinder: 3, riester: 'ja',   ersparnis: 310, besuch: '2026-01-25', telis: 4, fremd: 2, einheiten: 16, erhoehung: 0, active: true },
-  { id: 13, fa: '900113', name: 'Bauer, Stefan',          liqui: 190, kinder: 1, riester: 'nein', ersparnis: 140, besuch: '2025-10-02', telis: 2, fremd: 3, einheiten: 16, erhoehung: 3, active: true },
-  { id: 14, fa: '900114', name: 'Richter, Maria',         liqui: 700, kinder: 2, riester: 'ja',   ersparnis: 250, besuch: '2026-02-28', telis: 6, fremd: 2, einheiten: 48, erhoehung: 2, active: true },
-  { id: 15, fa: '900115', name: 'Klein, Tobias',          liqui: 380, kinder: 0, riester: 'ja',   ersparnis: 100, besuch: '2025-08-11', telis: 5, fremd: 0, einheiten: 56, erhoehung: 1, active: true },
-  { id: 16, fa: '900116', name: 'Wolf, Sabine',           liqui: 260, kinder: 1, riester: 'nein', ersparnis: 270, besuch: '2025-12-05', telis: 8, fremd: 4, einheiten: 17, erhoehung: 0, active: true },
-  { id: 17, fa: '900117', name: 'Schröder, Markus',       liqui: 480, kinder: 2, riester: 'ja',   ersparnis: 190, besuch: '2026-01-18', telis: 7, fremd: 0, einheiten: 45, erhoehung: 2, active: true },
-  { id: 18, fa: '900118', name: 'Neumann, Nadine',        liqui: 310, kinder: 0, riester: 'nein', ersparnis: 130, besuch: '2025-09-15', telis: 5, fremd: 5, einheiten: 49, erhoehung: 1, active: true },
-  { id: 19, fa: '900119', name: 'Schwarz, Patrick',       liqui: 650, kinder: 3, riester: 'ja',   ersparnis: 280, besuch: '2026-03-10', telis: 6, fremd: 4, einheiten: 22, erhoehung: 3, active: true },
-  { id: 20, fa: '900120', name: 'Zimmermann, Lena',       liqui: 210, kinder: 1, riester: 'ja',   ersparnis: 110, besuch: '2025-06-25', telis: 2, fremd: 0, einheiten: 52, erhoehung: 0, active: true },
-  { id: 21, fa: '900121', name: 'Braun, Dennis',          liqui: 120, kinder: 0, riester: 'nein', ersparnis: 160, besuch: '2025-11-12', telis: 4, fremd: 2, einheiten: 15, erhoehung: 2, active: true },
-  { id: 22, fa: '900122', name: 'Krüger, Katharina',      liqui: 520, kinder: 2, riester: 'ja',   ersparnis: 240, besuch: '2026-02-05', telis: 4, fremd: 0, einheiten: 34, erhoehung: 1, active: true },
-  { id: 23, fa: '900123', name: 'Hofmann, Felix',         liqui: 370, kinder: 0, riester: 'ja',   ersparnis: 150, besuch: '2025-10-28', telis: 5, fremd: 3, einheiten: 50, erhoehung: 0, active: true },
-  { id: 24, fa: '900124', name: 'Lange, Vanessa',         liqui: 290, kinder: 1, riester: 'nein', ersparnis: 210, besuch: '2025-12-20', telis: 6, fremd: 1, einheiten: 33, erhoehung: 3, active: true },
-  { id: 25, fa: '900125', name: 'Schmitt, Florian',       liqui: 440, kinder: 2, riester: 'ja',   ersparnis: 170, besuch: '2026-01-08', telis: 6, fremd: 1, einheiten: 52, erhoehung: 2, active: true }
+  { id: 1,  fa: '900101', name: 'Müller, Thomas',        liqui: 350, kinder: 2, riester: 'ja',   ersparnis: 120, besuch: '2024-11-08', telis: 2, fremd: 0, einheiten: 57, erhoehung: 2, active: true, status: 'terminiert',    statusDatum: '2026-03-24' },
+  { id: 2,  fa: '900102', name: 'Schmidt, Julia',         liqui: 150, kinder: 1, riester: 'nein', ersparnis: 200, besuch: '2024-07-15', telis: 5, fremd: 1, einheiten: 24, erhoehung: 0, active: true, status: 'offen',         statusDatum: '2026-03-23' },
+  { id: 3,  fa: '900103', name: 'Schneider, Michael',     liqui: 800, kinder: 0, riester: 'ja',   ersparnis: 50,  besuch: '2026-01-10', telis: 3, fremd: 5, einheiten: 16, erhoehung: 1, active: true, status: 'erledigt',      statusDatum: '2026-03-22' },
+  { id: 4,  fa: '900104', name: 'Fischer, Laura',         liqui: 220, kinder: 2, riester: 'nein', ersparnis: 300, besuch: '2025-11-05', telis: 2, fremd: 4, einheiten: 37, erhoehung: 3, active: true, status: 'terminiert',    statusDatum: '2026-03-25' },
+  { id: 5,  fa: '900105', name: 'Weber, Andreas',         liqui: 450, kinder: 1, riester: 'ja',   ersparnis: 180, besuch: '2024-03-22', telis: 1, fremd: 0, einheiten: 15, erhoehung: 0, active: true, status: 'nicht erreicht', statusDatum: '2026-03-21' },
+  { id: 6,  fa: '900106', name: 'Meyer, Sarah',           liqui: 100, kinder: 0, riester: 'nein', ersparnis: 150, besuch: '2024-09-04', telis: 4, fremd: 1, einheiten: 42, erhoehung: 1, active: true, status: 'offen',         statusDatum: '2026-03-23' },
+  { id: 7,  fa: '900107', name: 'Wagner, Christian',      liqui: 600, kinder: 3, riester: 'ja',   ersparnis: 210, besuch: '2026-02-15', telis: 1, fremd: 4, einheiten: 22, erhoehung: 2, active: true, status: 'terminiert',    statusDatum: '2026-03-24' },
+  { id: 8,  fa: '900108', name: 'Becker, Anna',           liqui: 320, kinder: 1, riester: 'ja',   ersparnis: 90,  besuch: '2024-05-30', telis: 7, fremd: 1, einheiten: 38, erhoehung: 3, active: true, status: 'erledigt',      statusDatum: '2026-03-22' },
+  { id: 9,  fa: '900109', name: 'Schulz, Kevin',          liqui: 50,  kinder: 0, riester: 'nein', ersparnis: 80,  besuch: '2023-11-14', telis: 5, fremd: 0, einheiten: 58, erhoehung: 0, active: true, status: 'kein Interesse', statusDatum: '2026-03-19' },
+  { id: 10, fa: '900110', name: 'Hoffmann, Lisa',         liqui: 410, kinder: 2, riester: 'ja',   ersparnis: 160, besuch: '2026-03-01', telis: 3, fremd: 5, einheiten: 37, erhoehung: 2, active: true, status: 'terminiert',    statusDatum: '2026-03-25' },
+  { id: 11, fa: '900111', name: 'Schäfer, Daniel',        liqui: 280, kinder: 0, riester: 'nein', ersparnis: 220, besuch: '2024-12-11', telis: 6, fremd: 2, einheiten: 19, erhoehung: 1, active: true, status: 'offen',         statusDatum: '2026-03-23' },
+  { id: 12, fa: '900112', name: 'Koch, Melanie',          liqui: 550, kinder: 3, riester: 'ja',   ersparnis: 310, besuch: '2026-01-25', telis: 4, fremd: 2, einheiten: 16, erhoehung: 0, active: true, status: 'erledigt',      statusDatum: '2026-03-22' },
+  { id: 13, fa: '900113', name: 'Bauer, Stefan',          liqui: 190, kinder: 1, riester: 'nein', ersparnis: 140, besuch: '2023-06-27', telis: 2, fremd: 3, einheiten: 16, erhoehung: 3, active: true, status: 'nicht erreicht', statusDatum: '2026-03-21' },
+  { id: 14, fa: '900114', name: 'Richter, Maria',         liqui: 700, kinder: 2, riester: 'ja',   ersparnis: 250, besuch: '2026-02-28', telis: 6, fremd: 2, einheiten: 48, erhoehung: 2, active: true, status: 'terminiert',    statusDatum: '2026-03-24' },
+  { id: 15, fa: '900115', name: 'Klein, Tobias',          liqui: 380, kinder: 0, riester: 'ja',   ersparnis: 100, besuch: '2025-08-11', telis: 5, fremd: 0, einheiten: 56, erhoehung: 1, active: true, status: 'offen',         statusDatum: '2026-03-20' },
+  { id: 16, fa: '900116', name: 'Wolf, Sabine',           liqui: 260, kinder: 1, riester: 'nein', ersparnis: 270, besuch: '2023-09-05', telis: 8, fremd: 4, einheiten: 17, erhoehung: 0, active: true, status: 'nicht erreicht', statusDatum: '2026-03-20' },
+  { id: 17, fa: '900117', name: 'Schröder, Markus',       liqui: 480, kinder: 2, riester: 'ja',   ersparnis: 190, besuch: '2026-01-18', telis: 7, fremd: 0, einheiten: 45, erhoehung: 2, active: true, status: 'terminiert',    statusDatum: '2026-03-24' },
+  { id: 18, fa: '900118', name: 'Neumann, Nadine',        liqui: 310, kinder: 0, riester: 'nein', ersparnis: 130, besuch: '2024-08-19', telis: 5, fremd: 5, einheiten: 49, erhoehung: 1, active: true, status: 'kein Interesse', statusDatum: '2026-03-19' },
+  { id: 19, fa: '900119', name: 'Schwarz, Patrick',       liqui: 650, kinder: 3, riester: 'ja',   ersparnis: 280, besuch: '2026-03-10', telis: 6, fremd: 4, einheiten: 22, erhoehung: 3, active: true, status: 'offen',         statusDatum: '2026-03-25' },
+  { id: 20, fa: '900120', name: 'Zimmermann, Lena',       liqui: 210, kinder: 1, riester: 'ja',   ersparnis: 110, besuch: '2025-06-25', telis: 2, fremd: 0, einheiten: 52, erhoehung: 0, active: true, status: 'erledigt',      statusDatum: '2026-03-22' },
+  { id: 21, fa: '900121', name: 'Braun, Dennis',          liqui: 120, kinder: 0, riester: 'nein', ersparnis: 160, besuch: '2025-11-12', telis: 4, fremd: 2, einheiten: 15, erhoehung: 2, active: true, status: 'offen',         statusDatum: '2026-03-21' },
+  { id: 22, fa: '900122', name: 'Krüger, Katharina',      liqui: 520, kinder: 2, riester: 'ja',   ersparnis: 240, besuch: '2026-02-05', telis: 4, fremd: 0, einheiten: 34, erhoehung: 1, active: true, status: 'terminiert',    statusDatum: '2026-03-24' },
+  { id: 23, fa: '900123', name: 'Hofmann, Felix',         liqui: 370, kinder: 0, riester: 'ja',   ersparnis: 150, besuch: '2025-10-28', telis: 5, fremd: 3, einheiten: 50, erhoehung: 0, active: true, status: 'nicht erreicht', statusDatum: '2026-03-20' },
+  { id: 24, fa: '900124', name: 'Lange, Vanessa',         liqui: 290, kinder: 1, riester: 'nein', ersparnis: 210, besuch: '2025-12-20', telis: 6, fremd: 1, einheiten: 33, erhoehung: 3, active: true, status: 'offen',         statusDatum: '2026-03-23' },
+  { id: 25, fa: '900125', name: 'Schmitt, Florian',       liqui: 440, kinder: 2, riester: 'ja',   ersparnis: 170, besuch: '2026-01-08', telis: 6, fremd: 1, einheiten: 52, erhoehung: 2, active: true, status: 'erledigt',      statusDatum: '2026-03-22' }
 ];
 
 let jegPotSortCol = 'name';
@@ -1735,9 +1735,10 @@ function jegRenderPotTable() {
   const filterErsparnis = parseInt(document.getElementById('filter-ersparnis').value) || 0;
   const filterBesuch = document.getElementById('filter-besuch').value;
   const filterErhoehung = parseInt(document.getElementById('filter-erhoehung')?.value) || 0;
-  const filterTelis = parseInt(document.getElementById('filter-telis').value) || 0;
-  const filterFremd = parseInt(document.getElementById('filter-fremd').value) || 0;
+  const filterVertraege = parseInt(document.getElementById('filter-vertraege')?.value) || 0;
   const filterEinheiten = parseInt(document.getElementById('filter-einheiten').value) || 0;
+  const activeChips = [...document.querySelectorAll('#filter-status-chips .jeg-chip--active')]
+    .map(el => el.dataset.status);
 
   let filtered = jegPotClients.filter(c => {
     if (!c.active) return false;
@@ -1746,8 +1747,7 @@ function jegRenderPotTable() {
     if (c.liqui < filterLiqui) return false;
     if (c.kinder < filterKinder) return false;
     if (c.ersparnis < filterErsparnis) return false;
-    if (c.telis < filterTelis) return false;
-    if (c.fremd < filterFremd) return false;
+    if ((c.telis + c.fremd) < filterVertraege) return false;
     if (c.einheiten < filterEinheiten) return false;
     
     if (filterBesuch !== 'all') {
@@ -1758,6 +1758,7 @@ function jegRenderPotTable() {
     }
 
     if (c.erhoehung < filterErhoehung) return false;
+    if (activeChips.length > 0 && !activeChips.includes(c.status)) return false;
     return true;
   });
 
@@ -1782,8 +1783,8 @@ function jegRenderPotTable() {
   if (elEinheiten) elEinheiten.innerText = count > 0 ? Math.round(sumEinheiten / count) : '0';
 
   filtered.sort((a, b) => {
-    let valA = a[jegPotSortCol];
-    let valB = b[jegPotSortCol];
+    let valA = jegPotSortCol === 'vertraege' ? (a.telis + a.fremd) : a[jegPotSortCol];
+    let valB = jegPotSortCol === 'vertraege' ? (b.telis + b.fremd) : b[jegPotSortCol];
     if (typeof valA === 'string') valA = valA.toLowerCase();
     if (typeof valB === 'string') valB = valB.toLowerCase();
 
@@ -1792,7 +1793,12 @@ function jegRenderPotTable() {
     return 0;
   });
 
-  tbody.innerHTML = filtered.map(c => `
+  tbody.innerHTML = filtered.map(c => {
+    const statusOpts = ['offen','terminiert','nicht erreicht','erledigt','kein Interesse'];
+    const statusSel = statusOpts.map(s =>
+      `<option value="${s}"${c.status === s ? ' selected' : ''}>${s}</option>`
+    ).join('');
+    return `
     <tr>
       <td><a href="#" class="jeg-pot-name-link" onclick="jegOpenMandantJEG(event, ${c.liqui}, ${c.ersparnis}, '${c.name.replace(/'/g, "\\'")}', '${c.fa}', ${c.erhoehung})"
         title="JEG 2026 für ${c.name.replace(/"/g,'&quot;')} öffnen">${c.name}</a></td>
@@ -1800,24 +1806,38 @@ function jegRenderPotTable() {
       <td class="text-center">${c.ersparnis} €</td>
       <td class="text-center">${c.riester === 'ja' ? 'Ja' : 'Nein'}</td>
       <td class="text-center">${c.kinder}</td>
-      <td class="text-center">${c.telis}</td>
-      <td class="text-center">${c.fremd}</td>
+      <td class="text-center">${c.telis + c.fremd}</td>
       <td class="text-center">${c.einheiten}</td>
       <td class="text-center">${c.erhoehung}</td>
       <td class="text-center">${jegFormatDate(c.besuch)}</td>
       <td class="text-center">
-        <label class="jeg-pot-switch">
-          <input type="checkbox" onchange="jegDeactivatePotClient(${c.id})" checked>
-          <span class="jeg-pot-slider"></span>
-        </label>
+        <select class="jeg-status-select jeg-status--${c.status.replace(/\s+/g,'-')}" onchange="jegUpdatePotClientStatus(${c.id}, this)">
+          ${statusSel}
+        </select>
       </td>
+      <td class="text-center" id="jeg-datum-${c.id}">${jegFormatDate(c.statusDatum)}</td>
     </tr>
-  `).join('');
+  `}).join('');
 
   jegUpdateSortIcons();
 }
 
-let _jegCurrentErhoehung = 0;
+window.jegUpdatePotClientStatus = function(id, selectEl) {
+  const c = jegPotClients.find(x => x.id === id);
+  if (!c) return;
+  c.status = selectEl.value;
+  c.statusDatum = new Date().toISOString().split('T')[0];
+  selectEl.className = 'jeg-status-select jeg-status--' + c.status.replace(/\s+/g, '-');
+  const datumEl = document.getElementById('jeg-datum-' + id);
+  if (datumEl) datumEl.textContent = jegFormatDate(c.statusDatum);
+};
+
+window.jegToggleStatusChip = function(btn) {
+  btn.classList.toggle('jeg-chip--active');
+  jegRenderPotTable();
+};
+
+
 
 window.jegOpenMandantJEG = function(event, liqui, ersparnis, name, fa, erhoehung) {
   event.preventDefault();
