@@ -2298,12 +2298,64 @@ Regeln:
 
         <!-- ============ PAGE: JEG – TOOLS & RECHNER (Übersicht) ============ -->
         <div class="page" id="page-jeg-tools">
-          <div class="jeg-hero" style="padding:24px 40px;">
-            <div class="jeg-hero-badge">JEG 2026</div>
-            <h1 class="jeg-hero-title" style="font-size:24px;">Tools &amp; Rechner</h1>
+
+          <!-- ==== WHITE TWO-COLUMN HEADER ==== -->
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta" id="tools-hero-meta">Jahresservice 2026</p>
+              <h1 class="jeg-page-hero-title">Tools &amp; Rechner</h1>
+              <p class="jeg-page-hero-desc">Nutzen Sie unsere interaktiven Analyserechner, um gemeinsam mit dem Mandanten konkrete Szenarien durchzurechnen. Ob staatliche Förderoptimierung oder langfristige Altersvorsorgeplanung – hier finden Sie die passenden Werkzeuge für eine fundierte Beratung.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_tools.png" alt="Tools & Rechner" class="jeg-page-hero-image">
+            </div>
           </div>
-          <div class="jeg-intro">
-            <p>Bitte w&auml;hlen Sie einen Rechner aus dem Men&uuml; auf der linken Seite.</p>
+
+          <!-- Tool Cards -->
+          <div style="padding:32px 40px 40px;max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
+
+            <!-- Card 1: Förder-Vergleichsrechner -->
+            <div style="background:#fff;border:1px solid #dde4f0;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:16px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(26,110,181,.13)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,.06)'">
+              <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#1565c0,#2196f3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#1a6eb5;letter-spacing:1px;margin-bottom:6px;">FÖRDEROPTIMIERUNG</div>
+                <h2 style="font-size:18px;font-weight:700;color:#1a3a5c;margin:0 0 10px;">Förder-Vergleichsrechner</h2>
+                <p style="font-size:13px;color:#5a6a80;line-height:1.65;margin:0;">Vergleichen Sie Riester mit dem AV-Depot und ermitteln Sie, welche staatliche Förderung für den Mandanten optimal ist. Inklusive Zulagenberechnung und Steuerersparnis.</p>
+              </div>
+              <button onclick="navigate('jeg2026','jeg-foerder'); updateBnavSubActive('jeg-tools'); updateBnavSubSubActive('jeg-foerder');"
+                style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#1565c0,#2196f3);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.2s;width:100%;"
+                onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+                Rechner öffnen
+              </button>
+            </div>
+
+            <!-- Card 2: Frühstart-Rentenrechner -->
+            <div style="background:#fff;border:1px solid #dde4f0;border-radius:14px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:16px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(26,110,181,.13)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,.06)'">
+              <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#1a6eb5,#42a5f5);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#1a6eb5;letter-spacing:1px;margin-bottom:6px;">ALTERSVORSORGE</div>
+                <h2 style="font-size:18px;font-weight:700;color:#1a3a5c;margin:0 0 10px;">Frühstart-Rentenrechner</h2>
+                <p style="font-size:13px;color:#5a6a80;line-height:1.65;margin:0;">Zeigen Sie dem Mandanten anschaulich, welchen Unterschied ein früherer Einstieg in die private Altersvorsorge macht – mit dynamischer Projektion bis zum Rentenalter und realistischer Lebenserwartung.</p>
+              </div>
+              <button onclick="navigate('jeg2026','jeg-fruehstart'); updateBnavSubActive('jeg-tools'); updateBnavSubSubActive('jeg-fruehstart');"
+                style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,#1a6eb5,#42a5f5);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.2s;width:100%;"
+                onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+                Rechner öffnen
+              </button>
+            </div>
+
           </div>
         </div>
 
@@ -2598,9 +2650,16 @@ Regeln:
 
         <!-- ============ PAGE: JEG – CHECKLISTE & NOTIZEN ============ -->
         <div class="page" id="page-jeg-checkliste">
-          <div class="jeg-hero" style="padding:24px 40px;">
-            <div class="jeg-hero-badge">JEG 2026</div>
-            <h1 class="jeg-hero-title" style="font-size:24px;">Abschluss</h1>
+          <!-- ==== WHITE TWO-COLUMN HEADER (wie JEG 2026 / Beratungsvorbereitung) ==== -->
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta" id="abschluss-hero-meta">Jahresservice 2026</p>
+              <h1 class="jeg-page-hero-title">Abschluss</h1>
+              <p class="jeg-page-hero-desc">Halten Sie alle Ergebnisse und Vereinbarungen aus dem JEG-Termin fest. Notieren Sie besprochene Maßnahmen, offene Punkte und nächste Schritte – damit nichts verloren geht und der Mandant optimal betreut bleibt.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_abschluss.png" alt="Abschluss JEG-Termin" class="jeg-page-hero-image">
+            </div>
           </div>
 
           <div style="padding:24px 40px;max-width:860px;margin:0 auto;">
@@ -2651,6 +2710,88 @@ Regeln:
               </div>
             </div>
 
+            <hr style="border:none;border-top:1px solid var(--border);margin:28px 0;">
+
+            <!-- NÄCHSTER TERMIN -->
+            <div class="daten-section" style="padding:0;border:none;">
+              <div class="daten-section-header" style="margin-bottom:16px;">
+                <span class="daten-section-icon">📅</span>
+                <div>
+                  <h2 class="daten-section-title">Nächsten Termin vereinbaren</h2>
+                  <p class="daten-section-sub">Datum und Uhrzeit des Folgetermins direkt festhalten</p>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+
+                <!-- Datum -->
+                <div style="flex:1;min-width:160px;">
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.3px;">DATUM</label>
+                  <div style="position:relative;">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+                    <input id="jeg-next-date" type="date"
+                      style="width:100%;padding:10px 12px 10px 36px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;box-sizing:border-box;background:#fff;"
+                      onfocus="this.style.borderColor='var(--blue-accent)'"
+                      onblur="this.style.borderColor='var(--border)'; jekSaveNextAppointment();">
+                  </div>
+                </div>
+
+                <!-- Uhrzeit -->
+                <div style="flex:0 0 140px;">
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.3px;">UHRZEIT</label>
+                  <div style="position:relative;">
+                    <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <input id="jeg-next-time" type="time"
+                      style="width:100%;padding:10px 12px 10px 36px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;box-sizing:border-box;background:#fff;"
+                      onfocus="this.style.borderColor='var(--blue-accent)'"
+                      onblur="this.style.borderColor='var(--border)'; jekSaveNextAppointment();">
+                  </div>
+                </div>
+
+                <!-- Terminart -->
+                <div style="flex:1;min-width:160px;">
+                  <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.3px;">TERMINART</label>
+                  <select id="jeg-next-type"
+                    style="width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;box-sizing:border-box;background:#fff;cursor:pointer;"
+                    onfocus="this.style.borderColor='var(--blue-accent)'"
+                    onblur="this.style.borderColor='var(--border)'; jekSaveNextAppointment();"
+                    onchange="jekSaveNextAppointment()">
+                    <option value="">Bitte wählen</option>
+                    <option value="Jahresendkontrolltermin">Jahresendkontrolltermin</option>
+                    <option value="Beratungsgespräch">Beratungsgespräch</option>
+                    <option value="Telefonat">Telefonat</option>
+                    <option value="Videotermin">Videotermin</option>
+                    <option value="Sonstiger Termin">Sonstiger Termin</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <!-- Notiz zum Termin -->
+              <div style="margin-top:14px;">
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.3px;">NOTIZ ZUM TERMIN (OPTIONAL)</label>
+                <input id="jeg-next-note" type="text"
+                  placeholder="z.B. Riester-Unterlagen mitbringen, Partner einladen …"
+                  style="width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color 0.2s;box-sizing:border-box;"
+                  onfocus="this.style.borderColor='var(--blue-accent)'"
+                  onblur="this.style.borderColor='var(--border)'; jekSaveNextAppointment();">
+              </div>
+
+              <!-- Bestätigungs-Banner (initial versteckt) -->
+              <div id="jeg-next-confirm" style="display:none;margin-top:14px;padding:12px 16px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;display:flex;align-items:center;gap:10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="jeg-next-confirm-text" style="font-size:13px;font-weight:600;color:#2e7d32;"></span>
+              </div>
+
+              <div class="form-actions" style="margin-top:16px;">
+                <button class="btn btn-outline" onclick="jekClearNextAppointment()">Termin löschen</button>
+                <button class="btn btn-primary" onclick="jekSaveNextAppointment(true)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;vertical-align:-2px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  Termin speichern
+                </button>
+              </div>
+            </div>
+
           </div>
 
           <script>
@@ -2689,7 +2830,67 @@ Regeln:
               jekUpdateCharCount();
             };
 
-            // ===== Web Speech API =====
+            // ===== NÄCHSTER TERMIN =====
+            const APPT_KEY = 'jeg_next_appointment';
+
+            // Gespeicherten Termin laden
+            document.addEventListener('DOMContentLoaded', function () {
+              try {
+                const saved = JSON.parse(localStorage.getItem(APPT_KEY) || 'null');
+                if (saved) {
+                  const dateEl = document.getElementById('jeg-next-date');
+                  const timeEl = document.getElementById('jeg-next-time');
+                  const typeEl = document.getElementById('jeg-next-type');
+                  const noteEl = document.getElementById('jeg-next-note');
+                  if (dateEl && saved.date) dateEl.value = saved.date;
+                  if (timeEl && saved.time) timeEl.value = saved.time;
+                  if (typeEl && saved.type) typeEl.value = saved.type;
+                  if (noteEl && saved.note) noteEl.value = saved.note;
+                  jekShowAppointmentConfirm(saved);
+                }
+              } catch(e) {}
+            });
+
+            window.jekSaveNextAppointment = function (showToastFlag) {
+              const date = document.getElementById('jeg-next-date')?.value || '';
+              const time = document.getElementById('jeg-next-time')?.value || '';
+              const type = document.getElementById('jeg-next-type')?.value || '';
+              const note = document.getElementById('jeg-next-note')?.value || '';
+              const data = { date, time, type, note };
+              try { localStorage.setItem(APPT_KEY, JSON.stringify(data)); } catch(e) {}
+              jekShowAppointmentConfirm(data);
+              if (showToastFlag === true && typeof showToast === 'function') showToast('Termin gespeichert.');
+            };
+
+            window.jekClearNextAppointment = function () {
+              if (!confirm('Nächsten Termin wirklich löschen?')) return;
+              ['jeg-next-date','jeg-next-time','jeg-next-note'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.value = '';
+              });
+              const sel = document.getElementById('jeg-next-type'); if (sel) sel.value = '';
+              try { localStorage.removeItem(APPT_KEY); } catch(e) {}
+              const confirm2 = document.getElementById('jeg-next-confirm');
+              if (confirm2) confirm2.style.display = 'none';
+              if (typeof showToast === 'function') showToast('Termin gelöscht.');
+            };
+
+            function jekShowAppointmentConfirm(data) {
+              const banner = document.getElementById('jeg-next-confirm');
+              const text   = document.getElementById('jeg-next-confirm-text');
+              if (!banner || !text) return;
+              if (!data.date && !data.time) { banner.style.display = 'none'; return; }
+              const parts = [];
+              if (data.date) {
+                const [y,m,d] = data.date.split('-');
+                parts.push(d + '.' + m + '.' + y);
+              }
+              if (data.time) parts.push('um ' + data.time + ' Uhr');
+              if (data.type) parts.push('· ' + data.type);
+              text.textContent = '✓ Nächster Termin: ' + parts.join(' ');
+              banner.style.display = 'flex';
+            }
+
+
             let recognition = null;
             let isRecording = false;
 
@@ -2795,17 +2996,19 @@ Regeln:
           })();
           </script>
           <!-- PDF Download Button -->
-          <div class="form-actions" style="margin-top:32px;margin-bottom:24px;">
-            <button onclick="generateJEGPdf()" id="jeg-pdf-btn"
-              style="display:flex;align-items:center;gap:10px;padding:10px 24px;background:#023e84;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:'Segoe UI',Arial,sans-serif;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(2,62,132,0.22);transition:all 0.2s;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="12" y1="18" x2="12" y2="12"/>
-                <polyline points="9 15 12 18 15 15"/>
-              </svg>
-              Beratungsprotokoll als PDF herunterladen
-            </button>
+          <div style="padding:0 40px 32px;max-width:860px;margin:0 auto;">
+            <div class="form-actions" style="margin-top:0;">
+              <button onclick="generateJEGPdf()" id="jeg-pdf-btn"
+                style="display:flex;align-items:center;gap:10px;padding:10px 24px;background:#023e84;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:'Segoe UI',Arial,sans-serif;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(2,62,132,0.22);transition:all 0.2s;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="12" y1="18" x2="12" y2="12"/>
+                  <polyline points="9 15 12 18 15 15"/>
+                </svg>
+                Gesprächsprotokoll als PDF herunterladen
+              </button>
+            </div>
           </div>
         </div> <!-- End page-jeg-checkliste -->
 

@@ -153,13 +153,37 @@ window.generateJEGPdf = function() {
       </div>
     </td>`;
 
-  // ---- Build print area ----
+  // ---- Nächster Termin ----
+  let nextApptSaved = null;
+  try { nextApptSaved = JSON.parse(localStorage.getItem('jeg_next_appointment') || 'null'); } catch(e) {}
+
+  let nextApptBlock = '';
+  if (nextApptSaved && (nextApptSaved.date || nextApptSaved.time)) {
+    const parts = [];
+    if (nextApptSaved.date) {
+      const [y,m,d] = nextApptSaved.date.split('-');
+      parts.push(`<strong style="font-size:13px;">${d}.${m}.${y}</strong>`);
+    }
+    if (nextApptSaved.time) parts.push(`um <strong>${nextApptSaved.time} Uhr</strong>`);
+    if (nextApptSaved.type) parts.push(`&middot; ${nextApptSaved.type}`);
+    nextApptBlock = `
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#e8f4fd;border:1px solid #90caf9;border-radius:6px;padding:10px 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+        <div style="margin-top:1px;font-size:18px;line-height:1;">📅</div>
+        <div>
+          <div style="font-size:12px;color:#0d47a1;">${parts.join(' ')}</div>
+          ${nextApptSaved.note ? `<div style="font-size:11px;color:#555;margin-top:3px;">${nextApptSaved.note}</div>` : ''}
+        </div>
+      </div>`;
+  } else {
+    nextApptBlock = `<div style="font-size:12px;color:#aaa;font-style:italic;padding:6px 10px;">Kein Folgetermin vereinbart.</div>`;
+  }
+
   document.getElementById('jeg-print-area').innerHTML = `
 <div style="font-family:'Segoe UI',Arial,sans-serif;color:#222;">
 
   <div style="background:#023e84;color:#fff;padding:16px 20px 12px;margin:-10mm -12mm 0;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
     <div style="font-size:10px;opacity:0.85;margin-bottom:3px;">${mandant}</div>
-    <div style="font-size:20px;font-weight:700;">Beratungsprotokoll JEG 2026</div>
+    <div style="font-size:20px;font-weight:700;">Gesprächsprotokoll JEG 2026</div>
     <div style="font-size:10px;opacity:0.75;margin-top:4px;">Erstellt am ${today}</div>
   </div>
 
@@ -196,8 +220,11 @@ window.generateJEGPdf = function() {
   <p style="font-size:10px;font-weight:700;color:#023e84;margin:0 0 2px;">Freie Notizen</p>
   ${noteBox(notizen)}
 
+  ${section('Nächster Termin')}
+  ${nextApptBlock}
+
   <div style="background:#f0f4f8;padding:7px 20px;margin-top:16px;font-size:9px;color:#888;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
-    JEG 2026 Beratungsprotokoll \u2013 ${mandant} \u2013 ${today}
+    JEG 2026 Gesprächsprotokoll \u2013 ${mandant} \u2013 ${today}
   </div>
 </div>`;
 
@@ -205,7 +232,7 @@ window.generateJEGPdf = function() {
     window.print();
     setTimeout(() => {
       if (btn) {
-        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg> Beratungsprotokoll als PDF herunterladen`;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg> Gesprächsprotokoll als PDF herunterladen`;
         btn.disabled = false;
       }
     }, 1000);

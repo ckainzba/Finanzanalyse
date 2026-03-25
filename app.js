@@ -1887,6 +1887,14 @@ window.jegOpenMandantJEG = function(event, liqui, ersparnis, name, fa, erhoehung
       const dakHeroMeta = document.getElementById('dak-hero-meta');
       if (dakHeroMeta) dakHeroMeta.textContent = metaText;
 
+      // ── Mirror to Abschluss page ──────────────────────────────────────
+      const abschlussHeroMeta = document.getElementById('abschluss-hero-meta');
+      if (abschlussHeroMeta) abschlussHeroMeta.textContent = metaText;
+
+      // ── Mirror to Tools & Rechner page ───────────────────────────────
+      const toolsHeroMeta = document.getElementById('tools-hero-meta');
+      if (toolsHeroMeta) toolsHeroMeta.textContent = metaText;
+
       const bvLiqui = document.getElementById('bv-jeg-liquidity');
       if (bvLiqui) {
         bvLiqui.value = liqui;
@@ -1912,6 +1920,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (bvHeroMeta) bvHeroMeta.textContent = last;
       const dakHeroMeta = document.getElementById('dak-hero-meta');
       if (dakHeroMeta) dakHeroMeta.textContent = last;
+      const abschlussHeroMeta = document.getElementById('abschluss-hero-meta');
+      if (abschlussHeroMeta) abschlussHeroMeta.textContent = last;
+      const toolsHeroMeta = document.getElementById('tools-hero-meta');
+      if (toolsHeroMeta) toolsHeroMeta.textContent = last;
     }
   } catch(e) {}
 });
