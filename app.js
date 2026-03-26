@@ -1573,7 +1573,7 @@ function bvJegSwitchPerson(type) {
   set('bv-jeg-gap-exi',   'bv-jeg-gap-exi-bar',   d.gapExi);
 }
 
-// ===== BV HANDLUNGSEMPFEHLUNGEN – direkt aus DAK-Warn-Flags =====
+// ===== BV HANDLUNGSEMPFEHLUNGEN – Delta-basiert aus Datenaktualisierung =====
 function bvRefreshHandlungsempfehlungen() {
   const list  = document.getElementById('bv-handlungsempfehlungen-list');
   const empty = document.getElementById('bv-handlungsempfehlungen-empty');
@@ -1581,7 +1581,13 @@ function bvRefreshHandlungsempfehlungen() {
 
   const recs = [];
 
-  // Helper: prüft ob ein dak-warn-Element sichtbar ist
+  // Helper: Zahl aus deutschem Zahlenformat lesen
+  const parseDE = s => {
+    if (!s) return NaN;
+    return parseFloat(String(s).replace(/\./g,'').replace(',','.').replace(/[^\d.-]/g,''));
+  };
+
+  // Helper: prüft ob ein dak-warn-Element sichtbar ist (für Riester-Grundzulage)
   const warnVisible = id => {
     const el = document.getElementById(id);
     return el && el.style.display !== 'none' && el.style.display !== '';
@@ -1593,20 +1599,137 @@ function bvRefreshHandlungsempfehlungen() {
     return el && el.textContent.trim() !== '';
   };
 
-  // --- 1. Gehaltserhöhung erkannt (brutto oder netto gestiegen) ---
-  const bruttoWarn = warnVisible('dak-warn-brutto');
-  const nettoWarn  = warnVisible('dak-warn-netto');
-  if (bruttoWarn || nettoWarn) {
-    const art = bruttoWarn ? 'Brutto' : 'Netto';
+  // --- 1. Gehaltserhöhung erkannt: Delta aus Bisheriger/Neuer Wert ---
+  const bruttoDez = parseDE(document.getElementById('dak-brutto-dez')?.value);
+  const bruttoAkt = parseDE(document.getElementById('dak-brutto-akt')?.value);
+  const nettoDez  = parseDE(document.getElementById('dak-netto-dez')?.value);
+  const nettoAkt  = parseDE(document.getElementById('dak-netto-akt')?.value);
+
+  const bruttoGestiegen = !isNaN(bruttoDez) && !isNaN(bruttoAkt) && bruttoAkt > bruttoDez;
+  const nettoGestiegen  = !isNaN(nettoDez)  && !isNaN(nettoAkt)  && nettoAkt  > nettoDez;
+  const gehaltsErhoehung = bruttoGestiegen || nettoGestiegen;
+
+  if (gehaltsErhoehung) {
+    const art = bruttoGestiegen ? 'Brutto' : 'Netto';
+    const diffAbs = bruttoGestiegen
+      ? (bruttoAkt - bruttoDez).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2})
+      : (nettoAkt  - nettoDez ).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    // 1a. Arbeitskraftsicherung / BU
     recs.push({
-      icon: '📈',
+      icon: '🛡️',
       prio: 'high',
-      kategorie: 'Einkommenssteigerung erkannt',
-      text: `${art}einkommen ist gegenüber dem Vorjahr gestiegen – <strong>BU-Absicherung überprüfen</strong> und an das gestiegene Einkommen anpassen.`
+      kategorie: 'Arbeitskraftsicherung – Anpassungsbedarf',
+      text: `Das ${art}einkommen ist gegenüber dem Vorjahr gestiegen (+${diffAbs}&nbsp;€/Monat). Die <strong>Absicherungslücke im Bereich Arbeitskraft hat sich damit erhöht</strong> – die BU-Rente sollte entsprechend angepasst werden, um das gestiegene Einkommen vollständig abzusichern.`
+    });
+
+    // 1b. Rentenlücke / Altersvorsorge
+    recs.push({
+      icon: '📊',
+      prio: 'high',
+      kategorie: 'Rentenlücke – Altersvorsorge überprüfen',
+      text: `Durch das gestiegene Einkommen hat sich auch die <strong>Rentenlücke vergrößert</strong>. Die bestehenden Altersvorsorgeverträge sollten auf ihre Beitragshöhe hin überprüft und ggf. angepasst werden, damit der aktuelle Lebensstandard im Alter gesichert bleibt.`
     });
   }
 
-  // --- 2. Strom- & Gasrechnung hochgeladen ---
+  // --- 2. Krankenkassen-Einsparpotenzial ---
+  const KK_ZUSATZBEITRAG = {
+    // Referenz
+    'hkk':                              2.59,
+    // AOK-Verbund
+    'aok baden-württemberg':            2.99,
+    'aok bw':                           2.99,
+    'aok bayern':                       2.69,
+    'aok bremen':                       3.29,
+    'aok bremerhaven':                  3.29,
+    'aok hessen':                       2.98,
+    'aok niedersachsen':                2.98,
+    'aok nordost':                      3.50,
+    'aok plus':                         3.10,
+    'aok rheinland-pfalz':              2.47,
+    'aok saarland':                     2.47,
+    'aok rheinland/hamburg':            3.39,
+    'aok rheinland hamburg':            3.39,
+    'aok nordwest':                     2.99,
+    'aok sachsen-anhalt':               3.20,
+    // Ersatzkassen
+    'techniker krankenkasse':           2.69,
+    'tk':                               2.69,
+    'barmer':                           3.29,
+    'dak':                              3.20,
+    'dak-gesundheit':                   3.20,
+    'dak gesundheit':                   3.20,
+    'kkh':                              3.78,
+    'kkh kaufmännische':                3.78,
+    'handelskrankenkasse':              2.59,
+    'hek':                              2.99,
+    'big direkt gesund':                3.69,
+    'big direkt':                       3.69,
+    // Betriebskrankenkassen
+    'ikk classic':                      3.40,
+    'ikk':                              3.40,
+    'knappschaft':                      4.30,
+    'debeka':                           3.25,
+    'debeka bkk':                       3.25,
+    'pronova bkk':                      3.70,
+    'pronova':                          3.70,
+    'sbk':                              3.80,
+    'siemens betriebskrankenkasse':     3.80,
+    'bkk firmus':                       2.80,
+    'bkk vbu':                          2.80,
+    'bkk provita':                      2.39,
+    'bkk faber-castell':                2.99,
+    'audi bkk':                         2.69,
+    'bahn-bkk':                         2.89,
+    'bkk linde':                        2.69,
+    'mhplus':                           3.10,
+    'bergische krankenkasse':           2.79,
+    'bkk melitta':                      2.99,
+    'bkk euregio':                      2.99,
+    'bkk herkules':                     2.79,
+    'energie-bkk':                      2.59,
+    'hallesche':                        2.59,
+  };
+  const HKK_RATE = 2.59;
+
+  const kkEl    = document.getElementById('dak-kk-akt');
+  const kkName  = (kkEl?.value || '').trim();
+  const bruttoEl = document.getElementById('dak-brutto-akt');
+  const bruttoMonat = parseDE(bruttoEl?.value);
+
+  if (kkName) {
+    // Fuzzy-Lookup: sucht nach dem längsten Schlüssel, der im KK-Namen vorkommt
+    const kkLower = kkName.toLowerCase();
+    let matchedRate = null;
+    let matchedName = null;
+    let bestLen = 0;
+    for (const [key, rate] of Object.entries(KK_ZUSATZBEITRAG)) {
+      if (kkLower.includes(key) && key.length > bestLen) {
+        matchedRate = rate;
+        matchedName = key;
+        bestLen = key.length;
+      }
+    }
+
+    if (matchedRate !== null && matchedRate > HKK_RATE) {
+      const diffPct = (matchedRate - HKK_RATE).toFixed(2).replace('.', ',');
+      let savingsText = '';
+      if (!isNaN(bruttoMonat) && bruttoMonat > 0) {
+        // Arbeitnehmer trägt die Hälfte des Zusatzbeitrags
+        const monthlySavings = bruttoMonat * (matchedRate - HKK_RATE) / 100 / 2;
+        const annualSavings  = monthlySavings * 12;
+        savingsText = ` Das entspricht einer monatlichen Ersparnis von ca. <strong>${monthlySavings.toLocaleString('de-DE', {minimumFractionDigits:2,maximumFractionDigits:2})}&nbsp;€</strong> (${annualSavings.toLocaleString('de-DE', {minimumFractionDigits:2,maximumFractionDigits:2})}&nbsp;€/Jahr).`;
+      }
+      recs.push({
+        icon: '💊',
+        prio: 'high',
+        kategorie: 'Einsparpotenzial Krankenkasse',
+        text: `Die aktuelle Krankenkasse (<strong>${kkName}</strong>) hat einen Zusatzbeitrag von <strong>${String(matchedRate).replace('.', ',')} %</strong>. Die <strong>hkk</strong> bietet mit <strong>${String(HKK_RATE).replace('.', ',')} %</strong> einen um ${diffPct}&nbsp;Prozentpunkte niedrigeren Zusatzbeitrag.${savingsText} Ein Kassenwechsel zur hkk kann schnell und unkompliziert angesprochen werden.`
+      });
+    }
+  }
+
+  // --- 3. Strom- & Gasrechnung hochgeladen ---
   if (fileUploaded('dak-fname-3')) {
     recs.push({
       icon: '⚡',
@@ -1618,13 +1741,15 @@ function bvRefreshHandlungsempfehlungen() {
 
   // --- 3. Riester-Zulagenbescheinigung hochgeladen ---
   if (fileUploaded('dak-fname-4')) {
-    // 3a. Grundzulage nicht voll ausgeschöpft → eigene Card
-    if (warnVisible('dak-warn-gz')) {
+    // 3a. Grundzulage nicht voll ausgeschöpft → direkt Wert auslesen statt DOM-Sichtbarkeit prüfen
+    const gzEl  = document.getElementById('dak-riester-gz');
+    const gzVal = parseDE(gzEl?.value);
+    if (!isNaN(gzVal) && gzVal > 0 && gzVal < 175) {
       recs.push({
         icon: '⚠️',
         prio: 'high',
         kategorie: 'Riester – Zulage nicht voll ausgeschöpft',
-        text: `Die Grundzulage beträgt weniger als 175 €. Riesterbeitrag anpassen, um die <strong>volle staatliche Zulage</strong> zu erhalten.`
+        text: `Die Grundzulage beträgt nur <strong>${gzEl.value}&nbsp;€</strong> statt 175&nbsp;€. Riesterbeitrag anpassen, um die <strong>volle staatliche Zulage</strong> zu erhalten.`
       });
     }
     // 3b. AV-Depot-Vergleich immer als gesonderte Card

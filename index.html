@@ -1515,8 +1515,8 @@
                 <thead>
                  <tr>
                     <th>Kennzahl</th>
-                    <th style="color:#1976d2;">Dez. 2025</th>
-                    <th style="color:#0d47a1;">Aktuell 2026</th>
+                    <th style="color:#1976d2;">Bisheriger Wert</th>
+                    <th style="color:#0d47a1;">Neuer Wert</th>
                     <th>&Delta; &Auml;nderung</th>
                     <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
                   </tr>
@@ -1524,21 +1524,21 @@
                 <tbody>
                   <tr class="dak-transfer-row" data-src="dak-brutto-akt" data-target="e-brutto" data-state-cat="einnahmen" data-state-key="brutto">
                     <td>Brutto (Monat)</td>
-                    <td><input class="dak-cell-input" id="dak-brutto-dez" type="text" placeholder="–" oninput="dakCalcDelta('brutto')"></td>
+                    <td><span class="dak-static-value">4.600,00&nbsp;&euro;</span><input type="hidden" id="dak-brutto-dez" value="4.600,00"></td>
                     <td><input class="dak-cell-input" id="dak-brutto-akt" type="text" placeholder="–" oninput="dakCalcDelta('brutto')"></td>
-                    <td><span id="dak-delta-brutto" class="dak-delta">–</span><span class="dak-warn" id="dak-warn-brutto" style="display:none;" data-tooltip="&#9888; Einkommenssteigerung erkannt! BU-H&ouml;he &uuml;berpr&uuml;fen &ndash; die Berufsunf&auml;higkeitsversicherung sollte an das gestiegene Einkommen angepasst werden.">!</span></td>
+                    <td><span id="dak-delta-brutto" class="dak-delta">–</span></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-netto-akt" data-target="e-netto" data-state-cat="einnahmen" data-state-key="netto">
                     <td>Netto (Monat)</td>
-                    <td><input class="dak-cell-input" id="dak-netto-dez" type="text" placeholder="–" oninput="dakCalcDelta('netto')"></td>
+                    <td><span class="dak-static-value">2.967,11&nbsp;&euro;</span><input type="hidden" id="dak-netto-dez" value="2.967,11"></td>
                     <td><input class="dak-cell-input" id="dak-netto-akt" type="text" placeholder="–" oninput="dakCalcDelta('netto')"></td>
-                    <td><span id="dak-delta-netto" class="dak-delta">–</span><span class="dak-warn" id="dak-warn-netto" style="display:none;" data-tooltip="&#9888; Einkommenssteigerung erkannt! BU-H&ouml;he &uuml;berpr&uuml;fen &ndash; die Berufsunf&auml;higkeitsversicherung sollte an das gestiegene Nettoeinkommen angepasst werden.">!</span></td>
+                    <td><span id="dak-delta-netto" class="dak-delta">–</span></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-steuerbrutto-akt" data-target="e-steuerbrutto" data-state-cat="einnahmen" data-state-key="steuerbrutto">
                     <td>Steuer-Brutto (Jahr)</td>
-                    <td><input class="dak-cell-input" id="dak-steuerbrutto-dez" type="text" placeholder="–" oninput="dakCalcDelta('steuerbrutto')"></td>
+                    <td><span class="dak-static-value">55.309,54&nbsp;&euro;</span><input type="hidden" id="dak-steuerbrutto-dez" value="55.309,54"></td>
                     <td><input class="dak-cell-input" id="dak-steuerbrutto-akt" type="text" placeholder="–" oninput="dakCalcDelta('steuerbrutto')"></td>
                     <td><span id="dak-delta-steuerbrutto" class="dak-delta">–</span></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
@@ -1548,7 +1548,7 @@
 
                   <tr class="dak-transfer-row" data-src="dak-kk-akt" data-target="gkv-gesellschaft" data-state-cat="gkv" data-state-key="gesellschaft">
                     <td>Krankenkasse</td>
-                    <td><input class="dak-cell-input" id="dak-kk-dez" type="text" placeholder="–" style="max-width:180px;"></td>
+                    <td><span class="dak-static-value">Techniker Krankenkasse</span></td>
                     <td><input class="dak-cell-input" id="dak-kk-akt" type="text" placeholder="–" style="max-width:180px;"></td>
                     <td><span class="dak-delta">–</span></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten &uuml;bernehmen"></td>
@@ -1572,28 +1572,33 @@
                 <thead>
                  <tr>
                     <th>Kennzahl</th>
-                    <th>Wert</th>
+                    <th style="color:#1976d2;">Bisheriger Wert</th>
+                    <th style="color:#0d47a1;">Neuer Wert</th>
                     <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="dak-transfer-row" data-src="dak-rente-datum" data-target="r-info" data-state-cat="rente" data-state-key="renteninfoVom">
                     <td>Renteninformation vom</td>
+                    <td><span class="dak-static-value">03.01.2022</span></td>
                     <td><input class="dak-cell-input" id="dak-rente-datum" type="text" placeholder="TT.MM.JJJJ" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-rente-regel" data-target="r-regel" data-state-cat="rente" data-state-key="regelAltersrente">
                     <td>Regelaltersrente (bisher erreicht)</td>
+                    <td><span class="dak-static-value">867,79&nbsp;&euro;</span></td>
                     <td><input class="dak-cell-input" id="dak-rente-regel" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-rente-kuenftig" data-target="r-kuenftig" data-state-cat="rente" data-state-key="kuenftigeRente">
                     <td>K&uuml;nftige Rente ohne Anpassung</td>
+                    <td><span class="dak-static-value">1.252,67&nbsp;&euro;</span></td>
                     <td><input class="dak-cell-input" id="dak-rente-kuenftig" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-rente-em" data-target="r-em" data-state-cat="rente" data-state-key="renteVollEM">
                     <td>Rente wegen Erwerbsminderung</td>
+                    <td><span class="dak-static-value">1.224,37&nbsp;&euro;</span></td>
                     <td><input class="dak-cell-input" id="dak-rente-em" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
@@ -1697,28 +1702,33 @@
                 <thead>
                   <tr>
                     <th>Kennzahl</th>
-                    <th>Wert</th>
+                    <th style="color:#1976d2;">Bisheriger Wert</th>
+                    <th style="color:#0d47a1;">Neuer Wert</th>
                     <th style="width:60px;text-align:center;color:var(--text-muted);">&#x2714; &Uuml;bernehmen</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="dak-transfer-row" data-src="dak-strom-kosten" data-target="en-strom-kosten" data-state-cat="energie" data-state-key="strom_kosten">
                     <td>Jahreskosten Strom</td>
+                    <td><span class="dak-static-value">937,45&nbsp;&euro;</span></td>
                     <td><input class="dak-cell-input" id="dak-strom-kosten" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-strom-kwh" data-target="en-strom-verbrauch" data-state-cat="energie" data-state-key="strom_verbrauch">
                     <td>Jahresverbrauch Strom (kWh)</td>
+                    <td><span class="dak-static-value">3.734</span></td>
                     <td><input class="dak-cell-input" id="dak-strom-kwh" type="text" placeholder="0" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-gas-kosten" data-target="en-gas-kosten" data-state-cat="energie" data-state-key="gas_kosten">
                     <td>Jahreskosten Gas</td>
+                    <td><span class="dak-static-value" style="color:var(--text-muted);background:#f8fafc;border-color:#eee;">–</span></td>
                     <td><input class="dak-cell-input" id="dak-gas-kosten" type="text" placeholder="0,00 €" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
                   <tr class="dak-transfer-row" data-src="dak-gas-kwh" data-target="en-gas-verbrauch" data-state-cat="energie" data-state-key="gas_verbrauch">
                     <td>Jahresverbrauch Gas (kWh)</td>
+                    <td><span class="dak-static-value" style="color:var(--text-muted);background:#f8fafc;border-color:#eee;">–</span></td>
                     <td><input class="dak-cell-input" id="dak-gas-kwh" type="text" placeholder="0" style="max-width:160px;"></td>
                     <td style="text-align:center;"><input type="checkbox" class="dak-cb" title="In Daten übernehmen"></td>
                   </tr>
@@ -1764,7 +1774,7 @@
                   </tr>
                   <tr>
                     <td>Grundzulage</td>
-                    <td><input class="dak-cell-input" id="dak-riester-gz" type="text" placeholder="0,00 &euro;" style="max-width:160px;" oninput="dakCheckRiesterGrundzulage(); dakCalcZulagenSum();"><span class="dak-warn" id="dak-warn-gz" style="display:none;margin-left:8px;" data-tooltip="&#9888; Grundzulage unter 175 &euro;! Aktuellen Riesterbeitrag &uuml;berpr&uuml;fen, um die volle staatliche Zulage zu erhalten. F&ouml;rdersystematik (Riester vs. AV-Depot) vergleichen.">!</span></td>
+                    <td><input class="dak-cell-input" id="dak-riester-gz" type="text" placeholder="0,00 &euro;" style="max-width:160px;" oninput="dakCheckRiesterGrundzulage(); dakCalcZulagenSum();"></td>
                     <td><span id="dak-avd-gz" style="font-size:13px;font-weight:600;color:#7b1fa2;">–</span></td>
                     <td></td>
                   </tr>
@@ -1884,6 +1894,16 @@
             .dak-delta { font-size: 13px; font-weight: 600; }
             .dak-delta.pos { color: #2e7d32; }
             .dak-delta.neg { color: #c62828; }
+            .dak-static-value {
+              display: inline-block;
+              font-size: 13px;
+              font-weight: 500;
+              color: var(--text);
+              padding: 4px 8px;
+              background: #f0f4fa;
+              border-radius: 4px;
+              border: 1px solid #dde4f0;
+            }
 
             /* === Warning-Badge + Tooltip === */
             .dak-warn {
@@ -2098,7 +2118,8 @@ Regeln:
               const sfx = isDez ? '-dez' : '-akt';
               set('dak-brutto'     + sfx, r.brutto);
               set('dak-netto'      + sfx, r.netto);
-              set('dak-steuerbrutto'+ sfx, r.steuerBrutto);
+              // Steuer-Brutto: NUR aus der Dez-Abrechnung → in den "Neuer Wert"-Slot (-akt)
+              if (isDez) set('dak-steuerbrutto-akt', r.steuerBrutto);
               set('dak-stk'        + sfx, r.steuerklasse);
               set('dak-kirche'     + sfx, r.kirchensteuer);
               set('dak-kv'         + sfx, r.krankenversicherung);
@@ -2213,22 +2234,22 @@ Regeln:
 
               const avVal = parseDE(document.getElementById('dak-riester-av')?.value);
 
-              // Grundzulage: bis 1200 × 0,30; 1201-1800 zusätzlich × 0,20; max 480
+              // Grundzulage: erste 360 € × 0,50 (max 180 €) + nächste 1.440 € × 0,25 (max 360 €) = max 540 €
               let gzAvd = NaN;
               if (!isNaN(avVal) && avVal > 0) {
-                const part1 = Math.min(avVal, 1200) * 0.30;
-                const part2 = avVal > 1200 ? Math.min(avVal - 1200, 600) * 0.20 : 0;
-                gzAvd = Math.min(part1 + part2, 480);
+                const part1 = Math.min(avVal, 360) * 0.50;
+                const part2 = avVal > 360 ? Math.min(avVal - 360, 1440) * 0.25 : 0;
+                gzAvd = Math.min(part1 + part2, 540);
               }
               const gzEl = document.getElementById('dak-avd-gz');
               if (gzEl) gzEl.textContent = fmtEUR(gzAvd);
 
-              // Kinderzulagen: geleistete AV-Beiträge × 0,25 je Kind; max 300
+              // Kinderzulagen: 1 € pro geleistetem Euro AV-Beitrag je Kind; max 300 €
               document.querySelectorAll('.dak-kz-row').forEach(row => {
                 const idx  = row.dataset.kzIdx;
                 let kzAvd = NaN;
                 if (!isNaN(avVal) && avVal > 0) {
-                  kzAvd = Math.min(avVal * 0.25, 300);
+                  kzAvd = Math.min(avVal * 1.00, 300);
                 }
                 const kzEl = document.getElementById('dak-avd-kz-' + idx);
                 if (kzEl) kzEl.textContent = fmtEUR(kzAvd);
