@@ -220,6 +220,16 @@
               <span>Chance</span>
             </div>
           </div>
+          <!-- Spezialthemen -->
+          <div class="nav-item">
+            <div class="bnav-link bnav-has-children" data-page="spezialthemen" data-sub="spezialthemen">
+              <span>Spezialthemen</span>
+              <span class="chevron">›</span>
+            </div>
+            <div class="bnav-sub">
+              <div class="bnav-sub-link" data-page="spezialthemen" data-sub="vermoegensanlage">Vermögensanlage</div>
+            </div>
+          </div>
           <!-- Kindervorsorge -->
           <div class="nav-item">
             <div class="bnav-link bnav-has-children">
@@ -1378,7 +1388,644 @@
 
         </div><!-- /.jeg-page-center -->
         </div><!-- End page-jeg-beratungsvorbereitung -->
+
+        <!-- ============ PAGE: SPEZIALTHEMEN - VERMÖGENSANLAGE ============ -->
+        <div class="page" id="page-vermoegensanlage">
+          <div class="jeg-page-hero">
+            <div class="jeg-page-hero-text">
+              <p class="jeg-page-hero-meta">Spezialthemen</p>
+              <h1 class="jeg-page-hero-title">Vermögensanlage</h1>
+              <p class="jeg-page-hero-desc">Erfüllen Sie sich Ihre finanziellen Wünsche schneller: Entdecken Sie, wie Sie mit einer intelligenten Vermögensanlage, beispielsweise in Investmentfonds, deutlich effizienter ans Ziel gelangen als durch einfaches Sparen.</p>
+            </div>
+            <div class="jeg-page-hero-image-wrap">
+              <img src="jeg_hero_vermoegensanlage.png" alt="Vermögensanlage" class="jeg-page-hero-image">
+            </div>
+          </div>
+          
+          <div style="padding:32px 40px;max-width:1100px;margin:0 auto;">
+
+            <!-- SCHRITT 1: WUNSCH AUSWÄHLEN -->
+            <div style="margin-bottom:36px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">1</div>
+                <div>
+                  <div style="font-weight:600;font-size:16px;color:var(--text);">Was ist Ihr größter finanzieller Wunsch?</div>
+                  <div style="font-size:13px;color:var(--text-muted);">Wählen Sie einen vordefinierten Wunsch oder geben Sie einen individuellen Wunsch ein.</div>
+                </div>
+              </div>
+
+              <!-- WISH GRID -->
+              <div id="va-wish-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;">
+
+                <!-- Auto -->
+                <div class="va-wish-card" data-wish="auto" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">🚗</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Traumauto</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Mein Wunschfahrzeug anschaffen</div>
+                </div>
+
+                <!-- Haus -->
+                <div class="va-wish-card" data-wish="haus" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">🏡</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Eigenes Haus</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Eigenheim oder Eigentumswohnung</div>
+                </div>
+
+                <!-- Weltreise -->
+                <div class="va-wish-card" data-wish="weltreise" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">✈️</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Weltreise</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Traumreise um die Welt</div>
+                </div>
+
+                <!-- Ruhestand -->
+                <div class="va-wish-card" data-wish="ruhestand" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">🌅</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Sorgenfreier Ruhestand</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Finanzielle Freiheit im Alter</div>
+                </div>
+
+                <!-- Ausbildung -->
+                <div class="va-wish-card" data-wish="ausbildung" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">🎓</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Ausbildung der Kinder</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Studium oder Berufsausbildung</div>
+                </div>
+
+                <!-- Individuell -->
+                <div class="va-wish-card" data-wish="individuell" onclick="vaSelectWish(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:40px;margin-bottom:10px;">✨</div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text-dark);">Individueller Wunsch</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Ganz persönlicher Traum</div>
+                </div>
+              </div>
+
+              <!-- Individueller Wunsch Eingabe -->
+              <div id="va-custom-input" style="display:none;margin-top:16px;">
+                <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:10px;">
+                  <div class="field-group" style="flex:1;">
+                    <label>Beschreiben Sie Ihren individuellen Wunsch</label>
+                    <input id="va-custom-text" type="text" placeholder="z.B. Ein Segelboot kaufen, ein Musikstudio einrichten …" oninput="vaCustomWishChanged(this.value)">
+                  </div>
+                  <button onclick="vaGenerateCustomImage()" style="padding:8px 16px;background:var(--blue-accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;white-space:nowrap;height:36px;">Bild generieren</button>
+                </div>
+                <!-- Optionaler Bild-API-Key – collapsed when key is set -->
+                <div id="va-key-set-badge" style="display:none;align-items:center;gap:8px;background:#f0faf4;border:1px solid #a5d6b7;border-radius:8px;padding:8px 14px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style="font-size:12px;color:#2e7d32;font-weight:600;">API Key hinterlegt</span>
+                  <button onclick="vaShowKeyInput()" style="margin-left:auto;padding:3px 10px;border:1px solid #a5d6b7;border-radius:5px;background:#fff;color:#2e7d32;font-size:11px;cursor:pointer;">Ändern</button>
+                </div>
+                <div id="va-key-input-area" style="display:flex;gap:10px;align-items:flex-end;background:#f8f9ff;border:1px solid var(--border);border-radius:8px;padding:12px 14px;">
+                  <svg style="flex-shrink:0;color:var(--text-muted);margin-bottom:6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><line x1="11" y1="12" x2="22" y2="1"/><line x1="18" y1="8" x2="21" y2="5"/></svg>
+                  <div class="field-group" style="flex:1;">
+                    <label>Gemini API Key (Bildgenerierung) – Modell: <code style="font-size:11px;background:#e8f0fe;padding:1px 5px;border-radius:3px;">gemini-2.5-flash-image</code> oder <code style="font-size:11px;background:#e8f0fe;padding:1px 5px;border-radius:3px;">gemini-3.1-flash-image-preview</code></label>
+                    <input id="va-image-api-key" type="password" placeholder="AIza…" style="font-family:monospace;font-size:12px;" oninput="vaImageKeyChanged()">
+                  </div>
+                  <button onclick="vaSaveImageKey()" style="padding:6px 14px;background:#fff;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap;height:34px;color:var(--text-dark);">Speichern</button>
+                  <button onclick="vaTestImageKey()" style="padding:6px 14px;background:#f0f7ff;border:1px solid var(--blue-accent);border-radius:6px;cursor:pointer;font-size:12px;white-space:nowrap;height:34px;color:var(--blue-accent);">Testen</button>
+                  <span id="va-image-key-status" style="font-size:11px;color:var(--text-muted);align-self:center;white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis;"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- WUNSCH-BILD & EINGABE -->
+            <div id="va-wish-detail" style="display:none;margin-bottom:36px;animation:vaFadeIn 0.4s ease;">
+              <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:32px;align-items:start;">
+
+                <!-- Bild -->
+                <div>
+                  <img id="va-wish-image" src="" alt="" style="width:100%;border-radius:16px;object-fit:cover;max-height:260px;box-shadow:0 4px 20px rgba(0,0,0,0.12);transition:opacity 0.4s;">
+                  <div id="va-wish-image-loading" style="display:none;width:100%;height:200px;border-radius:16px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;">
+                    <span>🖼️ Bild wird geladen…</span>
+                  </div>
+                </div>
+
+                <!-- Eingaben -->
+                <div>
+                  <div id="va-wish-label" style="font-size:22px;font-weight:700;color:var(--blue-primary);margin-bottom:20px;"></div>
+
+                  <div class="field-group" style="margin-bottom:20px;">
+                    <label>Geschätzte Kosten in Euro</label>
+                    <input id="va-wish-kosten" type="text" placeholder="z.B. 25.000,00" oninput="vaUpdateCalc()">
+                  </div>
+
+                  <div class="field-group" style="margin-bottom:20px;">
+                    <label>In wie vielen Jahren möchten Sie sich diesen Wunsch erfüllen?</label>
+                    <input id="va-wish-jahre" type="number" min="1" max="50" placeholder="z.B. 5" oninput="vaUpdateCalc()">
+                  </div>
+
+                  <div class="field-group" style="margin-bottom:0;">
+                    <label>Einmalanlage zu Beginn (optional)</label>
+                    <input id="va-wish-einmalanlage" type="text" placeholder="z.B. 5.000" oninput="vaUpdateCalc()">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCHRITT 2: WIE ERREICHEN SIE IHR ZIEL? -->
+            <div id="va-step2" style="display:none;margin-bottom:36px;animation:vaFadeIn 0.4s ease;">
+              <hr style="border:none;border-top:1px solid var(--border);margin-bottom:28px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">2</div>
+                <div>
+                  <div style="font-weight:600;font-size:16px;color:var(--text);">So erreichen Sie Ihr Ziel</div>
+                  <div style="font-size:13px;color:var(--text-muted);">Wählen Sie eine Anlageform – wir zeigen Ihnen die monatliche Rate, die Sie dafür brauchen.</div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;">
+                <div class="va-invest-card" data-rate="0.001" data-name="Sparbuch" onclick="vaSelectInvest(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:32px;margin-bottom:8px;">🏦</div>
+                  <div style="font-weight:600;font-size:13px;color:var(--text-dark);">Sparbuch</div>
+                  <div style="margin-top:6px;display:inline-block;background:#f5f5f5;color:var(--text-muted);font-size:11px;font-weight:600;border-radius:20px;padding:2px 10px;">0,1 % p.a.</div>
+                </div>
+                <div class="va-invest-card" data-rate="0.01" data-name="Tagesgeldkonto" onclick="vaSelectInvest(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:32px;margin-bottom:8px;">💳</div>
+                  <div style="font-weight:600;font-size:13px;color:var(--text-dark);">Tagesgeldkonto</div>
+                  <div style="margin-top:6px;display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:11px;font-weight:600;border-radius:20px;padding:2px 10px;">1,0 % p.a.</div>
+                </div>
+                <div class="va-invest-card" data-rate="0.025" data-name="Rentenfonds" onclick="vaSelectInvest(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:32px;margin-bottom:8px;">📊</div>
+                  <div style="font-weight:600;font-size:13px;color:var(--text-dark);">Rentenfonds</div>
+                  <div style="margin-top:6px;display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:11px;font-weight:600;border-radius:20px;padding:2px 10px;">2,5 % p.a.</div>
+                </div>
+                <div class="va-invest-card" data-rate="0.08" data-name="Investmentfonds" onclick="vaSelectInvest(this)" style="cursor:pointer;border:2px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center;transition:all 0.2s;background:#fff;">
+                  <div style="font-size:32px;margin-bottom:8px;">📈</div>
+                  <div style="font-weight:600;font-size:13px;color:var(--text-dark);">Investmentfonds</div>
+                  <div style="margin-top:6px;display:inline-block;background:#e3f2fd;color:#023e84;font-size:11px;font-weight:600;border-radius:20px;padding:2px 10px;">8,0 % p.a.</div>
+                </div>
+              </div>
+
+              <!-- Result -->
+              <div id="va-invest-result" style="display:none;animation:vaFadeIn 0.3s ease;">
+                <div style="background:linear-gradient(135deg,#e8f0fe,#f0f7ff);border-radius:16px;padding:24px 28px;border-left:4px solid var(--blue-primary);display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:center;margin-bottom:16px;">
+                  <div>
+                    <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Monatliche Rate</div>
+                    <div id="va-invest-rate" style="font-size:30px;font-weight:700;color:var(--blue-primary);"></div>
+                    <div id="va-invest-name" style="font-size:12px;color:var(--text-muted);margin-top:4px;"></div>
+                  </div>
+                  <div style="text-align:center;">
+                    <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Eigenes Kapital</div>
+                    <div id="va-invest-own" style="font-size:24px;font-weight:600;color:#555;"></div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Rendite-Beitrag</div>
+                    <div id="va-invest-gain" style="font-size:24px;font-weight:600;color:#2e7d32;"></div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="va-invest-gain-pct"></div>
+                  </div>
+                </div>
+                <!-- Comparison table -->
+                <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead>
+                      <tr style="background:#f5f7ff;">
+                        <th style="padding:10px 16px;text-align:left;font-weight:600;color:var(--text-dark);border-bottom:1px solid var(--border);">Anlageform</th>
+                        <th style="padding:10px 16px;text-align:right;font-weight:600;color:var(--text-dark);border-bottom:1px solid var(--border);">Rendite</th>
+                        <th style="padding:10px 16px;text-align:right;font-weight:600;color:var(--text-dark);border-bottom:1px solid var(--border);">Rate / Monat</th>
+                        <th style="padding:10px 16px;text-align:right;font-weight:600;color:var(--text-dark);border-bottom:1px solid var(--border);">Eigenes Kapital</th>
+                        <th style="padding:10px 16px;text-align:right;font-weight:600;color:var(--text-dark);border-bottom:1px solid var(--border);">Rendite-Beitrag</th>
+                      </tr>
+                    </thead>
+                    <tbody id="va-invest-table-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============ SCHRITT 3: Investitionsprinzipien ============ -->
+            <div id="va-step3" style="display:none;margin-bottom:36px;animation:vaFadeIn 0.4s ease;">
+              <hr style="border:none;border-top:1px solid var(--border);margin-bottom:28px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">3</div>
+                <div>
+                  <div style="font-weight:600;font-size:16px;color:var(--text);">Worauf man beim Investieren achten sollte</div>
+                  <div style="font-size:13px;color:var(--text-muted);">Fünf Prinzipien, die aus guten Sparern erfolgreiche Anleger machen.</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
+
+                <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(21,101,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;font-size:22px;">🔁</div>
+                  <div style="font-weight:700;font-size:14px;color:var(--text-dark);">Zinseszinseffekt</div>
+                  <div style="font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;">Zinsen, die Zinsen erwirtschaften – über Jahrzehnte entsteht so ein exponentielles Wachstum. Albert Einstein soll ihn das „achte Weltwunder" genannt haben.</div>
+                  <button onclick="navigate('spezialthemen','va-edu-zinseszins')" style="margin-top:4px;padding:7px 0;background:#e8f0fe;color:var(--blue-primary);border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s;" onmouseover="this.style.background='#c8dafc'" onmouseout="this.style.background='#e8f0fe'">Mehr erfahren →</button>
+                </div>
+
+                <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(21,101,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);display:flex;align-items:center;justify-content:center;font-size:22px;">📅</div>
+                  <div style="font-weight:700;font-size:14px;color:var(--text-dark);">Cost-Average-Effekt</div>
+                  <div style="font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;">Wer monatlich einen festen Betrag investiert, kauft automatisch mehr Anteile bei niedrigen Kursen – und so einen günstigen Durchschnittspreis.</div>
+                  <button onclick="navigate('spezialthemen','va-edu-cost-average')" style="margin-top:4px;padding:7px 0;background:#e8f5e9;color:#2e7d32;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s;" onmouseover="this.style.background='#c8e6c9'" onmouseout="this.style.background='#e8f5e9'">Mehr erfahren →</button>
+                </div>
+
+                <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(21,101,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#fff3e0,#ffe0b2);display:flex;align-items:center;justify-content:center;font-size:22px;">🌐</div>
+                  <div style="font-weight:700;font-size:14px;color:var(--text-dark);">Diversifikation</div>
+                  <div style="font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;">Nie alles auf eine Karte setzen. Wer weltweit in viele Unternehmen investiert, streut das Risiko – fällt eine Aktie, bleiben die anderen stabil.</div>
+                  <button onclick="navigate('spezialthemen','va-edu-diversifikation')" style="margin-top:4px;padding:7px 0;background:#fff3e0;color:#e65100;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s;" onmouseover="this.style.background='#ffe0b2'" onmouseout="this.style.background='#fff3e0'">Mehr erfahren →</button>
+                </div>
+
+                <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(21,101,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f3e5f5,#e1bee7);display:flex;align-items:center;justify-content:center;font-size:22px;">⏳</div>
+                  <div style="font-weight:700;font-size:14px;color:var(--text-dark);">Time-in-the-Market</div>
+                  <div style="font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;">Studien zeigen: Wer auf den „richtigen Moment" wartet, verliert oft mehr als er gewinnt. Entscheidend ist die Zeit im Markt – nicht das Timing.</div>
+                  <button onclick="navigate('spezialthemen','va-edu-time-in-market')" style="margin-top:4px;padding:7px 0;background:#f3e5f5;color:#7b1fa2;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s;" onmouseover="this.style.background='#e1bee7'" onmouseout="this.style.background='#f3e5f5'">Mehr erfahren →</button>
+                </div>
+
+                <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(21,101,192,0.12)'" onmouseout="this.style.boxShadow='none'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#fce4ec,#f8bbd0);display:flex;align-items:center;justify-content:center;font-size:22px;">📉</div>
+                  <div style="font-weight:700;font-size:14px;color:var(--text-dark);">Krisen sind Chancen</div>
+                  <div style="font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;">Börsencrashs wirken beängstigend – für langfristige Anleger sind sie oft die besten Kaufgelegenheiten. Der Markt hat sich nach jeder Krise erholt.</div>
+                  <button onclick="navigate('spezialthemen','va-edu-krisen')" style="margin-top:4px;padding:7px 0;background:#fce4ec;color:#c62828;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background 0.2s;" onmouseover="this.style.background='#f8bbd0'" onmouseout="this.style.background='#fce4ec'">Mehr erfahren →</button>
+                </div>
+
+              </div>
+            </div>
+            <!-- /SCHRITT 3 -->
+
+            <!-- ============ SCHRITT 4: Selbst oder professionell? ============ -->
+            <div id="va-step4" style="display:none;margin-bottom:36px;animation:vaFadeIn 0.4s ease;">
+              <hr style="border:none;border-top:1px solid var(--border);margin-bottom:28px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">4</div>
+                <div>
+                  <div style="font-weight:600;font-size:16px;color:var(--text);">Selbst investieren oder professionell verwalten lassen?</div>
+                  <div style="font-size:13px;color:var(--text-muted);">All diese Prinzipien klingen überzeugend – aber wer setzt sie konsequent um? Entscheiden Sie, welcher Weg besser zu Ihnen passt.</div>
+                </div>
+              </div>
+
+              <!-- Entscheidungs-Karten -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+
+                <!-- Option A: Selbst -->
+                <div id="va-s4-diy" onclick="vaSelectS4('diy')" style="cursor:pointer;border:2px solid var(--border);border-radius:16px;padding:28px 24px;background:#fff;transition:all 0.25s;position:relative;overflow:hidden;">
+                  <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#43a047,#66bb6a);border-radius:4px 4px 0 0;"></div>
+                  <div style="display:flex;align-items:flex-start;gap:16px;">
+                    <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🧑‍💻</div>
+                    <div style="flex:1;">
+                      <div style="font-weight:700;font-size:16px;color:var(--text-dark);margin-bottom:6px;">Ich mache es selbst</div>
+                      <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;">Ich informiere mich, wähle ETFs oder Fonds eigenständig aus und behalte die volle Kontrolle über mein Portfolio.</div>
+                      <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#2e7d32;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#e8f5e9;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</span>
+                          Maximale Flexibilität &amp; Transparenz
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#c62828;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#fce4ec;display:flex;align-items:center;justify-content:center;flex-shrink:0;">!</span>
+                          Erfordert eigene Zeit, Disziplin &amp; Marktkenntnis
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#c62828;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#fce4ec;display:flex;align-items:center;justify-content:center;flex-shrink:0;">!</span>
+                          Emotionale Entscheidungen in Krisenzeiten riskant
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#c62828;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#fce4ec;display:flex;align-items:center;justify-content:center;flex-shrink:0;">!</span>
+                          Kein systematisches Rebalancing ohne konsequente Eigendisziplin
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Option B: Professionell -->
+                <div id="va-s4-pro" onclick="vaSelectS4('pro')" style="cursor:pointer;border:2px solid var(--border);border-radius:16px;padding:28px 24px;background:#fff;transition:all 0.25s;position:relative;overflow:hidden;">
+                  <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue-accent),#1565c0);border-radius:4px 4px 0 0;"></div>
+                  <div style="display:flex;align-items:flex-start;gap:16px;">
+                    <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🏛️</div>
+                    <div style="flex:1;">
+                      <div style="font-weight:700;font-size:16px;color:var(--text-dark);margin-bottom:6px;">Professionelle Vermögensverwaltung</div>
+                      <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;">Experten übernehmen Auswahl, Überwachung und Anpassung des Portfolios – regelbasiert und emotionsfrei.</div>
+                      <div style="display:flex;flex-direction:column;gap:7px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1565c0;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#e3f2fd;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</span>
+                          Professionelles Risikomanagement &amp; Rebalancing
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1565c0;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#e3f2fd;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</span>
+                          Disziplinierte, emotionsfreie Strategie
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1565c0;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#e3f2fd;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</span>
+                          Zeitersparnis – kein eigenes Monitoring nötig
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#1565c0;">
+                          <span style="width:18px;height:18px;border-radius:50%;background:#e3f2fd;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✓</span>
+                          Zugang zu institutionellen Strategien &amp; Produkten
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Ergebnis-Block (erscheint nach Auswahl) -->
+              <div id="va-s4-result" style="display:none;animation:vaFadeIn 0.35s ease;">
+
+                <!-- DIY-Ergebnis -->
+                <div id="va-s4-result-diy" style="display:none;">
+                  <div style="background:linear-gradient(135deg,#f1f8f2,#e8f5e9);border-radius:16px;padding:24px 28px;border-left:4px solid #43a047;">
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                      <div style="font-size:28px;">🎯</div>
+                      <div>
+                        <div style="font-weight:700;font-size:15px;color:#1b5e20;">Gut – Sie wissen, worauf es ankommt!</div>
+                        <div style="font-size:13px;color:#388e3c;margin-top:3px;">Mit den richtigen Werkzeugen lässt sich das selbst sehr gut umsetzen.</div>
+                      </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #c8e6c9;">
+                        <div style="font-size:22px;margin-bottom:8px;">📊</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">ETF-Sparplan</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Breite Diversifikation zu geringen Kosten – ideal für den langfristigen Vermögensaufbau mit Cost-Average-Effekt.</div>
+                      </div>
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #c8e6c9;">
+                        <div style="font-size:22px;margin-bottom:8px;">📅</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">Automatisierung</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Dauerauftrag einrichten und laufen lassen. So entfällt die Versuchung, in turbulenten Phasen zu reagieren.</div>
+                      </div>
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #c8e6c9;">
+                        <div style="font-size:22px;margin-bottom:8px;">🔄</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">Jährliches Rebalancing</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Portfolio einmal im Jahr prüfen und auf die Ziel-Allokation zurückführen – das genügt in den meisten Fällen.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pro-Ergebnis -->
+                <div id="va-s4-result-pro" style="display:none;">
+                  <div style="background:linear-gradient(135deg,#e8f0fe,#f0f7ff);border-radius:16px;padding:24px 28px;border-left:4px solid var(--blue-accent);">
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                      <div style="font-size:28px;">🏆</div>
+                      <div>
+                        <div style="font-weight:700;font-size:15px;color:#0d47a1;">Kluge Entscheidung – Profis machen den Unterschied.</div>
+                        <div style="font-size:13px;color:var(--blue-accent);margin-top:3px;">Eine professionelle Vermögensverwaltung übernimmt genau das, was Privatanleger oft falsch machen.</div>
+                      </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px;">
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #bbdefb;">
+                        <div style="font-size:22px;margin-bottom:8px;">🧩</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">Individuelle Strategie</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Das Portfolio wird auf Ihre Ziele, Ihren Anlagehorizont und Ihre Risikobereitschaft maßgeschneidert.</div>
+                      </div>
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #bbdefb;">
+                        <div style="font-size:22px;margin-bottom:8px;">🤖</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">Regelbasiertes Handeln</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Keine Emotionen, kein Market-Timing. Kauf- und Verkaufentscheidungen folgen klaren, definierten Regeln.</div>
+                      </div>
+                      <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #bbdefb;">
+                        <div style="font-size:22px;margin-bottom:8px;">📋</div>
+                        <div style="font-weight:600;font-size:13px;color:var(--text-dark);margin-bottom:4px;">Transparente Berichterstattung</div>
+                        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Regelmäßige Reports zeigen, wie sich Ihr Vermögen entwickelt – nachvollziehbar und verständlich aufbereitet.</div>
+                      </div>
+                    </div>
+                    <!-- CTA -->
+                    <div style="background:#fff;border-radius:12px;padding:18px 20px;border:1px solid #bbdefb;display:flex;align-items:center;gap:16px;">
+                      <div style="font-size:32px;flex-shrink:0;">💬</div>
+                      <div style="flex:1;">
+                        <div style="font-weight:600;font-size:14px;color:var(--text-dark);margin-bottom:4px;">Jetzt gemeinsam das passende Konzept entwickeln</div>
+                        <div style="font-size:12px;color:var(--text-muted);">Wir zeigen Ihnen, welche Anbieter und Lösungen zu Ihrer persönlichen Situation passen – unabhängig und auf Ihre Ziele ausgerichtet.</div>
+                      </div>
+                      <button onclick="vaS4RequestConsultation()" style="flex-shrink:0;padding:10px 20px;background:var(--blue-accent);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.2s;" onmouseover="this.style.background='#1565c0'" onmouseout="this.style.background='var(--blue-accent)'">
+                        Beratungsgespräch anfragen →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- /SCHRITT 4 -->
+
+          </div>
+        </div>
+
+
         <!-- ============ PAGE: JEG – DATENAKTUALISIERUNG ============ -->
+
+        <!-- ============ EDU PAGE: Zinseszinseffekt ============ -->
+        <div class="page" id="page-va-edu-zinseszins">
+          <div style="padding:32px 40px;max-width:900px;margin:0 auto;">
+            <button onclick="navigate('spezialthemen','vermoegensanlage')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:28px;">← Zurück zur Vermögensanlage</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#e3f2fd,#bbdefb);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">🔁</div>
+              <div>
+                <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grundlagen des Investierens</div>
+                <h1 style="font-size:26px;font-weight:700;color:var(--text-dark);margin:0;">Zinseszinseffekt</h1>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#e3f2fd,#f0f7ff);border-radius:16px;padding:28px;margin-bottom:24px;border-left:4px solid #1565c0;">
+              <p style="font-size:15px;line-height:1.8;color:var(--text);margin:0;">Der <strong>Zinseszinseffekt</strong> beschreibt das Phänomen, bei dem nicht nur das investierte Kapital, sondern auch die erwirtschafteten Zinsen selbst wieder Zinsen einbringen. Mit der Zeit entsteht so ein exponentielles Wachstum.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+              <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;">
+                <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Beispiel: 100 € / Monat über 30 Jahre</div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f5f5f5;border-radius:8px;">
+                    <span style="font-size:13px;color:var(--text-muted);">Sparbuch (0,1 % p.a.)</span>
+                    <span style="font-weight:700;color:var(--text-dark);">36.548 €</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#e8f5e9;border-radius:8px;">
+                    <span style="font-size:13px;color:#2e7d32;">Rentenfonds (2,5 % p.a.)</span>
+                    <span style="font-weight:700;color:#2e7d32;">46.698 €</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#e3f2fd;border-radius:8px;">
+                    <span style="font-size:13px;color:#1565c0;">Investmentfonds (8 % p.a.)</span>
+                    <span style="font-weight:700;color:#1565c0;">149.036 €</span>
+                  </div>
+                </div>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;">
+                <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Die Formel</div>
+                <div style="font-family:monospace;font-size:16px;background:#f5f7ff;border-radius:8px;padding:14px;text-align:center;color:var(--text-dark);">K = P × (1 + r)ⁿ</div>
+                <ul style="font-size:13px;color:var(--text-muted);line-height:2;margin:12px 0 0 0;padding-left:16px;">
+                  <li><strong>K</strong> = Endkapital</li>
+                  <li><strong>P</strong> = Startkapital</li>
+                  <li><strong>r</strong> = jährlicher Zinssatz</li>
+                  <li><strong>n</strong> = Anlagejahre</li>
+                </ul>
+              </div>
+            </div>
+            <div style="background:#fff3e0;border-radius:12px;padding:16px 20px;border-left:3px solid #e65100;">
+              <p style="font-size:13px;color:#bf360c;margin:0;line-height:1.7;">💡 <strong>Merksatz:</strong> Albert Einstein soll den Zinseszins als das „achte Weltwunder" bezeichnet haben – wer ihn versteht, verdient ihn; wer ihn nicht versteht, zahlt ihn.</p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ============ EDU PAGE: Cost-Average-Effekt ============ -->
+        <div class="page" id="page-va-edu-cost-average">
+          <div style="padding:32px 40px;max-width:900px;margin:0 auto;">
+            <button onclick="navigate('spezialthemen','vermoegensanlage')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:28px;">← Zurück zur Vermögensanlage</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">📅</div>
+              <div>
+                <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grundlagen des Investierens</div>
+                <h1 style="font-size:26px;font-weight:700;color:var(--text-dark);margin:0;">Cost-Average-Effekt</h1>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#e8f5e9,#f0faf4);border-radius:16px;padding:28px;margin-bottom:24px;border-left:4px solid #2e7d32;">
+              <p style="font-size:15px;line-height:1.8;color:var(--text);margin:0;">Der <strong>Cost-Average-Effekt</strong> (Durchschnittskosteneffekt) beschreibt den Vorteil, wenn man regelmäßig einen festen Betrag investiert – unabhängig davon, ob die Kurse gerade hoch oder niedrig sind.</p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:14px;">Wie es funktioniert: Monatlich 100 € investiert</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center;">
+                <div style="padding:12px;background:#f5f7ff;border-radius:8px;">
+                  <div style="font-size:11px;color:var(--text-muted);">Monat 1</div>
+                  <div style="font-size:18px;font-weight:700;color:#2e7d32;">10 €</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Kurs/Anteil</div>
+                  <div style="font-size:13px;font-weight:600;">10 Anteile</div>
+                </div>
+                <div style="padding:12px;background:#fce4ec;border-radius:8px;">
+                  <div style="font-size:11px;color:var(--text-muted);">Monat 2</div>
+                  <div style="font-size:18px;font-weight:700;color:#c62828;">5 €</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Kurs/Anteil</div>
+                  <div style="font-size:13px;font-weight:600;">20 Anteile</div>
+                </div>
+                <div style="padding:12px;background:#e8f5e9;border-radius:8px;">
+                  <div style="font-size:11px;color:var(--text-muted);">Monat 3</div>
+                  <div style="font-size:18px;font-weight:700;color:#2e7d32;">8 €</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Kurs/Anteil</div>
+                  <div style="font-size:13px;font-weight:600;">12,5 Anteile</div>
+                </div>
+                <div style="padding:12px;background:#e3f2fd;border-radius:8px;border:2px solid #1565c0;">
+                  <div style="font-size:11px;color:var(--text-muted);">Ergebnis</div>
+                  <div style="font-size:14px;font-weight:700;color:#1565c0;">42,5 Anteile</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Ø Preis</div>
+                  <div style="font-size:13px;font-weight:600;">7,06 €</div>
+                </div>
+              </div>
+            </div>
+            <div style="background:#f0faf4;border-radius:12px;padding:16px 20px;border-left:3px solid #2e7d32;">
+              <p style="font-size:13px;color:#1b5e20;margin:0;line-height:1.7;">💡 <strong>Vorteil:</strong> Ohne Cost-Average wären 300 € investiert und Ø 7,67 €/Anteil bezahlt worden. Mit dem monatlichen Sparplan liegt der Durchschnittspreis bei nur 7,06 € – rund 8 % günstiger.</p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ============ EDU PAGE: Diversifikation ============ -->
+        <div class="page" id="page-va-edu-diversifikation">
+          <div style="padding:32px 40px;max-width:900px;margin:0 auto;">
+            <button onclick="navigate('spezialthemen','vermoegensanlage')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:28px;">← Zurück zur Vermögensanlage</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#fff3e0,#ffe0b2);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">🌐</div>
+              <div>
+                <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grundlagen des Investierens</div>
+                <h1 style="font-size:26px;font-weight:700;color:var(--text-dark);margin:0;">Diversifikation</h1>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#fff3e0,#fff8f0);border-radius:16px;padding:28px;margin-bottom:24px;border-left:4px solid #e65100;">
+              <p style="font-size:15px;line-height:1.8;color:var(--text);margin:0;"><strong>Diversifikation</strong> bedeutet, das Risiko auf viele verschiedene Anlagen zu verteilen. Das Ziel: Verluste in einem Bereich werden durch Gewinne in anderen Bereichen abgepuffert.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+              <div style="background:#fce4ec;border-radius:12px;padding:20px;">
+                <div style="font-weight:700;font-size:14px;color:#c62828;margin-bottom:12px;">❌ Nicht diversifiziert</div>
+                <div style="font-size:13px;color:var(--text);line-height:1.7;">Gesamtes Kapital in <em>eine</em> Aktie investiert. Geht das Unternehmen in die Krise, verliert man alles. Beispiel: Wirecard-Aktionäre 2020.</div>
+              </div>
+              <div style="background:#e8f5e9;border-radius:12px;padding:20px;">
+                <div style="font-weight:700;font-size:14px;color:#2e7d32;margin-bottom:12px;">✅ Gut diversifiziert</div>
+                <div style="font-size:13px;color:var(--text);line-height:1.7;">Kapital verteilt auf 1.000+ Unternehmen weltweit (ETF). Eine Pleite beeinträchtigt das Portfolio kaum – das Risiko ist auf viele Schultern verteilt.</div>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:12px;">Diversifikation umfasst mehrere Dimensionen</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:#f5f7ff;border-radius:8px;font-size:13px;"><span style="font-size:16px;">🏢</span> <strong>Unternehmen:</strong>&nbsp;Viele Firmen statt einer</div>
+                <div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:#f5f7ff;border-radius:8px;font-size:13px;"><span style="font-size:16px;">🌍</span> <strong>Regionen:</strong>&nbsp;USA, Europa, Asien, Schwellenländer</div>
+                <div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:#f5f7ff;border-radius:8px;font-size:13px;"><span style="font-size:16px;">📊</span> <strong>Branchen:</strong>&nbsp;Technik, Pharma, Energie, Konsum …</div>
+                <div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:#f5f7ff;border-radius:8px;font-size:13px;"><span style="font-size:16px;">⏱️</span> <strong>Zeit:</strong>&nbsp;Nicht alles auf einmal investieren (→ Cost-Average)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ============ EDU PAGE: Time-in-the-Market ============ -->
+        <div class="page" id="page-va-edu-time-in-market">
+          <div style="padding:32px 40px;max-width:900px;margin:0 auto;">
+            <button onclick="navigate('spezialthemen','vermoegensanlage')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:28px;">← Zurück zur Vermögensanlage</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#f3e5f5,#e1bee7);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">⏳</div>
+              <div>
+                <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grundlagen des Investierens</div>
+                <h1 style="font-size:26px;font-weight:700;color:var(--text-dark);margin:0;">Time-in-the-Market</h1>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#f3e5f5,#faf0ff);border-radius:16px;padding:28px;margin-bottom:24px;border-left:4px solid #7b1fa2;">
+              <p style="font-size:15px;line-height:1.8;color:var(--text);margin:0;"><strong>„Time in the market beats timing the market"</strong> – Studien belegen immer wieder: Wer versucht, den perfekten Ein- und Ausstiegszeitpunkt zu finden, schneidet im Durchschnitt schlechter ab als jemand, der einfach investiert und dabei bleibt.</p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:16px;">Was passiert, wenn man die besten Börsentage verpasst?</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#e3f2fd;border-radius:8px;">
+                  <span style="font-size:13px;">Vollständig investiert (S&P 500, 1993–2023)</span>
+                  <span style="font-weight:700;color:#1565c0;">+ 1.600 %</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f5f7ff;border-radius:8px;">
+                  <span style="font-size:13px;">10 beste Tage verpasst</span>
+                  <span style="font-weight:700;color:#555;">+ 740 %</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff3e0;border-radius:8px;">
+                  <span style="font-size:13px;">20 beste Tage verpasst</span>
+                  <span style="font-weight:700;color:#e65100;">+ 350 %</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fce4ec;border-radius:8px;">
+                  <span style="font-size:13px;">40 beste Tage verpasst</span>
+                  <span style="font-weight:700;color:#c62828;">− 12 %</span>
+                </div>
+              </div>
+            </div>
+            <div style="background:#f3e5f5;border-radius:12px;padding:16px 20px;border-left:3px solid #7b1fa2;">
+              <p style="font-size:13px;color:#4a148c;margin:0;line-height:1.7;">💡 <strong>Fazit:</strong> Der Markt ist am häufigsten auf neue Hochs – wer ständig wartet, ist meistens zu spät. Früh anfangen und konsequent investiert bleiben ist die bewährteste Strategie.</p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ============ EDU PAGE: Krisen sind Chancen ============ -->
+        <div class="page" id="page-va-edu-krisen">
+          <div style="padding:32px 40px;max-width:900px;margin:0 auto;">
+            <button onclick="navigate('spezialthemen','vermoegensanlage')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-muted);font-size:13px;cursor:pointer;margin-bottom:28px;">← Zurück zur Vermögensanlage</button>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#fce4ec,#f8bbd0);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">📉</div>
+              <div>
+                <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grundlagen des Investierens</div>
+                <h1 style="font-size:26px;font-weight:700;color:var(--text-dark);margin:0;">Krisen sind Chancen</h1>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#fce4ec,#fff5f7);border-radius:16px;padding:28px;margin-bottom:24px;border-left:4px solid #c62828;">
+              <p style="font-size:15px;line-height:1.8;color:var(--text);margin:0;">Börsencrashs gehören zum Investieren dazu – und wirken im Moment beängstigend. Für <strong>langfristige Anleger</strong> sind sie aber oft die besten Kaufgelegenheiten. Historisch hat sich der globale Aktienmarkt nach jeder Krise erholt und neue Höchststände erreicht.</p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:14px;">Bekannte Krisen und ihre Erholung</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:8px 12px;background:#f5f7ff;border-radius:8px;font-size:12px;font-weight:600;color:var(--text-muted);">
+                  <span>Krise</span><span style="text-align:center;">Max. Verlust</span><span style="text-align:center;">Erholung</span>
+                </div>
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:8px 12px;background:#fce4ec;border-radius:8px;font-size:13px;">
+                  <span>Dotcom-Blase (2000–2002)</span><span style="text-align:center;color:#c62828;font-weight:600;">− 49 %</span><span style="text-align:center;color:#2e7d32;font-weight:600;">~5 Jahre</span>
+                </div>
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:8px 12px;background:#fce4ec;border-radius:8px;font-size:13px;">
+                  <span>Finanzkrise (2007–2009)</span><span style="text-align:center;color:#c62828;font-weight:600;">− 56 %</span><span style="text-align:center;color:#2e7d32;font-weight:600;">~6 Jahre</span>
+                </div>
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;padding:8px 12px;background:#fce4ec;border-radius:8px;font-size:13px;">
+                  <span>Corona-Crash (Feb.–März 2020)</span><span style="text-align:center;color:#c62828;font-weight:600;">− 34 %</span><span style="text-align:center;color:#2e7d32;font-weight:600;">~6 Monate</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:0;">
+              <div style="background:#fce4ec;border-radius:12px;padding:16px;font-size:13px;line-height:1.7;color:#7f0000;">
+                <strong>Was Panik-Verkäufer tun:</strong><br>
+                Verkaufen im Crash, warten auf „Erholung", kaufen wenn alles teuer ist. Ergebnis: garantierter Verlust.
+              </div>
+              <div style="background:#e8f5e9;border-radius:12px;padding:16px;font-size:13px;line-height:1.7;color:#1b5e20;">
+                <strong>Was smarte Anleger tun:</strong><br>
+                Im Crash weiter oder sogar mehr investieren. Günstige Anteile kaufen, Zeit arbeiten lassen. Ergebnis: überdurchschnittliche Rendite.
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="page" id="page-jeg-datenaktualisierung">
           <!-- ==== WHITE TWO-COLUMN HEADER (wie JEG 2026 / Beratungsvorbereitung) ==== -->
           <div class="jeg-page-hero">

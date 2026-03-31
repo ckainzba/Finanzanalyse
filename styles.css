@@ -277,7 +277,8 @@ body {
   font-weight: 500;
 }
 
-.bnav-jeg-parent {
+.bnav-jeg-parent.open,
+.bnav-jeg-parent.active {
   font-weight: 500;
   color: var(--blue-primary);
 }
@@ -2559,4 +2560,17 @@ input:checked + .jeg-pot-slider:before {
 
 .jeg-chip:hover {
   opacity: 0.82;
+}
+
+/* ===== VERMÖGENSANLAGE BERATUNGSSTRECKE ===== */
+@keyframes vaFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.va-wish-card:hover {
+  border-color: var(--blue-primary) !important;
+  background: #f0f4ff !important;
+  box-shadow: 0 2px 8px rgba(21,101,192,0.12) !important;
+  transform: translateY(-2px);
 }

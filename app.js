@@ -52,10 +52,19 @@ function switchSection(section) {
   if (cfg.page) {
     navigate(cfg.page, cfg.sub);
   } else if (section === 'daten') {
-    const isBeratungPage = p => !p || p.startsWith('jeg') || ['dashboard','informationen','controlling','vertraege', 'pot-jeg'].includes(p);
-    const page = !isBeratungPage(state.currentPage)    ? state.currentPage    : 'persoenliche-angaben';
-    const sub  = !isBeratungPage(state.currentSubPage) ? state.currentSubPage : 'personendaten';
-    navigate(page, sub);
+    const isBeratungPage = p => !p || p.startsWith('jeg') || [
+      'dashboard','informationen','controlling','vertraege','pot-jeg',
+      'spezialthemen','beratung',
+      // Beratung sub-pages
+      'vermoegensanlage','kindervorsorge','servicefeedback'
+    ].includes(p);
+
+    // If EITHER current page or sub-page is a beratung/non-daten page, go to daten default
+    if (isBeratungPage(state.currentPage) || isBeratungPage(state.currentSubPage)) {
+      navigate('persoenliche-angaben', 'personendaten');
+    } else {
+      navigate(state.currentPage, state.currentSubPage);
+    }
   }
 
 }
@@ -70,19 +79,27 @@ function navigate(page, subPage) {
 }
 
 function renderNav() {
-  document.querySelectorAll('.nav-link, .sub-nav-link').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-link, .sub-nav-link, .bnav-link, .bnav-sub-link, .bnav-subsub-link').forEach(el => el.classList.remove('active'));
   const active = document.querySelector(`[data-page="${state.currentPage}"][data-sub="${state.currentSubPage}"]`) ||
     document.querySelector(`[data-page="${state.currentPage}"]`);
   if (active) active.classList.add('active');
-  // Open parent if sub-page active
-  document.querySelectorAll('.sub-nav').forEach(sub => {
-    if (sub.querySelector('.active')) sub.classList.add('open');
+  
+  // Close all submenus first, then only open the active one
+  document.querySelectorAll('.sub-nav, .bnav-sub').forEach(sub => {
+    sub.classList.remove('open');
+    if (sub.previousElementSibling) sub.previousElementSibling.classList.remove('open');
+    
+    // Open parent if sub-page active OR if the parent link itself is active
+    if (sub.querySelector('.active') || (sub.previousElementSibling && sub.previousElementSibling.classList.contains('active'))) {
+      sub.classList.add('open');
+      if (sub.previousElementSibling) sub.previousElementSibling.classList.add('open');
+    }
   });
 }
 
 function toggleSubNav(el) {
   const sub = el.nextElementSibling;
-  if (!sub || !sub.classList.contains('sub-nav')) return;
+  if (!sub || (!sub.classList.contains('sub-nav') && !sub.classList.contains('bnav-sub'))) return;
   sub.classList.toggle('open');
   el.classList.toggle('open');
 }
@@ -1279,7 +1296,12 @@ document.addEventListener('DOMContentLoaded', () => {
           e.stopPropagation();
           const page = el.dataset.page;
           const sub = el.dataset.sub;
-          if (el.classList.contains('has-children')) { toggleSubNav(el); return; }
+          if (el.classList.contains('has-children') || el.classList.contains('bnav-has-children')) { 
+            toggleSubNav(el); 
+            // Only navigate if it's explicitly the JEG 2026 overview
+            if (el.id === 'bnav-jeg2026') navigate(page, sub);
+            return; 
+          }
           navigate(page, sub);
         });
       });
@@ -1294,12 +1316,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // JEG 2026 parent: toggle sub-menu open/close
+      // JEG 2026 parent: handle additional click logic if needed
+      // (The toggle and navigation are now handled generically above)
       document.getElementById('bnav-jeg2026')?.addEventListener('click', () => {
-        const sub = document.querySelector('#sidebar-beratung .bnav-sub');
-        if (sub) sub.classList.toggle('open');
-        // Also navigate to the overview page
-        navigate('jeg2026', 'jeg2026');
         updateBnavSubActive(null);
       });
 
@@ -2241,3 +2260,437 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ===== VERMÖGENSANLAGE BERATUNGSSTRECKE =====
+const VA_WISHES = {
+  auto:       { label: 'Traumauto',                img: 'wish_auto.png' },
+  haus:       { label: 'Eigenes Haus',             img: 'wish_haus.png' },
+  weltreise:  { label: 'Weltreise',                img: 'wish_weltreise.png' },
+  ruhestand:  { label: 'Sorgenfreier Ruhestand',   img: 'wish_ruhestand.png' },
+  ausbildung: { label: 'Ausbildung der Kinder',    img: 'wish_ausbildung.png' },
+  individuell:{ label: 'Individueller Wunsch',     img: null },
+};
+
+let vaCurrentWish = null;
+
+function vaSelectWish(cardEl) {
+  document.querySelectorAll('.va-wish-card').forEach(c => {
+    c.style.border = '2px solid var(--border)';
+    c.style.background = '#fff';
+    c.style.boxShadow = 'none';
+  });
+  cardEl.style.border = '2px solid var(--blue-primary)';
+  cardEl.style.background = '#e8f0fe';
+  cardEl.style.boxShadow = '0 4px 12px rgba(21,101,192,0.18)';
+
+  vaCurrentWish = cardEl.dataset.wish;
+  const wish = VA_WISHES[vaCurrentWish];
+  const customInput = document.getElementById('va-custom-input');
+
+  // Always reset step 2, 3 and invest result when changing wish
+  document.getElementById('va-step2').style.display        = 'none';
+  document.getElementById('va-step3').style.display        = 'none';
+  document.getElementById('va-invest-result').style.display = 'none';
+  document.querySelectorAll('.va-invest-card').forEach(c => {
+    c.style.border = '2px solid var(--border)';
+    c.style.background = '#fff';
+    c.classList.remove('selected');
+  });
+
+  if (vaCurrentWish === 'individuell') {
+    customInput.style.display = 'block';
+    document.getElementById('va-wish-detail').style.display = 'none';
+    return;
+  }
+  customInput.style.display = 'none';
+
+  document.getElementById('va-wish-label').textContent = wish.label;
+  const imgEl = document.getElementById('va-wish-image');
+  imgEl.src = wish.img;
+  imgEl.style.display = 'block';
+  document.getElementById('va-wish-image-loading').style.display = 'none';
+  document.getElementById('va-wish-detail').style.display = 'block';
+  document.getElementById('va-wish-kosten').value = '';
+  document.getElementById('va-wish-jahre').value = '';
+  document.getElementById('va-wish-einmalanlage').value = '';
+  document.getElementById('va-step2').style.display = 'none';
+  document.getElementById('va-step3').style.display = 'none';
+  document.getElementById('va-step4').style.display = 'none';
+  document.getElementById('va-s4-result').style.display = 'none';
+  document.getElementById('va-s4-result-diy').style.display = 'none';
+  document.getElementById('va-s4-result-pro').style.display = 'none';
+  ['va-s4-diy','va-s4-pro'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.border = '2px solid var(--border)'; el.style.background = '#fff'; el.style.boxShadow = 'none'; }
+  });
+}
+
+function vaCustomWishChanged(val) {
+  document.getElementById('va-wish-label').textContent = val.trim() || 'Individueller Wunsch';
+}
+
+function vaGetImageKey() {
+  return (localStorage.getItem('va_image_api_key') || getGeminiKey() || '').trim();
+}
+
+function vaImageKeyChanged() {
+  document.getElementById('va-image-key-status').textContent = '';
+}
+
+function vaSaveImageKey() {
+  const val = document.getElementById('va-image-api-key')?.value?.trim();
+  if (val) {
+    localStorage.setItem('va_image_api_key', val);
+    vaCollapseKeyInput(); // hide input, show badge
+  } else {
+    localStorage.removeItem('va_image_api_key');
+    document.getElementById('va-image-key-status').textContent = 'Entfernt';
+    document.getElementById('va-image-key-status').style.color = 'var(--text-muted)';
+  }
+}
+
+function vaCollapseKeyInput() {
+  const badge = document.getElementById('va-key-set-badge');
+  const area  = document.getElementById('va-key-input-area');
+  if (badge) badge.style.display = 'flex';
+  if (area)  area.style.display  = 'none';
+}
+
+function vaShowKeyInput() {
+  const badge = document.getElementById('va-key-set-badge');
+  const area  = document.getElementById('va-key-input-area');
+  if (badge) badge.style.display = 'none';
+  if (area)  area.style.display  = 'flex';
+  document.getElementById('va-image-api-key')?.focus();
+}
+
+async function vaTestImageKey() {
+  const keyInput = document.getElementById('va-image-api-key');
+  const rawStored = localStorage.getItem('va_image_api_key') || '';
+  const imageKey = (keyInput?.value?.trim() || rawStored.trim());
+  const textKey  = getGeminiKey().trim();
+  const statusEl = document.getElementById('va-image-key-status');
+
+  async function testKey(key, label) {
+    if (!key) return { ok: false, msg: 'Kein Key', models: [] };
+    try {
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+      const data = await resp.json();
+      if (!resp.ok) {
+        return { ok: false, msg: `Fehler ${data?.error?.code}: ${(data?.error?.message||'').slice(0,50)}`, models: [] };
+      }
+      const models = (data.models || []).map(m => m.name.replace('models/', ''));
+      const imgModels = models.filter(m => m.includes('image') || m.includes('imagen'));
+      return { ok: true, msg: `✓ Gültig (${models.length} Modelle, ${imgModels.length} Bild-Modelle)`, models, imgModels };
+    } catch(e) { return { ok: false, msg: `Netzwerkfehler: ${e.message}`, models: [] }; }
+  }
+
+  if (!imageKey && !textKey) {
+    if (statusEl) { statusEl.textContent = '⚠️ Kein Key vorhanden'; statusEl.style.color = 'orange'; }
+    return;
+  }
+
+  if (statusEl) { statusEl.textContent = '⏳ Teste Keys…'; statusEl.style.color = 'var(--text-muted)'; }
+
+  const [imgResult, txtResult] = await Promise.all([
+    testKey(imageKey, 'Bild-Key'),
+    testKey(textKey,  'Text-Key')
+  ]);
+
+  // Build diagnostic message
+  let lines = [];
+  if (imageKey) lines.push(`Bild-Key (Länge: ${imageKey.length}): ${imgResult.msg}`);
+  else          lines.push('Bild-Key: nicht gesetzt');
+  if (textKey)  lines.push(`Text-Key (Länge: ${textKey.length}): ${txtResult.msg}`);
+
+  // Auto-use text key for images if it has image models and image key fails
+  if (!imgResult.ok && txtResult.ok && txtResult.imgModels.length > 0) {
+    lines.push('→ Text-Key hat Bildmodelle – wird automatisch verwendet: ' + txtResult.imgModels[0]);
+    localStorage.setItem('va_image_api_key', textKey);
+    if (keyInput) keyInput.value = textKey;
+    if (statusEl) {
+      statusEl.textContent = lines[lines.length - 1];
+      statusEl.title = lines.join('|');
+      statusEl.style.color = '#2e7d32';
+    }
+    return;
+  }
+
+  // Show result
+  const allGood = imgResult.ok && imgResult.imgModels.length > 0;
+  if (statusEl) {
+    statusEl.title = lines.join(' | ');
+    if (allGood) {
+      statusEl.textContent = `✓ Key gültig · Bildmodelle: ${imgResult.imgModels.slice(0,2).join(', ')}`;
+      statusEl.style.color = '#2e7d32';
+    } else {
+      statusEl.textContent = lines.join(' | ');
+      statusEl.style.color = imgResult.ok ? 'orange' : '#c62828';
+    }
+  }
+  // Alert with full details for debugging
+  const detail = lines.join('\n');
+  if (!allGood) setTimeout(() => alert('Key-Diagnose:\n\n' + detail), 100);
+}
+
+// On page init: restore saved image key (auto-trim on restore)
+(function vaInitImageKey() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('va_image_api_key');
+    const el = document.getElementById('va-image-api-key');
+    const status = document.getElementById('va-image-key-status');
+    if (saved) {
+      const trimmed = saved.trim();
+      if (trimmed !== saved) {
+        // Key had hidden whitespace – auto-fix
+        localStorage.setItem('va_image_api_key', trimmed);
+      }
+      if (el) el.value = trimmed;
+      if (status) { status.textContent = '✓ Gespeichert'; status.style.color = '#2e7d32'; }
+      vaCollapseKeyInput(); // show badge, hide input
+    }
+  });
+})();
+
+async function vaGenerateCustomImage() {
+  const text = document.getElementById('va-custom-text')?.value?.trim();
+  if (!text) { showToast('⚠️ Bitte zuerst einen Wunsch eingeben.'); return; }
+  const apiKey = vaGetImageKey();
+  if (!apiKey) { showToast('⚠️ Bitte einen API Key für die Bildgenerierung hinterlegen.'); return; }
+
+  // Basic key format check
+  if (!apiKey.startsWith('AIza') || apiKey.length < 30) {
+    showToast('⚠️ Der API Key hat ein ungültiges Format (erwartet: AIza…)');
+    return;
+  }
+
+  document.getElementById('va-wish-label').textContent = text;
+  document.getElementById('va-wish-detail').style.display = 'block';
+  const imgEl = document.getElementById('va-wish-image');
+  imgEl.style.display = 'none';
+  const loadingEl = document.getElementById('va-wish-image-loading');
+  loadingEl.innerHTML = '<span>🖼️ Bild wird generiert…</span>';
+  loadingEl.style.display = 'flex';
+
+  const prompt = `Aspirational lifestyle photo: "${text}". Photorealistic, warm colors, professional, no people required, no text, no logos.`;
+
+  // Try gemini-2.5-flash-image first, fallback to gemini-3.1-flash-image-preview
+  const tryModels = [
+    { 
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
+      body: { contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseModalities: ['IMAGE', 'TEXT'] } },
+      parse: data => {
+        const part = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+        return part ? `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` : null;
+      }
+    },
+    { 
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent?key=${apiKey}`,
+      body: { contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseModalities: ['IMAGE', 'TEXT'] } },
+      parse: data => {
+        const part = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+        return part ? `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` : null;
+      }
+    },
+  ];
+
+  const errors = [];
+  for (const m of tryModels) {
+    try {
+      const resp = await fetch(m.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(m.body)
+      });
+      const data = await resp.json();
+      const dataUrl = m.parse(data);
+      if (dataUrl) {
+        imgEl.src = dataUrl;
+        imgEl.style.display = 'block';
+        loadingEl.style.display = 'none';
+        return;
+      }
+      // Capture API error message if available
+      const errCode = data?.error?.code;
+      const errMsg = data?.error?.message || data?.error?.status || JSON.stringify(data).slice(0, 120);
+      // If key is invalid (401/403), no need to try further models
+      if (errCode === 400 && errMsg.toLowerCase().includes('api key not valid')) {
+        loadingEl.innerHTML = `<span style="font-size:12px;line-height:1.5;">
+          ⚠️ <strong>API Key ungültig oder fehlende Berechtigung.</strong><br>
+          Bildgenerierung erfordert einen Gemini API Key mit aktiviertem Billing.<br>
+          <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue-accent);">→ API Key in Google AI Studio verwalten</a>
+        </span>`;
+        return;
+      }
+      errors.push(errMsg);
+    } catch(e) { errors.push(e.message); }
+  }
+  // Deduplicate error messages
+  const uniqueErrors = [...new Set(errors)];
+  const isKeyError = uniqueErrors.some(e => e && e.toLowerCase().includes('api key'));
+  if (isKeyError) {
+    loadingEl.innerHTML = `<span style="font-size:12px;line-height:1.5;">
+      ⚠️ <strong>API Key ungültig oder fehlende Berechtigung.</strong><br>
+      Bildgenerierung erfordert einen Gemini API Key mit aktiviertem Billing.<br>
+      <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue-accent);">→ API Key in Google AI Studio verwalten</a>
+    </span>`;
+  } else {
+    loadingEl.innerHTML = `<span style="font-size:11px;">⚠️ Fehler: ${uniqueErrors.join(' | ')}</span>`;
+  }
+}
+
+
+const VA_INVEST_OPTIONS = [
+  { name: 'Sparbuch',      rate: 0.001,  emoji: '🏦' },
+  { name: 'Tagesgeldkonto',rate: 0.01,   emoji: '💳' },
+  { name: 'Rentenfonds',   rate: 0.025,  emoji: '📊' },
+  { name: 'Investmentfonds',rate: 0.08,  emoji: '📈' },
+];
+
+function vaCalcRate(ziel, jahre, ratePA, einmalanlage) {
+  const monate = jahre * 12;
+  // Future value of the initial lump-sum investment
+  const fvEinmal = (einmalanlage || 0) * Math.pow(1 + ratePA, jahre);
+  // Remaining target after the lump-sum covers part of the goal
+  const remaining = Math.max(0, ziel - fvEinmal);
+  if (remaining === 0) return 0;
+  if (ratePA === 0 || ratePA < 0.0001) return remaining / monate;
+  const r = ratePA / 12;
+  return remaining * r / (Math.pow(1 + r, monate) - 1);
+}
+
+function vaUpdateCalc() {
+  const kostStr      = document.getElementById('va-wish-kosten')?.value || '';
+  const jahre        = parseFloat(document.getElementById('va-wish-jahre')?.value) || 0;
+  const einmalStr    = document.getElementById('va-wish-einmalanlage')?.value || '';
+  const kosten       = parseFloat(kostStr.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+  const einmalanlage = parseFloat(einmalStr.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+
+  if (kosten <= 0 || jahre <= 0) {
+    document.getElementById('va-step2').style.display = 'none';
+    document.getElementById('va-step3').style.display = 'none';
+    return;
+  }
+
+  // Reveal Schritt 2, 3 & 4
+  document.getElementById('va-step2').style.display = 'block';
+  document.getElementById('va-step3').style.display = 'block';
+  document.getElementById('va-step4').style.display = 'block';
+
+  // Rebuild comparison table (all options)
+  vaRenderCompareTable(kosten, jahre, einmalanlage);
+}
+
+// ===== SCHRITT 4: Selbst oder professionell? =====
+
+function vaSelectS4(choice) {
+  // Reset both cards
+  const diyCard = document.getElementById('va-s4-diy');
+  const proCard = document.getElementById('va-s4-pro');
+  [diyCard, proCard].forEach(el => {
+    if (!el) return;
+    el.style.border     = '2px solid var(--border)';
+    el.style.background = '#fff';
+    el.style.boxShadow  = 'none';
+  });
+
+  // Highlight selected
+  if (choice === 'diy' && diyCard) {
+    diyCard.style.border     = '2px solid #43a047';
+    diyCard.style.background = '#f1f8f2';
+    diyCard.style.boxShadow  = '0 4px 16px rgba(67,160,71,0.18)';
+  } else if (choice === 'pro' && proCard) {
+    proCard.style.border     = '2px solid var(--blue-accent)';
+    proCard.style.background = '#e8f0fe';
+    proCard.style.boxShadow  = '0 4px 16px rgba(21,101,192,0.18)';
+  }
+
+  // Show correct result block
+  const resultBox = document.getElementById('va-s4-result');
+  const diyResult = document.getElementById('va-s4-result-diy');
+  const proResult = document.getElementById('va-s4-result-pro');
+
+  if (resultBox) resultBox.style.display = 'block';
+  if (diyResult) diyResult.style.display = choice === 'diy' ? 'block' : 'none';
+  if (proResult) proResult.style.display = choice === 'pro' ? 'block' : 'none';
+
+  // Smooth scroll to result
+  setTimeout(() => {
+    const el = document.getElementById('va-s4-result');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
+function vaS4RequestConsultation() {
+  if (typeof showToast === 'function') {
+    showToast('✅ Beratungsgespräch wird vorbereitet – Ihr Berater meldet sich bei Ihnen.');
+  }
+}
+function vaRenderCompareTable(kosten, jahre, einmalanlage) {
+  einmalanlage = einmalanlage || 0;
+  const fmt = v => v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const monate = jahre * 12;
+  const tbody = document.getElementById('va-invest-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  VA_INVEST_OPTIONS.forEach(opt => {
+    const rate    = vaCalcRate(kosten, jahre, opt.rate, einmalanlage);
+    const eigen   = rate * monate + einmalanlage;
+    const gewinn  = kosten - eigen;
+    const gewinnPct = ((gewinn / kosten) * 100).toFixed(0);
+    const isSelected = document.querySelector('.va-invest-card.selected')?.dataset?.name === opt.name;
+    const tr = document.createElement('tr');
+    tr.style.background = isSelected ? '#e8f0fe' : '';
+    tr.innerHTML = `
+      <td style="padding:9px 16px;border-bottom:1px solid #f0f0f0;">${opt.emoji} ${opt.name}</td>
+      <td style="padding:9px 16px;text-align:right;border-bottom:1px solid #f0f0f0;color:var(--text-muted);">${(opt.rate * 100).toLocaleString('de-DE', {minimumFractionDigits:1,maximumFractionDigits:1})} %</td>
+      <td style="padding:9px 16px;text-align:right;border-bottom:1px solid #f0f0f0;font-weight:600;color:var(--blue-primary);">${rate > 0 ? fmt(rate) + ' €' : '—'}</td>
+      <td style="padding:9px 16px;text-align:right;border-bottom:1px solid #f0f0f0;color:#555;">${fmt(eigen)} €</td>
+      <td style="padding:9px 16px;text-align:right;border-bottom:1px solid #f0f0f0;color:${gewinn >= 0 ? '#2e7d32' : '#c62828'};">${gewinn >= 0 ? '+' : ''}${fmt(gewinn)} € (${gewinn >= 0 ? '+' : ''}${gewinnPct} %)</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function vaSelectInvest(cardEl) {
+  // Deselect all invest cards
+  document.querySelectorAll('.va-invest-card').forEach(c => {
+    c.style.border = '2px solid var(--border)';
+    c.style.background = '#fff';
+    c.style.boxShadow = 'none';
+    c.classList.remove('selected');
+  });
+  // Select clicked
+  cardEl.style.border = '2px solid var(--blue-primary)';
+  cardEl.style.background = '#e8f0fe';
+  cardEl.style.boxShadow = '0 4px 12px rgba(21,101,192,0.18)';
+  cardEl.classList.add('selected');
+
+  const rate  = parseFloat(cardEl.dataset.rate);
+  const name  = cardEl.dataset.name;
+
+  const kostStr      = document.getElementById('va-wish-kosten')?.value || '';
+  const jahre        = parseFloat(document.getElementById('va-wish-jahre')?.value) || 0;
+  const einmalStr    = document.getElementById('va-wish-einmalanlage')?.value || '';
+  const kosten       = parseFloat(kostStr.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+  const einmalanlage = parseFloat(einmalStr.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')) || 0;
+
+  if (kosten <= 0 || jahre <= 0) {
+    showToast('⚠️ Bitte zuerst Kosten und Zeitraum im Schritt 1 eingeben.');
+    return;
+  }
+
+  const fmt    = v => v.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const monate = jahre * 12;
+  const monRate = vaCalcRate(kosten, jahre, rate, einmalanlage);
+  const eigen   = monRate * monate + einmalanlage;
+  const gewinn  = kosten - eigen;
+  const gewinnPct = ((gewinn / kosten) * 100).toFixed(0);
+
+  document.getElementById('va-invest-rate').textContent = monRate > 0 ? `${fmt(monRate)} €` : '0,00 €';
+  document.getElementById('va-invest-name').textContent = `${name} · ${(rate * 100).toLocaleString('de-DE', {minimumFractionDigits:1})} % p.a. · ${jahre} Jahre${einmalanlage > 0 ? ' · Einmalanlage ' + fmt(einmalanlage) + ' €' : ''}`;
+  document.getElementById('va-invest-own').textContent  = `${fmt(eigen)} €`;
+  document.getElementById('va-invest-gain').textContent = `${gewinn >= 0 ? '+' : ''}${fmt(gewinn)} €`;
+  document.getElementById('va-invest-gain-pct').textContent = `${gewinn >= 0 ? '+' : ''}${gewinnPct} % des Ziels durch Rendite`;
+  document.getElementById('va-invest-result').style.display = 'block';
+
+  vaRenderCompareTable(kosten, jahre, einmalanlage);
+}
