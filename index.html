@@ -251,9 +251,8 @@
               <span class="chevron">›</span>
             </div>
             <div class="bnav-sub open">
-              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-datenaktualisierung">Datenaktualisierung
+              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-datenaktualisierung" style="display:none;">Datenaktualisierung
               </div>
-              <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-beratungsvorbereitung">Beratungsvorbereitung</div>
               <div class="bnav-sub-link" data-page="jeg2026" data-sub="jeg-themen">Themen</div>
               <div class="bnav-sub-group">
                 <div class="bnav-sub-link bnav-sub-parent" data-page="jeg2026" data-sub="jeg-tools">Tools &amp; Rechner
@@ -1030,166 +1029,148 @@
           </div>
 
           <div class="jeg-page-center">
-
-            <!-- ===== GROSSES KREISLAUF-DIAGRAMM (zentriert) ===== -->
-            <div style="display:flex; justify-content:center; margin-bottom:40px;">
-              <svg viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg"
-                   style="width:min(560px,100%); height:auto; overflow:visible;">
-                <defs>
-                  <marker id="ca1" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
-                  <marker id="ca2" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
-                  <marker id="ca3" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
-                  <marker id="ca4" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#1a6eb5"/></marker>
-                  <linearGradient id="cgrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#1a3a5c"/>
-                    <stop offset="100%" stop-color="#1a6eb5"/>
-                  </linearGradient>
-                  <linearGradient id="igrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#1565c0"/>
-                    <stop offset="100%" stop-color="#2196f3"/>
-                  </linearGradient>
-                  <filter id="ish" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(21,101,192,0.25)"/>
-                  </filter>
-                  <filter id="cshadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(26,58,92,0.30)"/>
-                  </filter>
-                </defs>
-
-                <!-- Dotted track ring -->
-                <circle cx="350" cy="350" r="155" fill="none" stroke="#c8d8eb" stroke-width="2" stroke-dasharray="6 5" opacity="0.9"/>
-
-                <!-- Arcs (gap 12° per icon) -->
-                <path d="M 381.9 197.3 A 155 155 0 0 1 500.7 381.9" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca1)"/>
-                <path d="M 500.7 381.9 A 155 155 0 0 1 381.9 502.7" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca2)"/>
-                <path d="M 318.1 502.7 A 155 155 0 0 1 199.3 381.9" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca3)"/>
-                <path d="M 199.3 318.1 A 155 155 0 0 1 318.1 197.3" fill="none" stroke="#1a6eb5" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ca4)"/>
-
-                <!-- CENTER BADGE -->
-                <circle cx="350" cy="350" r="95" fill="url(#cgrad)" filter="url(#cshadow)"/>
-                <circle cx="350" cy="350" r="89" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="2"/>
-                <text x="350" y="332" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="rgba(255,255,255,0.8)" letter-spacing="4">JEG</text>
-                <text x="350" y="368" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="38" font-weight="800" fill="#fff">2026</text>
-                <text x="350" y="390" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="11" fill="rgba(255,255,255,0.55)" letter-spacing="3">KREISLAUF</text>
-
-                <!-- STEP 1: TOP (350, 195) -->
-                <circle cx="350" cy="195" r="36" fill="url(#igrad)" filter="url(#ish)"/>
-                <g transform="translate(333,178)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="1" y="2" width="30" height="28" rx="3"/>
-                  <line x1="10" y1="0" x2="10" y2="6"/><line x1="22" y1="0" x2="22" y2="6"/>
-                  <line x1="1" y1="11" x2="31" y2="11"/>
-                  <circle cx="16" cy="20" r="2.5" fill="white" stroke="none"/>
-                </g>
-                <text x="350" y="135" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5" letter-spacing="1">1</text>
-                <text x="350" y="118" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Termin vereinbaren</text>
-                <text x="350" y="99" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">JEG-Termin mit dem Mandanten abstimmen</text>
-
-                <!-- STEP 2: RIGHT (505, 350) -->
-                <circle cx="505" cy="350" r="36" fill="url(#igrad)" filter="url(#ish)"/>
-                <g transform="translate(489,334)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                  <polyline points="0 2 0 11 9 11"/>
-                  <path d="M1,19 a14,14 0 1,0 1,-8"/>
-                </g>
-                <text x="570" y="338" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">2</text>
-                <text x="570" y="356" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Daten</text>
-                <text x="570" y="375" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">aktualisieren</text>
-                <text x="570" y="393" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Dokumente einlesen</text>
-                <text x="570" y="408" text-anchor="start" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">&amp; Angaben prüfen</text>
-
-                <!-- STEP 3: BOTTOM (350, 505) -->
-                <circle cx="350" cy="505" r="36" fill="url(#igrad)" filter="url(#ish)"/>
-                <g transform="translate(333,488)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 1h24a3 3 0 0 1 3 3v28a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3z"/>
-                  <line x1="7" y1="11" x2="25" y2="11"/>
-                  <line x1="7" y1="18" x2="25" y2="18"/>
-                  <line x1="7" y1="25" x2="17" y2="25"/>
-                </g>
-                <text x="350" y="560" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">3</text>
-                <text x="350" y="578" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Beratung vorbereiten</text>
-                <text x="350" y="597" text-anchor="middle" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Themen &amp; Empfehlungen aufbereiten</text>
-
-                <!-- STEP 4: LEFT (195, 350) -->
-                <circle cx="195" cy="350" r="36" fill="url(#igrad)" filter="url(#ish)"/>
-                <g transform="translate(179,334)" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                  <path d="M22 29v-3a6 6 0 0 0-6-6H8a6 6 0 0 0-6 6v3"/>
-                  <circle cx="12" cy="11" r="5"/>
-                  <path d="M30 29v-2a6 6 0 0 0-4-5.65"/>
-                  <path d="M2 7a4 4 0 0 1 0 8"/>
-                </g>
-                <text x="130" y="338" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#1a6eb5">4</text>
-                <text x="130" y="356" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">Beratung</text>
-                <text x="130" y="375" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="16" font-weight="700" fill="#1a3a5c">durchführen</text>
-                <text x="130" y="393" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">Termin umsetzen</text>
-                <text x="130" y="408" text-anchor="end" font-family="Inter,'Segoe UI',sans-serif" font-size="12" fill="#7a8fa8">&amp; abschließen</text>
-              </svg>
-            </div>
-
             <!-- ===== SCHRITT-FÜR-SCHRITT-ANLEITUNG ===== -->
             <div style="max-width:900px; margin:0 auto 48px;">
-              <h2 style="font-size:20px; font-weight:700; color:#1a3a5c; margin:0 0 24px; text-align:center; letter-spacing:-0.2px;">So bereiten Sie den JEG-Termin vor</h2>
+              <h2 style="font-size:20px; font-weight:700; color:#1a3a5c; margin:0 0 24px; text-align:center; letter-spacing:-0.2px;">Schritt für Schritt zum erfolgreichen Jahresendkontrolltermin</h2>
 
-              <div style="display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; flex-direction:row; align-items:stretch; justify-content:space-between; gap:12px;">
 
-                <!-- Schritt 1 -->
-                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
-                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">1</div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Termin vereinbaren</div>
-                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">JEG-Termin mit dem Mandanten abstimmen und in der Kalenderplanung erfassen. Checkliste &amp; benötigte Unterlagen vorab kommunizieren, damit der Mandant vorbereitet ist.</div>
-                  </div>
+  <!-- Step 1 -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+    <!-- Number above -->
+    <div style="display:flex; justify-content:center;">
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; box-shadow:0 2px 6px rgba(21,101,192,.3);">1</div>
+    </div>
+    <!-- Card -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#fff; border:1px solid #dde4f0; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:16px;" 
+         title="JEG-Termin mit dem Mandanten abstimmen und in der Kalenderplanung erfassen. Checkliste & benötigte Unterlagen vorab kommunizieren, damit der Mandant vorbereitet ist.">
+      
+      <!-- Top row: Checkbox & Icon -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <input type="checkbox" style="width:16px; height:16px; cursor:pointer; accent-color:var(--blue-accent);">
+        <div style="color:var(--blue-accent); opacity:0.8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+      </div>
+      
+      <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:12px; line-height:1.3;">Termin vereinbaren</div>
 
-                </div>
+      <!-- Action -->
+      <div style="margin-top:auto;">
+        <input type="text" placeholder="TT.MM.JJJJ HH:MM" style="width:100%; border:1px solid #dde4f0; border-radius:6px; padding:6px 8px; font-size:12px; outline:none;" onfocus="this.style.borderColor='var(--blue-accent)'" onblur="this.style.borderColor='#dde4f0'">
+      </div>
+    </div>
+  </div>
 
-                <!-- Schritt 2 -->
-                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
-                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">2</div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Daten aktualisieren</div>
-                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Gehaltsnachweise, Renteninformation, Strom-/Gasrechnung und Riester-Bescheinigung hochladen. Die KI liest die relevanten Kennzahlen automatisch aus – Änderungen zum Vorjahr werden direkt gekennzeichnet.</div>
-                  </div>
+  <!-- Step 2 -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+    <!-- Number above -->
+    <div style="display:flex; justify-content:center;">
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; box-shadow:0 2px 6px rgba(21,101,192,.3);">2</div>
+    </div>
+    <!-- Card -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#fff; border:1px solid #dde4f0; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:16px;" 
+         title="Gehaltsnachweise, Renteninformation, Strom-/Gasrechnung und Riester-Bescheinigung hochladen. Die KI liest die relevanten Kennzahlen automatisch aus – Änderungen zum Vorjahr werden direkt gekennzeichnet.">
+      
+      <!-- Top row: Checkbox & Icon -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <input type="checkbox" style="width:16px; height:16px; cursor:pointer; accent-color:var(--blue-accent);">
+        <div style="color:var(--blue-accent); opacity:0.8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </div>
+      </div>
+      
+      <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:12px; line-height:1.3;">Daten aktualisieren</div>
 
-                </div>
+      <!-- Action -->
+      <div style="margin-top:auto;">
+        <button onclick="navigate('jeg2026', 'jeg-datenaktualisierung'); updateBnavSubActive('jeg-datenaktualisierung'); updateBnavSubSubActive(null);" style="width:100%; background:#f0f5fa; color:var(--blue-accent); border:1px solid #c8d8eb; border-radius:6px; padding:6px 4px; font-size:11px; font-weight:600; cursor:pointer; line-height:1.2; text-align:center; transition:background 0.2s;" onmouseover="this.style.background='#e1ecf5'" onmouseout="this.style.background='#f0f5fa'">Daten KI-gestützt<br>aktualisieren</button>
+      </div>
+    </div>
+  </div>
 
-                <!-- Schritt 3 -->
-                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
-                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">3</div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Beratung vorbereiten</div>
-                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Mandanten-Kennzahlen analysieren, Handlungsempfehlungen prüfen und Gesprächsschwerpunkte festlegen. Fördervergleiche (Riester vs. AV-Depot) und Themenagenda für den Termin aufbereiten.</div>
-                  </div>
+  <!-- Step 3 -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+    <!-- Number above -->
+    <div style="display:flex; justify-content:center;">
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; box-shadow:0 2px 6px rgba(21,101,192,.3);">3</div>
+    </div>
+    <!-- Card -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#fff; border:1px solid #dde4f0; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:16px;" 
+         title="Mandanten-Kennzahlen analysieren, Handlungsempfehlungen prüfen und Gesprächsschwerpunkte festlegen. Fördervergleiche (Riester vs. AV-Depot) und Themenagenda für den Termin aufbereiten.">
+      
+      <!-- Top row: Checkbox & Icon -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <input type="checkbox" style="width:16px; height:16px; cursor:pointer; accent-color:var(--blue-accent);">
+        <div style="color:var(--blue-accent); opacity:0.8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+      </div>
+      
+      <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:0; line-height:1.3;">Beratung vorbereiten</div>
+    </div>
+  </div>
 
-                </div>
+  <!-- Step 4 -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+    <!-- Number above -->
+    <div style="display:flex; justify-content:center;">
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; box-shadow:0 2px 6px rgba(21,101,192,.3);">4</div>
+    </div>
+    <!-- Card -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#fff; border:1px solid #dde4f0; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:16px;" 
+         title="Termin mit dem Mandanten umsetzen: Themen strukturiert besprechen, staatliche Förderungen optimal nutzen, Förderbedarf identifizieren und konkrete Maßnahmen vereinbaren. Dokumentation abschließen.">
+      
+      <!-- Top row: Checkbox & Icon -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <input type="checkbox" style="width:16px; height:16px; cursor:pointer; accent-color:var(--blue-accent);">
+        <div style="color:var(--blue-accent); opacity:0.8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+      </div>
+      
+      <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:0; line-height:1.3;">Beratung durchführen</div>
+    </div>
+  </div>
 
-                <!-- Schritt 4 -->
-                <div style="display:flex; align-items:flex-start; gap:18px; padding:20px 24px; background:#fff; border:1px solid #dde4f0; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.05);">
-                  <div style="flex-shrink:0; width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; box-shadow:0 2px 6px rgba(21,101,192,.3);">4</div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700; font-size:15px; color:#1a3a5c; margin-bottom:4px;">Beratung durchführen</div>
-                    <div style="font-size:13px; color:#5a6a80; line-height:1.6;">Termin mit dem Mandanten umsetzen: Themen strukturiert besprechen, staatliche Förderungen optimal nutzen, Förderbedarf identifizieren und konkrete Maßnahmen vereinbaren. Dokumentation abschließen.</div>
-                  </div>
+  <!-- Step 5 -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+    <!-- Number above -->
+    <div style="display:flex; justify-content:center;">
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#2196f3); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; box-shadow:0 2px 6px rgba(21,101,192,.3);">5</div>
+    </div>
+    <!-- Card -->
+    <div style="flex:1; display:flex; flex-direction:column; background:#fff; border:1px solid #dde4f0; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:16px;" 
+         title="Neuen JEG-Termin für das Folgejahr bereits jetzt abstimmen und in der Kalenderplanung verankern.">
+      
+      <!-- Top row: Checkbox & Icon -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <input type="checkbox" style="width:16px; height:16px; cursor:pointer; accent-color:var(--blue-accent);">
+        <div style="color:var(--blue-accent); opacity:0.8;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="12" y1="14" x2="12" y2="18"></line><line x1="10" y1="16" x2="14" y2="16"></line></svg>
+        </div>
+      </div>
+      
+      <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:12px; line-height:1.3;">Neuen Termin vereinbaren</div>
 
-                </div>
+      <!-- Action -->
+      <div style="margin-top:auto;">
+        <input type="text" placeholder="TT.MM.JJJJ HH:MM" style="width:100%; border:1px solid #dde4f0; border-radius:6px; padding:6px 8px; font-size:12px; outline:none;" onfocus="this.style.borderColor='var(--blue-accent)'" onblur="this.style.borderColor='#dde4f0'">
+      </div>
+    </div>
+  </div>
 
-              </div>
+</div>
             </div>
 
         </div><!-- /.jeg-page-center -->
 
-        </div><!-- End page-jeg2026 -->
 
-        <!-- ============ PAGE: JEG-BERATUNGSVORBEREITUNG ============ -->
-        <div class="page" id="page-jeg-beratungsvorbereitung">
+          <!-- ==== WURDE AUS BERATUNGSVORBEREITUNG MERGED ==== -->
 
-          <!-- ==== NEW WHITE TWO-COLUMN HEADER ==== -->
-          <div class="jeg-page-hero">
-            <div class="jeg-page-hero-text">
-              <p class="jeg-page-hero-meta" id="bv-hero-meta">Jahresservice 2026</p>
-              <h1 class="jeg-page-hero-title">Beratungsvorbereitung</h1>
-              <p class="jeg-page-hero-desc">Eine gründliche Vorbereitung ist der Schlüssel zu einem erfolgreichen Beratungstermin. Analysieren Sie die aktuellen Kennzahlen Ihres Mandanten, identifizieren Sie Optimierungspotenziale und legen Sie die Gesprächsschwerpunkte fest &ndash; so schaffen Sie die ideale Grundlage für eine zielgerichtete und wertvolle Beratung.</p>
-            </div>
-            <div class="jeg-page-hero-image-wrap">
-              <img src="jeg_hero_beratungsvorbereitung.png" alt="Beratungsvorbereitung" class="jeg-page-hero-image">
-            </div>
+          <!-- ==== ÜBERSCHRIFT BERATUNGSVORBEREITUNG ==== -->
+          <div style="max-width:900px; margin:48px auto 32px;">
+            <h2 style="font-size:24px; font-weight:700; color:#1a3a5c; margin:0; text-align:center; letter-spacing:-0.2px;">Beratungsvorbereitung</h2>
           </div>
 
 
@@ -1387,8 +1368,7 @@
           </div><!-- /.note-areas -->
 
         </div><!-- /.jeg-page-center -->
-        </div><!-- End page-jeg-beratungsvorbereitung -->
-
+        </div><!-- End page-jeg2026 -->
         <!-- ============ PAGE: SPEZIALTHEMEN - VERMÖGENSANLAGE ============ -->
         <div class="page" id="page-vermoegensanlage">
           <div class="jeg-page-hero">
@@ -3952,6 +3932,55 @@ Regeln:
       </div>
     </div> <!-- .modal -->
   </div> <!-- .modal-overlay -->
+  <!-- ===== KI SCAN SUMMARY MODAL ===== -->
+  <div id="scan-summary-overlay" class="modal-overlay" style="display:none;">
+    <div id="scan-summary-modal" class="modal scan-summary-modal">
+      <div class="modal-header scan-summary-header">
+        <div class="scan-summary-header-left">
+          <svg class="scan-summary-ki-logo" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+            <defs><linearGradient id="sshg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00c8f0"/><stop offset="100%" stop-color="#d040fb"/>
+            </linearGradient></defs>
+            <rect x="5" y="5" width="70" height="70" rx="18" fill="none" stroke="url(#sshg)" stroke-width="5"/>
+            <path d="M30 14 L33 26 L45 29 L33 32 L30 44 L27 32 L15 29 L27 26 Z" fill="url(#sshg)"/>
+            <path d="M55 40 L57 49 L66 51 L57 53 L55 62 L53 53 L44 51 L53 49 Z" fill="url(#sshg)"/>
+          </svg>
+          <div>
+            <h3 class="scan-summary-title">KI-Analyse abgeschlossen</h3>
+            <p class="scan-summary-subtitle"><strong id="scan-summary-total">0</strong> Datenfelder wurden erkannt und können übernommen werden</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="cancelScanSummary()" title="Schließen">&times;</button>
+      </div>
+      <div class="modal-body scan-summary-body">
+        <!-- Scanned documents -->
+        <div class="scan-summary-block">
+          <h4 class="scan-summary-block-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Ausgelesene Dokumente
+          </h4>
+          <div id="scan-summary-files" class="scan-summary-files"></div>
+        </div>
+        <!-- Detected sections -->
+        <div class="scan-summary-block">
+          <h4 class="scan-summary-block-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Erkannte Datenbereiche
+          </h4>
+          <div id="scan-summary-sections" class="scan-summary-sections"></div>
+        </div>
+        <p class="scan-summary-hint">Im nächsten Schritt können Sie die erkannten Werte prüfen, anpassen und auswählen, welche übernommen werden sollen.</p>
+      </div>
+      <div class="modal-footer scan-summary-footer">
+        <button class="btn btn-outline" onclick="cancelScanSummary()">Abbrechen</button>
+        <button class="btn btn-primary scan-summary-proceed-btn" onclick="proceedToReview()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          Erkannte Daten überprüfen
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- REVIEW MODAL -->
   <div id="review-modal-overlay" class="modal-overlay">
     <div id="review-modal" class="modal review-modal-content">

@@ -76,6 +76,21 @@ function navigate(page, subPage) {
   state.currentSubPage = subPage || page;
   renderNav();
   renderPage();
+
+  // If we are in "pending review" mode, check if the navigated page has a KI badge
+  if (typeof _pendingReviewActive !== 'undefined' && _pendingReviewActive) {
+    const subLink = document.querySelector(`.sub-nav-link[data-sub="${state.currentSubPage}"]`);
+    if (subLink && subLink.classList.contains('has-ki-data')) {
+      const item = _navReviewOrder.find(i => i.sub === state.currentSubPage);
+      if (item) {
+        _currentReviewItem = item;
+        // Small delay to allow the page rendering to settle
+        setTimeout(() => {
+          showReviewModal(_pendingParsedAll, null, item.sections, item.label);
+        }, 80);
+      }
+    }
+  }
 }
 
 function renderNav() {
@@ -714,7 +729,199 @@ let currentReviewResolve = null;
 let currentParsedData = null;
 
 
-function showReviewModal(parsed, resolveUpload) {
+// ===== SIDEBAR NAV KI BADGE MANAGEMENT =====
+const _sectionToNavMap = {
+  person:      [{ sub: 'personendaten' }],
+  ausweis:     [{ sub: 'ausweisdaten' }],
+  adresse:     [{ sub: 'personendaten' }],
+  steuerdaten: [{ sub: 'steuerdaten' }],
+  arbeitgeber: [{ sub: 'arbeitgeber' }],
+  einnahmen:   [{ sub: 'einnahmen' }],
+  rente:       [{ sub: 'rente' }],
+  hausrat:     [{ sub: 'hausrat' }],
+  gkv:         [{ sub: 'gesundheit-krankenversicherung' }],
+  energie:     [{ sub: 'ausgaben' }],
+};
+
+function clearNavSidebarKI() {
+  document.querySelectorAll('.nav-ki-badge').forEach(el => el.remove());
+  document.querySelectorAll('.sub-nav-link.has-ki-data, .nav-link.has-ki-data').forEach(el => el.classList.remove('has-ki-data'));
+}
+
+function markNavSidebarKI(detectedSections) {
+  clearNavSidebarKI();
+  const markedSubs = new Set();
+  detectedSections.forEach(section => {
+    const targets = _sectionToNavMap[section];
+    if (!targets) return;
+    targets.forEach(({ sub }) => {
+      if (markedSubs.has(sub)) return;
+      markedSubs.add(sub);
+      // Find the sub-nav-link
+      const link = document.querySelector(`.sub-nav-link[data-sub="${sub}"]`);
+      if (link) {
+        link.classList.add('has-ki-data');
+        const badgeId = 'nav-ki-badge-count-ki';
+        if (!link.querySelector('.nav-ki-badge')) {
+          link.insertAdjacentHTML('beforeend', `<span class="nav-ki-badge" title="KI-Daten erkannt">${NAV_KI_BADGE_HTML()}</span>`);
+        }
+      }
+      // Also mark parent nav-link
+      const subLink = document.querySelector(`.sub-nav-link[data-sub="${sub}"]`);
+      if (subLink) {
+        const parentNavItem = subLink.closest('.nav-item');
+        if (parentNavItem) {
+          const parentNavLink = parentNavItem.querySelector('.nav-link');
+          if (parentNavLink && !parentNavLink.querySelector('.nav-ki-badge')) {
+            parentNavLink.classList.add('has-ki-data');
+            parentNavLink.querySelector('span:first-child')?.insertAdjacentHTML('afterend', `<span class="nav-ki-badge nav-ki-badge--parent" title="KI-Daten erkannt">${NAV_KI_BADGE_HTML()}</span>`);
+          }
+        }
+      }
+    });
+  });
+}
+
+function NAV_KI_BADGE_HTML() {
+  return `<svg class="nav-ki-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+  <defs><linearGradient id="navkig" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00c8f0"/><stop offset="100%" stop-color="#d040fb"/>
+  </linearGradient></defs>
+  <rect x="5" y="5" width="70" height="70" rx="18" fill="none" stroke="url(#navkig)" stroke-width="5"/>
+  <path d="M30 14 L33 26 L45 29 L33 32 L30 44 L27 32 L15 29 L27 26 Z" fill="url(#navkig)"/>
+  <path d="M55 40 L57 49 L66 51 L57 53 L55 62 L53 53 L44 51 L53 49 Z" fill="url(#navkig)"/>
+</svg>`;
+}
+
+// ===== NAV REVIEW QUEUE: per-nav-item ordered review flow =====
+// Defines sidebar order and which parsed sections belong to each nav item
+const _navReviewOrder = [
+  { sub: 'personendaten',               page: 'persoenliche-angaben', sections: ['person', 'adresse'],  label: 'Personendaten' },
+  { sub: 'ausweisdaten',                page: 'persoenliche-angaben', sections: ['ausweis'],            label: 'Ausweisdaten' },
+  { sub: 'steuerdaten',                 page: 'persoenliche-angaben', sections: ['steuerdaten'],        label: 'Steuerdaten' },
+  { sub: 'arbeitgeber',                 page: 'berufliche-angaben',   sections: ['arbeitgeber'],        label: 'Arbeitgeber' },
+  { sub: 'rente',                       page: 'rente',                sections: ['rente'],              label: 'Rente' },
+  { sub: 'einnahmen',                   page: 'einnahmen',            sections: ['einnahmen'],          label: 'Einnahmen' },
+  { sub: 'ausgaben',                    page: 'ausgaben',             sections: ['energie'],            label: 'Ausgaben (Energie)' },
+  { sub: 'gesundheit-krankenversicherung', page: 'gesundheit',       sections: ['gkv'],                label: 'Krankenversicherung' },
+  { sub: 'hausrat',                     page: 'versicherungen',       sections: ['hausrat'],            label: 'Versicherungen' },
+];
+
+let _pendingReviewActive = false;
+let _pendingParsedAll = null;
+let _currentReviewItem = null;
+
+function _hasDataInSections(parsed, sections) {
+  return sections.some(sec => {
+    const obj = parsed[sec];
+    return obj && Object.values(obj).some(v => v && String(v).trim() !== '');
+  });
+}
+
+// ===== SCAN SUMMARY (shown before review modal) =====
+let _scanSummaryResolve = null;
+let _scanSummaryParsed = null;
+
+function showScanSummary(parsed, fileResults, resolveUpload) {
+  _scanSummaryResolve = resolveUpload;
+  _scanSummaryParsed = parsed;
+
+  // Compute fields per section
+  const SECTION_LABELS = {
+    person:      'Persönliche Daten',
+    ausweis:     'Ausweisdaten',
+    adresse:     'Adresse',
+    steuerdaten: 'Steuerdaten',
+    arbeitgeber: 'Arbeitgeber',
+    einnahmen:   'Einkommen',
+    rente:       'Rente',
+    hausrat:     'Versicherung',
+    gkv:         'Krankenversicherung',
+    energie:     'Energie / Ausgaben',
+  };
+  const sectionCounts = {};
+  let totalFields = 0;
+  Object.entries(SECTION_LABELS).forEach(([key, label]) => {
+    const count = parsed[key] ? Object.values(parsed[key]).filter(v => v && String(v).trim() !== '').length : 0;
+    if (count > 0) {
+      sectionCounts[key] = { label, count };
+      totalFields += count;
+    }
+  });
+
+  // Build file-list HTML
+  const fileListHtml = fileResults.map(f => {
+    const icon = f.fieldCount > 0 ? '✅' : '⚠️';
+    const ext = f.name.split('.').pop().toUpperCase();
+    return `
+      <div class="scan-summary-file">
+        <span class="scan-summary-file-icon">${icon}</span>
+        <div class="scan-summary-file-info">
+          <span class="scan-summary-file-name">${f.name}</span>
+          <span class="scan-summary-file-meta">${ext} · ${f.docType} · ${f.fieldCount} Felder erkannt</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Build section badges HTML
+  const sectionBadgesHtml = Object.entries(sectionCounts).map(([key, { label, count }]) => {
+    return `<div class="scan-summary-section-badge">
+      <span class="scan-summary-section-icon">${NAV_KI_BADGE_HTML()}</span>
+      <span class="scan-summary-section-label">${label}</span>
+      <span class="scan-summary-section-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  const overlay = document.getElementById('scan-summary-overlay');
+  document.getElementById('scan-summary-total').textContent = totalFields;
+  document.getElementById('scan-summary-files').innerHTML = fileListHtml;
+  document.getElementById('scan-summary-sections').innerHTML = sectionBadgesHtml || '<p style="color:var(--text-muted);font-size:13px;">Keine strukturierten Daten erkannt.</p>';
+
+  // Close upload modal, show summary
+  closeModal();
+  overlay.style.display = 'flex';
+
+  // Pre-mark sidebar with detected sections
+  markNavSidebarKI(Object.keys(sectionCounts));
+}
+
+function closeScanSummary() {
+  document.getElementById('scan-summary-overlay').style.display = 'none';
+}
+
+function proceedToReview() {
+  closeScanSummary();
+
+  _pendingParsedAll = _scanSummaryParsed;
+  _pendingReviewActive = true;
+  _scanSummaryParsed = null;
+  // Note: we no longer block the main upload queue on full review completion
+  if (_scanSummaryResolve) {
+    _scanSummaryResolve(0); 
+    _scanSummaryResolve = null;
+  }
+
+  // Find first nav item with data and navigate to it
+  const firstItem = _navReviewOrder.find(item => _hasDataInSections(_pendingParsedAll, item.sections));
+
+  if (!firstItem) {
+    _pendingReviewActive = false;
+    return;
+  }
+
+  navigate(firstItem.page, firstItem.sub);
+}
+
+function cancelScanSummary() {
+
+  closeScanSummary();
+  if (_scanSummaryResolve) _scanSummaryResolve(0);
+  _scanSummaryResolve = null;
+  _scanSummaryParsed = null;
+  clearNavSidebarKI();
+}
+
+function showReviewModal(parsed, resolveUpload, sectionFilter = null, navLabel = null) {
   currentReviewResolve = resolveUpload;
   currentParsedData = parsed;
   let fieldCount = 0;
@@ -843,6 +1050,8 @@ function showReviewModal(parsed, resolveUpload) {
 
   _reviewSections = [];
   for (const [title, category, fieldMap, parsedObj] of sectionDefs) {
+    // Filter to only show sections relevant to the current nav item (queue mode)
+    if (sectionFilter && !sectionFilter.includes(category)) continue;
     const body = renderSection(category, fieldMap, parsedObj);
     if (body) _reviewSections.push({ title, html: body });
   }
@@ -874,7 +1083,12 @@ function showReviewModal(parsed, resolveUpload) {
   // (will be set correctly once _reviewUpdateApplyBtn runs after sections are built)
   setTimeout(_reviewUpdateApplyBtn, 0);
 
-  document.getElementById('review-modal-title').textContent = `Erkannte Daten überprüfen (${fieldCount} erkannte Felder)`;
+  // Update modal title
+  if (navLabel) {
+    document.getElementById('review-modal-title').textContent = navLabel;
+  } else {
+    document.getElementById('review-modal-title').textContent = `Erkannte Daten überprüfen (${fieldCount} erkannte Felder)`;
+  }
 
   // Show first section
   _reviewCurrentIdx = 0;
@@ -1084,6 +1298,51 @@ function applyReviewSelected() {
     return;
   }
 
+  // ===== PENDING REVIEW MODE: stay on current page, mark fields, clear badge =====
+  if (_pendingReviewActive && _currentReviewItem) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      filledFields.person.forEach(markKIField);
+      filledFields.ausweis.forEach(markKIField);
+      filledFields.adresse.forEach(markKIField);
+      filledFields.steuerdaten.forEach(markKIField);
+      filledFields.arbeitgeber.forEach(markKIField);
+      filledFields.rente.forEach(markKIField);
+      filledFields.hausrat.forEach(markKIField);
+      filledFields.einnahmen.forEach(markKIField);
+      filledFields.gkv.forEach(markKIField);
+      filledFields.energie.forEach(markKIField);
+      filledFields.radios.forEach(markKIRadio);
+      if (totalApplied > 0) showKIBanner(_currentReviewItem.sub, totalApplied);
+
+      // Remove KI badge from completed nav item
+      const navLink = document.querySelector(`.sub-nav-link[data-sub="${_currentReviewItem.sub}"]`);
+      if (navLink) {
+        navLink.querySelector('.nav-ki-badge')?.remove();
+        navLink.classList.remove('has-ki-data');
+      }
+      // Remove parent KI badge if no more children have KI data
+      const parentNavItem = navLink?.closest('.nav-item');
+      if (parentNavItem) {
+        const remainingSiblings = parentNavItem.querySelectorAll('.sub-nav-link.has-ki-data');
+        if (remainingSiblings.length === 0) {
+          parentNavItem.querySelector('.nav-link .nav-ki-badge')?.remove();
+          parentNavItem.querySelector('.nav-link')?.classList.remove('has-ki-data');
+        }
+      }
+
+      currentReviewResolve = null;
+      currentParsedData = null;
+      _currentReviewItem = null;
+      
+      // Check if all KI badges are done
+      if (document.querySelectorAll('.sub-nav-link.has-ki-data').length === 0) {
+        _pendingReviewActive = false;
+        _pendingParsedAll = null;
+      }
+    }));
+    return;
+  }
+
   // ===== STANDARD CONTEXT: navigate to relevant page =====
   let navPage = ['berufliche-angaben', 'arbeitgeber'];
   if (currentParsedData.docType === 'Renteninformation') navPage = ['rente', 'rente'];
@@ -1125,6 +1384,7 @@ function cancelReview() {
   if (currentReviewResolve) currentReviewResolve(0);
   currentReviewResolve = null;
   currentParsedData = null;
+  _currentReviewItem = null;
 }
 
 
@@ -1179,6 +1439,8 @@ async function processFileQueue(files) {
       let combinedParsed = { person: {}, ausweis: {}, adresse: {}, steuerdaten: {}, arbeitgeber: {}, einnahmen: {}, rente: {}, hausrat: {}, gkv: {} };
       let hasData = false;
       let lastDocType = 'Dokument';
+      // Collect per-file results for the summary screen
+      const fileResults = [];
 
       for (let i = 0; i < list.length; i++) {
         const file = list[i];
@@ -1190,6 +1452,14 @@ async function processFileQueue(files) {
           if (parsed.docType && parsed.docType !== 'Dokument' && parsed.docType !== 'Unbekannt') {
             lastDocType = parsed.docType;
           }
+          // Count fields in this file
+          let fileFieldCount = 0;
+          ['person', 'ausweis', 'adresse', 'steuerdaten', 'arbeitgeber', 'einnahmen', 'rente', 'hausrat', 'gkv', 'energie'].forEach(key => {
+            if (parsed[key]) {
+              fileFieldCount += Object.values(parsed[key]).filter(v => v && String(v).trim() !== '').length;
+            }
+          });
+          fileResults.push({ name: file.name, docType: parsed.docType || 'Dokument', fieldCount: fileFieldCount });
           ['person', 'ausweis', 'adresse', 'steuerdaten', 'arbeitgeber', 'einnahmen', 'rente', 'hausrat', 'gkv'].forEach(key => {
             if (parsed[key]) {
               Object.entries(parsed[key]).forEach(([k, v]) => {
@@ -1199,6 +1469,8 @@ async function processFileQueue(files) {
               });
             }
           });
+        } else {
+          fileResults.push({ name: file.name, docType: 'Nicht erkannt', fieldCount: 0 });
         }
       }
       
@@ -1206,11 +1478,13 @@ async function processFileQueue(files) {
 
       if (hasData) {
         const verifiedFields = await new Promise(resolveUpload => {
-          showReviewModal(combinedParsed, resolveUpload);
+          showScanSummary(combinedParsed, fileResults, resolveUpload);
         });
         if (list.length > 1) {
           showToast(`✓ ${list.length} Dokumente verarbeitet – ${verifiedFields} Felder befüllt`);
         }
+      } else {
+        showToast('⚠️ Keine Daten in den Dokumenten erkannt.');
       }
     }
 
@@ -1825,11 +2099,11 @@ function bvRefreshHandlungsempfehlungen() {
 
 // Auto-refresh wenn Beratungsvorbereitung-Seite aktiv wird
 document.addEventListener('DOMContentLoaded', function() {
-  const bvPage = document.getElementById('page-jeg-beratungsvorbereitung');
+  const bvPage = document.getElementById('page-jeg2026');
   if (!bvPage) return;
   new MutationObserver(function(mutations) {
     mutations.forEach(function(m) {
-      if (m.target && m.target.id === 'page-jeg-beratungsvorbereitung' && m.target.classList.contains('active')) {
+      if (m.target && m.target.id === 'page-jeg2026' && m.target.classList.contains('active')) {
         bvRefreshHandlungsempfehlungen();
       }
     });
